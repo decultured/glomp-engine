@@ -11,9 +11,18 @@
 namespace glomp {
 
 class Application {
+private:
+	int pixel_width;
+	int pixel_height;
+
 public:
 	Application();
 	virtual ~Application();
+
+	int width() {return pixel_width;}
+	int height() {return pixel_height;}
+
+	bool resize(int width, int height, bool fullscreen);
 };
 
 } /* namespace glomp */
