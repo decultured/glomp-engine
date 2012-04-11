@@ -1,23 +1,28 @@
 /*
- * Application.h
+ * Window.h
  *
  *  Created on: Apr 1, 2012
  *      Author: jgraves
  */
 
-#ifndef APPLICATION_H_
-#define APPLICATION_H_
+#ifndef Window_H_
+#define Window_H_
 
 namespace glomp {
+namespace app {
 
-class Application {
+class Window {
 private:
 	int pixel_width;
 	int pixel_height;
 
+	bool fullscreen;
 public:
-	Application();
-	virtual ~Application();
+	Window();
+	virtual ~Window();
+
+	int init(int width, int height, int bpp, bool fullscreen);
+	int shutdown();
 
 	int width() {return pixel_width;}
 	int height() {return pixel_height;}
@@ -25,5 +30,6 @@ public:
 	bool resize(int width, int height, bool fullscreen);
 };
 
+} /* namespace app */
 } /* namespace glomp */
-#endif /* APPLICATION_H_ */
+#endif /* Window_H_ */
