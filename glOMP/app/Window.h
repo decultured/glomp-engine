@@ -16,6 +16,8 @@ private:
 	int pixel_width;
 	int pixel_height;
 
+	float r, g, b;
+
 	bool fullscreen;
 public:
 	Window();
@@ -28,6 +30,10 @@ public:
 	int height() {return pixel_height;}
 
 	bool resize(int width, int height, bool fullscreen);
+
+	void clear();
+	void set_clear_color(float r, float g, float b);
+
 };
 
 } /* namespace app */
