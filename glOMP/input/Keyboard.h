@@ -9,14 +9,21 @@
 #define KEYBOARD_H_
 
 namespace glomp {
+namespace keyboard {
 
 class Keyboard {
+private:
+	int keystates[];
+
 public:
 	Keyboard();
 	virtual ~Keyboard();
 
-	int keyState(int);
+	bool inputState(int);
+
+	bool keyState(int);
 };
 
+}
 } /* namespace glomp */
 #endif /* KEYBOARD_H_ */

@@ -22,7 +22,7 @@ namespace app {
 
 #define glomp_checkwindow(L, N) *(Window **)luaL_checkudata(L, N, "glomp.window")
 
-static int glomp_window_new(lua_State *L) {
+int glomp_window_new(lua_State *L) {
 	Window **new_win = (Window **)lua_newuserdata(L, sizeof(Window *));
 	luaL_getmetatable(L, "glomp.window");
 	lua_setmetatable(L, -2);
@@ -32,7 +32,7 @@ static int glomp_window_new(lua_State *L) {
 	return 1;
 }
 
-static int glomp_window_init(lua_State *L)
+int glomp_window_init(lua_State *L)
 {
 	Window *win = glomp_checkwindow(L, 1);
 
@@ -44,7 +44,7 @@ static int glomp_window_init(lua_State *L)
 	return 0;
 }
 
-static int glomp_window_resize(lua_State *L)
+int glomp_window_resize(lua_State *L)
 {
 	Window *win = glomp_checkwindow(L, 1);
 
@@ -55,7 +55,7 @@ static int glomp_window_resize(lua_State *L)
 	return 0;
 }
 
-static int glomp_window_clear(lua_State *L)
+int glomp_window_clear(lua_State *L)
 {
 	Window *win = glomp_checkwindow(L, 1);
 
@@ -63,7 +63,7 @@ static int glomp_window_clear(lua_State *L)
 	return 0;
 }
 
-static int glomp_window_clearcolor(lua_State *L) {
+int glomp_window_clearcolor(lua_State *L) {
 	Window *win = glomp_checkwindow(L, 1);
 	float r = luaL_checknumber(L, 2);
 	float g = luaL_checknumber(L, 3);
@@ -74,14 +74,14 @@ static int glomp_window_clearcolor(lua_State *L) {
 	return 0;
 }
 
-static int glomp_window_shutdown(lua_State *L)
+int glomp_window_shutdown(lua_State *L)
 {
 	Window *win = glomp_checkwindow(L, 1);
 	win->shutdown();
 	return 0;
 }
 
-static int glomp_window_gc(lua_State *L) {
+int glomp_window_gc(lua_State *L) {
 	Window *win = glomp_checkwindow(L, 1);
 	delete win;
 	return 0;

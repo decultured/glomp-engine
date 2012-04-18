@@ -31,6 +31,8 @@ public:
 
 	bool resize(int width, int height, bool fullscreen);
 
+	void update();
+
 	void clear();
 	void set_clear_color(float r, float g, float b);
 

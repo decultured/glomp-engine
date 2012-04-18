@@ -40,6 +40,11 @@ bool Window::resize(int width, int height, bool fullscreen) {
 	return false;
 }
 
+void Window::update() {
+	glfwPollEvents();
+	this->clear();
+}
+
 void Window::clear() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glfwSwapBuffers();

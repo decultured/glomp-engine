@@ -7,6 +7,7 @@
 
 #include "Timer.h"
 #include <cstdlib>
+#include <iostream>
 
 namespace glomp {
 
@@ -20,13 +21,15 @@ Timer::Timer()
         startCount.tv_sec = startCount.tv_usec = 0;
         endCount.tv_sec = endCount.tv_usec = 0;
     #endif
-
+    std::cerr << "Timer Created\n";
     stopped = 0;
     startTimeInMicroSec = 0;
     endTimeInMicroSec = 0;
 }
 
-Timer::~Timer() {}
+Timer::~Timer() {
+	std::cerr << "Timer Destroyed\n";
+}
 
 void Timer::start()
 {

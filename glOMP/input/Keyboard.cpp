@@ -9,18 +9,14 @@
 #include <GL/glfw.h>
 
 namespace glomp {
+namespace keyboard {
 
-Keyboard::Keyboard() {
-	// TODO Auto-generated constructor stub
+Keyboard::Keyboard() {}
+Keyboard::~Keyboard() {}
 
+bool Keyboard::keyState(int key) {
+	return (glfwGetKey(key) == GLFW_PRESS);
 }
 
-Keyboard::~Keyboard() {
-	// TODO Auto-generated destructor stub
 }
-
-int Keyboard::keyState(int key) {
-	return glfwGetKey(key);
-}
-
 } /* namespace glomp */

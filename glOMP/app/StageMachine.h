@@ -22,7 +22,7 @@ private:
 	Stage *current_stage;
     Timer timer;
 
-    Keyboard keyboard;
+//    Keyboard keyboard;
 
 public:
 	StageMachine();

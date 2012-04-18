@@ -20,6 +20,7 @@ extern "C" {
 
 #include <iostream>
 #include "app/StageMachine.h"
+#include "common/TimerBinding.h"
 
 bool force_quit = false;
 
@@ -52,6 +53,7 @@ int main(int argc, char *argv[]) {
 	luaL_openlibs(L);
 
 	glomp::app::luaopen_window(L);
+	glomp::util::luaopen_timer(L);
 
 	lua_pushcfunction(L, quit);
 	lua_setglobal(L, "quit");

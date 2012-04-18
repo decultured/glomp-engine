@@ -20,12 +20,12 @@ extern "C" {
 namespace glomp {
 namespace app {
 
-	static int glomp_window_new(lua_State *L);
-	static int glomp_window_init(lua_State *L);
-	static int glomp_window_resize(lua_State *L);
-	static int glomp_window_shutdown(lua_State *L);
-	static int glomp_window_clearcolor(lua_State *L);
-	static int glomp_window_clear(lua_State *L);
+	int glomp_window_new(lua_State *L);
+	int glomp_window_init(lua_State *L);
+	int glomp_window_resize(lua_State *L);
+	int glomp_window_shutdown(lua_State *L);
+	int glomp_window_clearcolor(lua_State *L);
+	int glomp_window_clear(lua_State *L);
 	int luaopen_window (lua_State *L);
 }
 } /* namespace glomp */

@@ -36,8 +36,8 @@ int StageMachine::run() {
         transition_code = current_stage->run(elapsed_time);
         if (!transition_function(transition_code))
             break;
-        if (keyboard.keyState( GLFW_KEY_ESC ) || !glfwGetWindowParam( GLFW_OPENED ))
-        	break;
+//        if (keyboard.keyState( GLFW_KEY_ESC ) || !glfwGetWindowParam( GLFW_OPENED ))
+//        	break;
         glfwSwapBuffers();
     };
 
