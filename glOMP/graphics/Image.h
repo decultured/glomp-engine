@@ -15,6 +15,8 @@ class Image {
 public:
 	Image();
 	virtual ~Image();
+
+	void load(const char *filename);
 };
 
 } /* namespace graphics */
