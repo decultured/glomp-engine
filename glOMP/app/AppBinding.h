@@ -26,6 +26,7 @@ namespace app {
 	int glomp_window_shutdown(lua_State *L);
 	int glomp_window_clearcolor(lua_State *L);
 	int glomp_window_clear(lua_State *L);
+	int glomp_window_update(lua_State *L);
 	int luaopen_window (lua_State *L);
 }
 } /* namespace glomp */

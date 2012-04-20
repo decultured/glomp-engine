@@ -8,6 +8,8 @@
 #include "InputTriggers.h"
 #include "Input.h"
 
+#include <iostream>
+
 namespace glomp {
 namespace input {
 
@@ -16,7 +18,7 @@ KeyUpTrigger::KeyUpTrigger(int key_code) {
 	this->prev_state = true;
 }
 
-bool KeyUpTrigger::trigger(Input &input) {
+bool KeyUpTrigger::check(Input &input) {
 	bool state = (input.key_state(this->key_code) == GLFW_PRESS);
 	bool result = (state == false && state != this->prev_state);
 	this->prev_state = state;
@@ -28,7 +30,7 @@ KeyDownTrigger::KeyDownTrigger(int key_code) {
 	this->prev_state = false;
 }
 
-bool KeyDownTrigger::trigger(Input &input) {
+bool KeyDownTrigger::check(Input &input) {
 	bool state = (input.key_state(this->key_code) == GLFW_PRESS);
 	bool result = (state == true && state != this->prev_state);
 	this->prev_state = state;
@@ -39,7 +41,7 @@ KeyIsUpTrigger::KeyIsUpTrigger(int key_code) {
 	this->key_code = key_code;
 }
 
-bool KeyIsUpTrigger::trigger(Input &input) {
+bool KeyIsUpTrigger::check(Input &input) {
 	return (input.key_state(this->key_code) == GLFW_RELEASE);
 }
 
@@ -47,7 +49,7 @@ KeyIsDownTrigger::KeyIsDownTrigger(int key_code) {
 	this->key_code = key_code;
 }
 
-bool KeyIsDownTrigger::trigger(Input &input) {
+bool KeyIsDownTrigger::check(Input &input) {
 	return (input.key_state(this->key_code) == GLFW_PRESS);
 }
 

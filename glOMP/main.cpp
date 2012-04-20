@@ -5,6 +5,7 @@
  *
  */
 
+#define GLOMP_PLATFORM_OSX
 
 #include <GL/glfw.h>
 #include <opengl.h>
@@ -15,12 +16,19 @@ extern "C" {
 	#include "lauxlib.h"
 }
 
-#include "app/Window.h"
-#include "app/appBinding.h"
-
 #include <iostream>
+
+#include "app/Window.h"
 #include "app/StageMachine.h"
+
+#include "app/appBinding.h"
 #include "common/TimerBinding.h"
+#include "input/InputBinding.h"
+#include "audio/AudioBinding.h"
+#include "audio/SoundBinding.h"
+
+#include "audio/Audio.h"
+#include "audio/Sound.h"
 
 bool force_quit = false;
 
@@ -54,6 +62,17 @@ int main(int argc, char *argv[]) {
 
 	glomp::app::luaopen_window(L);
 	glomp::util::luaopen_timer(L);
+	glomp::input::luaopen_input(L);
+	glomp::audio::luaopen_audio(L);
+	glomp::audio::luaopen_sound(L);
+
+//	glomp::audio::Audio *audio = new glomp::audio::Audio();
+//
+//	glomp::audio::Sound sound;
+//
+//	sound.load_wav("Sound.wav");
+//	sound.play();
+//	delete audio;
 
 	lua_pushcfunction(L, quit);
 	lua_setglobal(L, "quit");
@@ -66,6 +85,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	lua_close(L);
+
 
 	// Exit program
 	return 0;

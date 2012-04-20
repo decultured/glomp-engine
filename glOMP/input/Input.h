@@ -32,11 +32,8 @@ namespace input {
 
 class InputListener {
 private :
-	std::string name;
 public :
-	InputListener(const char *name) {
-		this->name = name;
-	}
+	virtual ~InputListener() {}
 	virtual void trigger() = 0;
 };
 

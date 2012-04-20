@@ -58,8 +58,13 @@ int glomp_window_resize(lua_State *L)
 int glomp_window_clear(lua_State *L)
 {
 	Window *win = glomp_checkwindow(L, 1);
-
 	win->clear();
+	return 0;
+}
+
+int glomp_window_update(lua_State *L) {
+	Window *win = glomp_checkwindow(L, 1);
+	win->update();
 	return 0;
 }
 
@@ -96,6 +101,7 @@ static const struct luaL_Reg glomp_window_funcs [] = {
 	{"init", glomp_window_init},
 	{"resize", glomp_window_resize},
 	{"clear", glomp_window_clear},
+	{"update", glomp_window_update},
 	{"set_clear_color", glomp_window_clearcolor},
 	{"shutdown", glomp_window_shutdown},
 	{"__gc", glomp_window_gc},
