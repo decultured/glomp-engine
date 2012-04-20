@@ -17,6 +17,7 @@ extern "C" {
 }
 
 #include <iostream>
+#include <fstream>
 
 #include "app/Window.h"
 #include "app/StageMachine.h"
@@ -26,9 +27,6 @@ extern "C" {
 #include "input/InputBinding.h"
 #include "audio/AudioBinding.h"
 #include "audio/SoundBinding.h"
-
-#include "audio/Audio.h"
-#include "audio/Sound.h"
 
 bool force_quit = false;
 
@@ -55,6 +53,11 @@ static int quit(lua_State *L) {
 	return 0;
 }
 
+bool file_exists(const char *filename) {
+	std::ifstream file(filename);
+	return file;
+}
+
 int main(int argc, char *argv[]) {
 
 	lua_State *L = luaL_newstate();
@@ -66,21 +69,19 @@ int main(int argc, char *argv[]) {
 	glomp::audio::luaopen_audio(L);
 	glomp::audio::luaopen_sound(L);
 
-//	glomp::audio::Audio *audio = new glomp::audio::Audio();
-//
-//	glomp::audio::Sound sound;
-//
-//	sound.load_wav("Sound.wav");
-//	sound.play();
-//	delete audio;
-
 	lua_pushcfunction(L, quit);
 	lua_setglobal(L, "quit");
 
 	if (argc > 1) {
 		if (luaL_loadfile(L, argv[1]) || lua_pcall(L, 0, 0, 0))
 			std::cerr << "cannot run config. file:" << lua_tostring(L, -1) << "\nNum arguments: " << argc << "\n";
+	} else if (file_exists("main.lua")) {
+		if (luaL_loadfile(L, "main.lua") || lua_pcall(L, 0, 0, 0)) {
+
+
+		}
 	} else {
+		std::cout << "No lua file found, running interactive command line tester.\nEnter \"quit()\" to quit.\n\n";
 		lua_command_line(L);
 	}
 
