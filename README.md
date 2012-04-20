@@ -1,5 +1,4 @@
-Warning: glOMP engine is very early in development and may change in drastic ways within a short time.  While I welcome comments, contributions, and participation, I can't recommend its use for anything serious until more work is complete.
-=======
+### Warning: glOMP engine is very early in development and may change in drastic ways within a short time.  While I welcome comments, contributions, and participation, I can't recommend its use for anything serious until more work is complete.
 
 GLOMP engine
 ============
