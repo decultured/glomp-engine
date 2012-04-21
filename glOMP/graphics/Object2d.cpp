@@ -25,7 +25,6 @@ Object2d::Object2d() {
 Object2d::~Object2d() {}
 
 void Object2d::update(float seconds) {
-	rotation += (1200.0f * seconds);
 	if (rotation > 360.0f)
 		rotation = fmod(rotation, 360.0f);
 }

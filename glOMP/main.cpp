@@ -62,6 +62,15 @@ bool file_exists(const char *filename) {
 	return file;
 }
 
+void error (lua_State *L, const char *fmt, ...) {
+	va_list argp;
+	va_start(argp, fmt);
+	std::cerr << fmt << argp;
+	va_end(argp);
+	lua_close(L);
+	exit(EXIT_FAILURE);
+}
+
 int main(int argc, char *argv[]) {
 
 	lua_State *L = luaL_newstate();
@@ -80,11 +89,10 @@ int main(int argc, char *argv[]) {
 
 	if (argc > 1) {
 		if (luaL_loadfile(L, argv[1]) || lua_pcall(L, 0, 0, 0))
-			std::cerr << "cannot run config. file:" << lua_tostring(L, -1) << "\nNum arguments: " << argc << "\n";
+			std::cerr << "Error:\n" << lua_tostring(L, -1) << "\nNum arguments: " << argc << "\n";
 	} else if (file_exists("main.lua")) {
 		if (luaL_loadfile(L, "main.lua") || lua_pcall(L, 0, 0, 0)) {
-
-
+			std::cerr << "cannot run config. file:" << lua_tostring(L, -1) << "\nNum arguments: " << argc << "\n";
 		}
 	} else {
 		std::cout << "No lua file found, running interactive command line tester.\nEnter \"quit()\" to quit.\n\n";
@@ -92,7 +100,6 @@ int main(int argc, char *argv[]) {
 	}
 
 	lua_close(L);
-
 
 	// Exit program
 	return 0;

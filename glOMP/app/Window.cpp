@@ -13,15 +13,9 @@
 namespace glomp {
 namespace app {
 
-Window::Window() {
-	// TODO Auto-generated constructor stub
-	std::cerr << "Window Created\n";
-}
+Window::Window() {}
 
-Window::~Window() {
-	// TODO Auto-generated destructor stub
-	std::cerr << "Window Destroyed\n";
-}
+Window::~Window() {}
 
 int Window::init(int width, int height, int bpp, bool fullscreen) {
 	this->pixel_height = height;

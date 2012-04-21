@@ -88,17 +88,18 @@ bool Sound::load_wav(const char *filename) {
     fread(&dataSize,sizeof(unsigned int),1,fp);
 
     //Display the info about the WAVE file
-    std::cout << "Chunk Size: " << chunkSize << "\n";
-    std::cout << "Format Type: " << formatType << "\n";
-    std::cout << "Channels: " << channels << "\n";
-    std::cout << "Sample Rate: " << sampleRate << "\n";
-    std::cout << "Average Bytes Per Second: " << avgBytesPerSec << "\n";
-    std::cout << "Bytes Per Sample: " << bytesPerSample << "\n";
-    std::cout << "Bits Per Sample: " << bitsPerSample << "\n";
-    std::cout << "Data Size: " << dataSize << "\n";
+//    std::cout << "Chunk Size: " << chunkSize << "\n";
+//    std::cout << "Format Type: " << formatType << "\n";
+//    std::cout << "Channels: " << channels << "\n";
+//    std::cout << "Sample Rate: " << sampleRate << "\n";
+//    std::cout << "Average Bytes Per Second: " << avgBytesPerSec << "\n";
+//    std::cout << "Bytes Per Sample: " << bytesPerSample << "\n";
+//    std::cout << "Bits Per Sample: " << bitsPerSample << "\n";
+//    std::cout << "Data Size: " << dataSize << "\n";
 
     unsigned char* file_buffer= new unsigned char[dataSize];
-    std::cout << fread(file_buffer, sizeof(unsigned char), dataSize, fp) << " bytes loaded\n";
+    fread(file_buffer, sizeof(unsigned char), dataSize, fp);
+//    std::cout <<  << " bytes loaded\n";
 
     fclose(fp);
 

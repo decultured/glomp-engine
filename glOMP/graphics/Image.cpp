@@ -32,7 +32,7 @@ void Image::load(const char *filename) {
 	glfwLoadTexture2D(filename, GLFW_BUILD_MIPMAPS_BIT );
 
 //	// Use trilinear interpolation for minification
-	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST );
+	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 //	// Use bilinear interpolation for magnification
 	glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 

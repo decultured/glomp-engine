@@ -19,7 +19,7 @@ namespace graphics {
 class Object2d {
 private:
 	GLuint texture_id;
-
+public:
 	float x;
 	float y;
 
@@ -28,16 +28,22 @@ private:
 	float width;
 	float height;
 
-public:
 	Object2d();
 	virtual ~Object2d();
 
 	void set_texture_id(GLuint t_id) {texture_id = t_id;}
 
-	void translate(float x, float y);
-	void rotate(float rad);
-	void scale(float rad);
-	void size(float width, float height);
+	void translate(float x, float y) {
+		this->x += x;
+		this->y += y;
+	}
+	void rotate(float deg) {
+		this->rotation += deg;
+	}
+	void scale(float x, float y) {
+		this->width = width;
+		this->height = height;
+	}
 
 	void update(float seconds);
 	void render();

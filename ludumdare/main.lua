@@ -1,12 +1,8 @@
-require "game_loop"
+dofile("game_loop.lua")
+dofile("world.lua")
+dofile("player.lua")
 
-times = timer.new()
-times:start()
-
-frames = game_loop()
-
-times:stop()
-
-local elapsed = times:elapsed()
-local fps = frames / elapsed
-print("Ran in", elapsed, "seconds\nOr", fps, "fps")
+game_loop(function (seconds) 
+	world.update(seconds)
+	player.update(seconds)
+end)
