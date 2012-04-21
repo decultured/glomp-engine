@@ -6,13 +6,17 @@ game_audio = audio.new()
 
 active = true
 
+function bind_actions(actions)
+	for idx, row in ipairs(actions) do	
+		game_input:bind(row[1], row[2], row[3])
+	end
+end
 
-game_input:bind("quit", 81)
+game_input:bind("quit", "key_down", keyboard.Q)
 game_input:on("quit", function () 
 	active = false
 end)
 
-game_input:bind("fire", 90)
 game_input:on("fire", function ()
 	zap:play()
 	player:update(1.0)

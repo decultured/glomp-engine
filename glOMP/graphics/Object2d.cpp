@@ -58,5 +58,31 @@ void Object2d::render() {
 }
 
 
+//void Object2d::circle() {
+//	glPushMatrix();
+//	glTranslatef(x, y, 0.0f);
+//	glRotatef(rotation, 0.0f, 0.0f, 1.0f);
+//
+//
+//	float h_w = width * 0.5f;
+//	float h_h = height * 0.5f;
+//
+//	int num = 10;
+//
+//	glBegin( GL_TRIANGLE_FAN );
+//		glVertex2d(0.0, 0.0);
+//
+//		float angle = 0.0f
+//		for (int i = 0; i < num; i++) {
+//
+//			glVertex2d(0.0, 0.0);
+//
+////			angle +=
+//		}
+//	glEnd();
+//
+//	glPopMatrix();
+//}
+
 } /* namespace graphics */
 } /* namespace glomp */

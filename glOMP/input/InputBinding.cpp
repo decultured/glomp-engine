@@ -64,15 +64,32 @@ int glomp_input_mouse_button_state(lua_State *L) {
 int glomp_input_add_trigger(lua_State *L) {
 	Input *in = glomp_checkinput(L, 1);
 	const char *action = luaL_checkstring(L, 2);
-	int key = luaL_checknumber(L, 3);
-	KeyDownTrigger *new_trigger = new KeyDownTrigger(key);
-	in->add_trigger(action, new_trigger);
+	const char *activity = luaL_checkstring(L, 3);
+	int key = luaL_checknumber(L, 4);
+
+	InputTrigger *new_trigger = 0;
+	if (!strcmp(activity, "key_down")) {
+		new_trigger = new KeyDownTrigger(key);
+	} else if (!strcmp(activity, "key_up")) {
+		new_trigger = new KeyUpTrigger(key);
+	} else if (!strcmp(activity, "key_is_down")) {
+		new_trigger = new KeyIsDownTrigger(key);
+	} else if (!strcmp(activity, "key_is_up")) {
+		new_trigger = new KeyIsUpTrigger(key);
+	}
+
+	if (new_trigger) {
+		in->add_trigger(action, new_trigger);
+	} else {
+		std::cerr << "Unrecognized input action: " << activity << "\n";
+	}
 
 	return 0;
 }
 
 int glomp_input_add_listener(lua_State *L) {
 	Input *in = glomp_checkinput(L, 1);
+
 	const char *action = luaL_checkstring(L, 2);
 
 	if (!lua_isfunction(L, 3)) {
