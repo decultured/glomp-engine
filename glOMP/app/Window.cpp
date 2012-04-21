@@ -7,7 +7,7 @@
 
 #include "Window.h"
 #include <GL/glfw.h>
-#include <opengl.h>
+#include <gl.h>
 #include <iostream>
 
 namespace glomp {
@@ -46,12 +46,37 @@ void Window::update() {
 }
 
 void Window::clear() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glfwSwapBuffers();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Window::set_clear_color(float r, float g, float b) {
 	glClearColor(r, g, b, 1.0);
+}
+
+void Window::start_2d_projection(float width, float height, float x, float y) {
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    glOrtho(0, width, 0, height, -10.0, 10.0);
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+    glDisable(GL_DEPTH_TEST);
+    glRasterPos2f(0.0f, 0.0f);
+}
+
+void Window::stop_2d_projection() {
+	glPopMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+}
+
+
+void Window::translate2d(float x, float y) {
+
+
 }
 
 int Window::shutdown() {

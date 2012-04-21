@@ -8,7 +8,7 @@
 #define GLOMP_PLATFORM_OSX
 
 #include <GL/glfw.h>
-#include <opengl.h>
+#include <gl.h>
 
 extern "C" {
 	#include "lua.h"
@@ -27,6 +27,9 @@ extern "C" {
 #include "input/InputBinding.h"
 #include "audio/AudioBinding.h"
 #include "audio/SoundBinding.h"
+
+#include "graphics/ImageBinding.h"
+
 
 bool force_quit = false;
 
@@ -68,6 +71,7 @@ int main(int argc, char *argv[]) {
 	glomp::input::luaopen_input(L);
 	glomp::audio::luaopen_audio(L);
 	glomp::audio::luaopen_sound(L);
+	glomp::graphics::luaopen_image(L);
 
 	lua_pushcfunction(L, quit);
 	lua_setglobal(L, "quit");

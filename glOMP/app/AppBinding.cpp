@@ -79,6 +79,26 @@ int glomp_window_clearcolor(lua_State *L) {
 	return 0;
 }
 
+int glomp_window_2d_start(lua_State *L) {
+	Window *win = glomp_checkwindow(L, 1);
+	float w = luaL_checknumber(L, 2);
+	float h = luaL_checknumber(L, 3);
+	float x = luaL_checknumber(L, 4);
+	float y = luaL_checknumber(L, 5);
+
+	win->start_2d_projection(w, h, x, y);
+
+	return 0;
+}
+
+int glomp_window_2d_end(lua_State *L) {
+	Window *win = glomp_checkwindow(L, 1);
+
+	win->stop_2d_projection();
+
+	return 0;
+}
+
 int glomp_window_shutdown(lua_State *L)
 {
 	Window *win = glomp_checkwindow(L, 1);
@@ -104,6 +124,8 @@ static const struct luaL_Reg glomp_window_funcs [] = {
 	{"update", glomp_window_update},
 	{"set_clear_color", glomp_window_clearcolor},
 	{"shutdown", glomp_window_shutdown},
+	{"start_2d", glomp_window_2d_start},
+	{"end_2d", glomp_window_2d_end},
 	{"__gc", glomp_window_gc},
 	{NULL, NULL}
 };

@@ -9,6 +9,7 @@
 #include "DefaultStage.h"
 #include "StageMachine.h"
 #include <GL/glfw.h>
+#include <gl.h>
 
 namespace glomp {
 

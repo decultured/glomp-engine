@@ -1,12 +1,12 @@
 /*
- * Image.h
+ * Object2d.h
  *
  *  Created on: Apr 20, 2012
  *      Author: jgraves
  */
 
-#ifndef IMAGE_H_
-#define IMAGE_H_
+#ifndef OBJECT2D_H_
+#define OBJECT2D_H_
 
 // To resolve highlighting bug in eclipse, I explicitly include the framework folders here.
 // TODO : find a better fix for this!
@@ -16,20 +16,27 @@
 namespace glomp {
 namespace graphics {
 
-class Image {
+class Object2d {
 private:
 	GLuint texture_id;
 
+	float x;
+	float y;
+
+	float rotation;
+
+	float width;
+	float height;
+
 public:
-	Image();
-	virtual ~Image();
+	Object2d();
+	virtual ~Object2d();
 
-	GLuint get_id() {return texture_id;}
+	void update();
+	void render();
 
-	void load(const char *filename);
-	void draw();
 };
 
 } /* namespace graphics */
 } /* namespace glomp */
-#endif /* IMAGE_H_ */
+#endif /* OBJECT2D_H_ */

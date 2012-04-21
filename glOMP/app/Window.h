@@ -36,6 +36,9 @@ public:
 	void clear();
 	void set_clear_color(float r, float g, float b);
 
+	void start_2d_projection(float width, float height, float x, float y);
+	void stop_2d_projection();
+	void translate2d(float x, float y);
 };
 
 } /* namespace app */
