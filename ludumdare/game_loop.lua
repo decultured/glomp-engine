@@ -1,6 +1,10 @@
 game_window = window.new()
-game_window:init(800, 600, true)
-game_time = timer.new()
+game_window:init(game_options.screen_width, 
+				game_options.screen_height,
+				true)
+game_frame_time = 0
+game_time = 0
+game_timer = timer.new()
 game_input = input.new()
 game_audio = audio.new()
 
@@ -22,21 +26,24 @@ game_input:on("fire", function ()
 	player:update(1.0)
 end)
 
-game_window:start_2d(800, 600, 0, 0)
+game_window:start_2d(game_options.screen_width, 
+		game_options.screen_height,
+		0, 0)
 
 local elapsed_time = 1.0
 function game_loop(callback)
 	frames = 0
 	
 	while active do
-		elapsed_time = game_time:elapsed()
-		if (elapsed_time > 0.2) then
-			elapsed_time = 0.2
+		game_frame_time = game_timer:elapsed()
+		game_time = game_time + game_frame_time
+		if (game_frame_time > 0.2) then
+			game_frame_time = 0.2
 		end
-		game_time:reset()
+		game_timer:reset()
 		game_window:update()
 		game_input:update()
-		callback(elapsed_time)
+		callback(game_frame_time)
 	end
 	return frames
 end

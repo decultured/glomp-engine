@@ -16,10 +16,19 @@ Object2d::Object2d() {
 	x = 64.0f;
 	y = 64.0f;
 
+	tx = 0.0;
+	ty = 0.0;
+	tw = 1.0;
+	th = 1.0;
+
+	is_polar = false;
 	rotation = 0.0f;
 
 	width = 64.0f;
 	height = 64.0f;
+
+	center_x = 0.0f;
+	center_y = 0.0f;
 }
 
 Object2d::~Object2d() {}
@@ -30,33 +39,47 @@ void Object2d::update(float seconds) {
 }
 
 void Object2d::render() {
-	glBindTexture( GL_TEXTURE_2D, texture_id);
+	this->apply_transform();
+	this->draw();
+	this->remove_transform();
+}
 
+void Object2d::apply_transform() {
 	glPushMatrix();
-	glTranslatef(x, y, 0.0f);
+
+	if (is_polar) {
+		glRotatef(x, 0.0f, 0.0f, 1.0f);
+		glTranslatef(0.0f, y, 0.0f);
+	} else {
+		glTranslatef(x, y, 0.0f);
+	}
+	glTranslatef(-center_x, -center_y, 0.0f);
 	glRotatef(rotation, 0.0f, 0.0f, 1.0f);
+}
 
-
+void Object2d::draw() {
+	glBindTexture( GL_TEXTURE_2D, texture_id);
 	float h_w = width * 0.5f;
 	float h_h = height * 0.5f;
 
 	glBegin( GL_QUADS );
-		glTexCoord2d(0.0,0.0);
+		glTexCoord2d(tx, ty);
 		glVertex2d(-h_w, -h_h);
 
-		glTexCoord2d(1.0,0.0);
+		glTexCoord2d(tw + tx, ty);
 		glVertex2d(h_w, -h_h);
 
-		glTexCoord2d(1.0,1.0);
+		glTexCoord2d(tw + tx, th + ty);
 		glVertex2d(h_w, h_h);
 
-		glTexCoord2d(0.0,1.0);
+		glTexCoord2d(tx, th + ty);
 		glVertex2d(-h_w, h_h);
 	glEnd();
-
-	glPopMatrix();
 }
 
+void Object2d::remove_transform(){
+	glPopMatrix();
+}
 
 //void Object2d::circle() {
 //	glPushMatrix();

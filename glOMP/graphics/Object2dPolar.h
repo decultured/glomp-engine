@@ -1,12 +1,12 @@
 /*
- * Object2d.h
+ * Object2dPolar.h
  *
- *  Created on: Apr 20, 2012
+ *  Created on: Apr 21, 2012
  *      Author: jgraves
  */
 
-#ifndef OBJECT2D_H_
-#define OBJECT2D_H_
+#ifndef OBJECT2DPOLAR_H_
+#define OBJECT2DPOLAR_H_
 
 // To resolve highlighting bug in eclipse, I explicitly include the framework folders here.
 // TODO : find a better fix for this!
@@ -16,43 +16,39 @@
 namespace glomp {
 namespace graphics {
 
-class Object2d {
+class Object2dPolar {
 private:
 	GLuint texture_id;
 public:
-	bool is_polar;
+	float angle;
+	float distance;
 
-	float x, y;
 	float rotation;
-	float width, height;
-	float tx, ty, tw, th;
-	float center_x, center_y;
 
-	Object2d();
-	virtual ~Object2d();
+	float width;
+	float height;
+
+	Object2dPolar();
+	virtual ~Object2dPolar();
 
 	void set_texture_id(GLuint t_id) {texture_id = t_id;}
 
-	void translate(float x, float y) {
-		this->x += x;
-		this->y += y;
+	void translate(float angle, float distance) {
+		this->angle += angle;
+		this->distance += distance;
 	}
 	void rotate(float deg) {
 		this->rotation += deg;
 	}
 	void scale(float x, float y) {
-		this->width *= width;
-		this->height *= height;
+		this->width = width;
+		this->height = height;
 	}
 
 	void update(float seconds);
 	void render();
-
-	void apply_transform();
-	void draw();
-	void remove_transform();
 };
 
 } /* namespace graphics */
 } /* namespace glomp */
-#endif /* OBJECT2D_H_ */
+#endif /* OBJECT2DPOLAR_H_ */

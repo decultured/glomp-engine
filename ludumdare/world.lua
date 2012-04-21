@@ -1,31 +1,21 @@
-world1_tex = image.new()
-world1_tex:load("world1.tga")
-
-world_obj = object2d.new()
-
 world = {
-	obj = world_obj,
-	globe_offset = -192,
-	inside_offset = 512
+	obj = object2d.new(),
+	v_offset = game_options.screen_width * 0.1
 }
 
-world_obj:set_texture_id(world1_tex:get_id())
-world_obj:size(1024, 1024)
-world_obj:position(400, -192)
+world.obj:position(game_options.screen_width * 0.4, -75)
 
-game_input:on("toggle", function () 
-	x, y = world_obj:position()
+world.start_frame = function(elapsed_time)  
+	local r, d = player.obj:position()
+	local x, y = world.obj:position()
 	
-	if y == world.globe_offset then
-		world_obj:position(x, world.inside_offset)
-	else
-		world_obj:position(x, world.globe_offset)
-	end	
+	world.obj:rotation(-r)
+	world.obj:position(x, (-d * 0.7) + world.v_offset)
 
-end)
-
-world.update = function(elapsed_time)  
-	world_obj:update(elapsed_time)
-	world_obj:render()
+	world.obj:update(elapsed_time)
+	world.obj:apply_transform()
 end
 
+world.end_frame = function(elapsed_time)  
+	world.obj:remove_transform()
+end
