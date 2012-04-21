@@ -23,8 +23,8 @@ public:
     ~Timer();
     void start();
     void stop();
-    double elapsed(bool reset = true);
-    double elapsedTimeInMicroSec(bool reset = true);
+    float elapsed(bool reset = true);
+    float elapsedTimeInMicroSec(bool reset = true);
 
 private:
     double startTimeInMicroSec;

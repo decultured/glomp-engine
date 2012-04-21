@@ -1,0 +1,3 @@
+#!/bin/bash
+mv ../glOMP/Debug/glOMP ./
+./glOMP

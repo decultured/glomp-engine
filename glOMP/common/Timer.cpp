@@ -51,7 +51,7 @@ void Timer::stop()
     #endif
 }
 
-double Timer::elapsedTimeInMicroSec(bool reset)
+float Timer::elapsedTimeInMicroSec(bool reset)
 {
     #ifdef WIN32
         if(!stopped)
@@ -71,7 +71,7 @@ double Timer::elapsedTimeInMicroSec(bool reset)
     return endTimeInMicroSec - startTimeInMicroSec;
 }
 
-double Timer::elapsed(bool reset)
+float Timer::elapsed(bool reset)
 {
     return this->elapsedTimeInMicroSec(reset) * 0.000001;
 }

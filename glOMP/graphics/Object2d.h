@@ -32,7 +32,14 @@ public:
 	Object2d();
 	virtual ~Object2d();
 
-	void update();
+	void set_texture_id(GLuint t_id) {texture_id = t_id;}
+
+	void translate(float x, float y);
+	void rotate(float rad);
+	void scale(float rad);
+	void size(float width, float height);
+
+	void update(float seconds);
 	void render();
 
 };

@@ -33,6 +33,11 @@ int Window::init(int width, int height, int bpp, bool fullscreen) {
 
 	glfwOpenWindow(pixel_width, pixel_height, 0,0,0,0,0,0, GLFW_WINDOW );
 
+	glfwSwapInterval(1);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	return 1;
 }
 
@@ -58,12 +63,12 @@ void Window::start_2d_projection(float width, float height, float x, float y) {
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
-    glOrtho(0, width, 0, height, -10.0, 10.0);
+    glOrtho(0.0f, width, 0.0f, height, -10.0, 10.0);
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glLoadIdentity();
     glDisable(GL_DEPTH_TEST);
-    glRasterPos2f(0.0f, 0.0f);
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 void Window::stop_2d_projection() {

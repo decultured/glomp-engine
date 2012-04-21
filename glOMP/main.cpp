@@ -29,6 +29,7 @@ extern "C" {
 #include "audio/SoundBinding.h"
 
 #include "graphics/ImageBinding.h"
+#include "graphics/Object2dBinding.h"
 
 
 bool force_quit = false;
@@ -72,6 +73,7 @@ int main(int argc, char *argv[]) {
 	glomp::audio::luaopen_audio(L);
 	glomp::audio::luaopen_sound(L);
 	glomp::graphics::luaopen_image(L);
+	glomp::graphics::luaopen_obj2d(L);
 
 	lua_pushcfunction(L, quit);
 	lua_setglobal(L, "quit");
