@@ -21,6 +21,11 @@ Object2d::Object2d() {
 	tw = 1.0;
 	th = 1.0;
 
+	r = 1.0;
+	g = 1.0;
+	b = 1.0;
+	a = 1.0;
+
 	is_polar = false;
 	rotation = 0.0f;
 
@@ -58,6 +63,7 @@ void Object2d::apply_transform() {
 }
 
 void Object2d::draw() {
+	glColor4f(r, g, b, a);
 	glBindTexture( GL_TEXTURE_2D, texture_id);
 	float h_w = width * 0.5f;
 	float h_h = height * 0.5f;
@@ -80,32 +86,6 @@ void Object2d::draw() {
 void Object2d::remove_transform(){
 	glPopMatrix();
 }
-
-//void Object2d::circle() {
-//	glPushMatrix();
-//	glTranslatef(x, y, 0.0f);
-//	glRotatef(rotation, 0.0f, 0.0f, 1.0f);
-//
-//
-//	float h_w = width * 0.5f;
-//	float h_h = height * 0.5f;
-//
-//	int num = 10;
-//
-//	glBegin( GL_TRIANGLE_FAN );
-//		glVertex2d(0.0, 0.0);
-//
-//		float angle = 0.0f
-//		for (int i = 0; i < num; i++) {
-//
-//			glVertex2d(0.0, 0.0);
-//
-////			angle +=
-//		}
-//	glEnd();
-//
-//	glPopMatrix();
-//}
 
 } /* namespace graphics */
 } /* namespace glomp */

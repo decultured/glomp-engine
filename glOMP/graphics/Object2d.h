@@ -26,6 +26,7 @@ public:
 	float rotation;
 	float width, height;
 	float tx, ty, tw, th;
+	float r, g, b, a;
 	float center_x, center_y;
 
 	Object2d();

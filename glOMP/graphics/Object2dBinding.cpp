@@ -148,6 +148,24 @@ int glomp_obj2d_texture_coords(lua_State *L) {
 	return 4;
 }
 
+int glomp_obj2d_color(lua_State *L) {
+	Object2d *obj = glomp_checkobject2d(L, 1);
+
+	if (lua_isnumber(L, 2) && lua_isnumber(L, 3) && lua_isnumber(L, 4) && lua_isnumber(L, 5)) {
+		obj->r = luaL_checknumber(L, 2);
+		obj->g = luaL_checknumber(L, 3);
+		obj->b = luaL_checknumber(L, 4);
+		obj->a = luaL_checknumber(L, 5);
+	}
+
+	lua_pushnumber(L, obj->r);
+	lua_pushnumber(L, obj->g);
+	lua_pushnumber(L, obj->b);
+	lua_pushnumber(L, obj->a);
+
+	return 4;
+}
+
 int glomp_obj2d_position(lua_State *L) {
 	Object2d *obj = glomp_checkobject2d(L, 1);
 
@@ -202,6 +220,7 @@ static const struct luaL_Reg glomp_obj2d_funcs [] = {
 	{"update", glomp_obj2d_update},
 	{"render", glomp_obj2d_render},
 	{"draw", glomp_obj2d_draw},
+	{"color", glomp_obj2d_color},
 	{"center", glomp_obj2d_center},
 	{"texture_coords", glomp_obj2d_texture_coords},
 	{"apply_transform", glomp_obj2d_apply_transform},
