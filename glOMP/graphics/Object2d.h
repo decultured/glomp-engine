@@ -33,6 +33,7 @@ public:
 	virtual ~Object2d();
 
 	void set_texture_id(GLuint t_id) {texture_id = t_id;}
+	GLuint get_texture_id() {return texture_id;}
 
 	void translate(float x, float y) {
 		this->x += x;

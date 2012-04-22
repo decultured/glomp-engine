@@ -1,6 +1,7 @@
 game_object_settings =  {
-	x = 150,
-	y = 250,
+	name = "game object",
+	x = 0,
+	y = 600,
 	width = 64,
 	height = 64,
 	rotation = 0,
@@ -10,41 +11,78 @@ game_object_settings =  {
 	ty = 0,
 	tw = 0,
 	tz = 0,
-	texture_id = 0
+	r = 1,
+	g = 1,
+	b = 1,
+	a = 1,
+	texture_id = 0,
+	polar = true,	
+	new = function(self, base)
+		local new_obj = base or {}
+		setmetatable(new_obj, self)
+		self.__index = self
+		return new_obj
+	end
 }
 
 game_object = {		
-	children = {},
-	translate = function(x, y)
+	name = "game object",
+	drawable = true,
+
+	_update_callbacks = {},
+	_children = {},
+
+	settings = game_object_settings:new(),
+	translate = function(self, x, y)
 		return self.sprite:translate(x,y)
 	end,
-	new = function (self, settings, base)
-		settings = settings or {}
-		setmetatable(settings, game_object_settings)
+	position = function(self, x, y)
+		return self.sprite:position(x,y)
+	end,
 
-		new_obj = base or {}
+	new = function (self, settings, base)
+		base = base or {}
+		local new_obj = base
 		setmetatable(new_obj, self)
 		self.__index = self
 
-		new_obj.sprite = object2d.new()
+		new_obj.settings = self.settings:new(settings)
+		local settings = new_obj.settings
 
-		print (settings.x, settings.texture_id)
-	
-		new_obj.sprite:position(settings.x, settings.y)
+		new_obj._update_callbacks = {}
+		new_obj.name = settings.name
+		new_obj.sprite = object2d.new()
 		new_obj.sprite:rotation(settings.rotation)
 		new_obj.sprite:center(settings.center_x, settings.center_y)
 		new_obj.sprite:set_texture_id(settings.texture_id)
+		new_obj.sprite:color(r, g, b, a)
 		new_obj.sprite:texture_coords(settings.tx, settings.ty, settings.tw, settings.th)
 		new_obj.sprite:make_polar(settings.polar)
 		new_obj.sprite:size(settings.width, settings.height)
+		new_obj.sprite:position(settings.x, settings.y)
 	
 		return new_obj
 	end,
 
+	on_update = function(self, callback)
+		self._update_callbacks[#self._update_callbacks + 1] = callback
+	end,
+
 	update = function (self, seconds)
 		self.sprite:update(seconds)
+		self.sprite:render()		
+		for k, v in pairs(self._update_callbacks) do
+			v(self, seconds)
+		end
+		
+		for k, v in pairs(self.__index._update_callbacks) do
+			v(self, seconds)
+		end
+		
 		self.sprite:apply_transform()
-			self.sprite:draw()
+			if self.drawable then
+				self.sprite:draw()
+			end
 		self.sprite:remove_transform()
 	end
 }

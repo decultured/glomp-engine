@@ -35,6 +35,14 @@ int glomp_obj2d_set_texture_id(lua_State *L) {
 	unsigned int texture_id = luaL_checknumber(L, 2);
 	obj->set_texture_id(texture_id);
 
+	return 0;
+}
+
+int glomp_obj2d_get_texture_id(lua_State *L) {
+	Object2d *obj = glomp_checkobject2d(L, 1);
+
+	lua_pushnumber(L, obj->get_texture_id());
+
 	return 1;
 }
 
@@ -74,7 +82,7 @@ int glomp_obj2d_make_polar(lua_State *L) {
 	if (lua_isboolean(L, 2))
 		obj->is_polar = lua_toboolean(L, 2);
 	else
-		std::cerr << "Parameter must be boolean";
+		std::cerr << "Parameter must be boolean\n";
 	return 0;
 }
 
@@ -216,6 +224,7 @@ static const struct luaL_Reg glomp_obj2d_main [] = {
 
 static const struct luaL_Reg glomp_obj2d_funcs [] = {
 	{"set_texture_id", glomp_obj2d_set_texture_id},
+	{"get_texture_id", glomp_obj2d_get_texture_id},
 	{"make_polar", glomp_obj2d_make_polar},
 	{"update", glomp_obj2d_update},
 	{"render", glomp_obj2d_render},
