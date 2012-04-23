@@ -28,6 +28,7 @@ public:
 	float tx, ty, tw, th;
 	float r, g, b, a;
 	float center_x, center_y;
+	float scale_x, scale_y;
 
 	Object2d();
 	virtual ~Object2d();

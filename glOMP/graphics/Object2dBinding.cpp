@@ -116,12 +116,12 @@ int glomp_obj2d_scale(lua_State *L) {
 	Object2d *obj = glomp_checkobject2d(L, 1);
 
 	if (lua_isnumber(L, 2) && lua_isnumber(L, 3)) {
-		obj->width *= luaL_checknumber(L, 2);
-		obj->height *= luaL_checknumber(L, 3);
+		obj->scale_x = luaL_checknumber(L, 2);
+		obj->scale_y = luaL_checknumber(L, 3);
 	}
 
-	lua_pushnumber(L, obj->width);
-	lua_pushnumber(L, obj->height);
+	lua_pushnumber(L, obj->scale_x);
+	lua_pushnumber(L, obj->scale_y);
 
 	return 2;
 }

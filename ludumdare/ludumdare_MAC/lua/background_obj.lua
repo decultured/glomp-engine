@@ -1,6 +1,3 @@
-meteor_image = image.new()
-meteor_image:load("meteors.tga")
-
 background_object = game_object:new({
 	texture_id = meteor_image:get_id(),
 	tx = 0.0,
@@ -14,9 +11,6 @@ background_object = game_object:new({
 background_object:on_update(function (self, seconds)
 	self.sprite:rotate(seconds*90)
 end)
-
-stars_image = image.new()
-stars_image:load("stars.tga")
 
 star_object = game_object:new({
 	texture_id = stars_image:get_id(),

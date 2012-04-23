@@ -1,6 +1,3 @@
-player_bullet_image = image.new()
-player_bullet_image:load("bullet.tga")
-
 background_object = game_object:new({
 	texture_id = meteor_image:get_id(),
 	x = 0,

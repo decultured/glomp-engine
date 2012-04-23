@@ -90,13 +90,13 @@ int main(int argc, char *argv[]) {
 	if (argc > 1) {
 		if (luaL_loadfile(L, argv[1]) || lua_pcall(L, 0, 0, 0))
 			std::cerr << "Error:\n" << lua_tostring(L, -1) << "\nNum arguments: " << argc << "\n";
-	} else if (file_exists("main.lua")) {
-		if (luaL_loadfile(L, "main.lua") || lua_pcall(L, 0, 0, 0)) {
+	} else if (file_exists("lua/main.lua")) {
+		if (luaL_loadfile(L, "lua/main.lua") || lua_pcall(L, 0, 0, 0)) {
 			std::cerr << "cannot run config. file:" << lua_tostring(L, -1) << "\nNum arguments: " << argc << "\n";
 		}
 	} else {
 		std::cout << "No lua file found, running interactive command line tester.\nEnter \"quit()\" to quit.\n\n";
-		lua_command_line(L);
+		//lua_command_line(L);
 	}
 
 	lua_close(L);

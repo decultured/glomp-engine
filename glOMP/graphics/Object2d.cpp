@@ -34,13 +34,24 @@ Object2d::Object2d() {
 
 	center_x = 0.0f;
 	center_y = 0.0f;
+
+	scale_x = 1.0f;
+	scale_y = 1.0f;
 }
 
 Object2d::~Object2d() {}
 
 void Object2d::update(float seconds) {
+	if (is_polar && x > 360.0f)
+		x = fmod (x, 360.0f);
+	else if (is_polar && x < 0.0f)
+		x = 360.0f + fmod (x, 360.0f);
+
+
 	if (rotation > 360.0f)
 		rotation = fmod(rotation, 360.0f);
+	else if (rotation < 0.0f)
+		rotation = 360.0f + fmod(rotation, 360.0f);
 }
 
 void Object2d::render() {
@@ -60,6 +71,7 @@ void Object2d::apply_transform() {
 	}
 	glTranslatef(-center_x, -center_y, 0.0f);
 	glRotatef(rotation, 0.0f, 0.0f, 1.0f);
+	glScalef(scale_x, scale_y, 1.0f);
 }
 
 void Object2d::draw() {

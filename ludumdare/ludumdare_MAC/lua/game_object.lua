@@ -46,7 +46,7 @@ game_object = {
 		setmetatable(new_obj, self)
 		self.__index = self
 
-		new_obj.settings = self.settings:new(settings)
+		new_obj.settings = self.settings:new(settings) or {}
 		local settings = new_obj.settings
 
 		new_obj._update_callbacks = {}
@@ -55,7 +55,7 @@ game_object = {
 		new_obj.sprite:rotation(settings.rotation)
 		new_obj.sprite:center(settings.center_x, settings.center_y)
 		new_obj.sprite:set_texture_id(settings.texture_id)
-		new_obj.sprite:color(r, g, b, a)
+		new_obj.sprite:color(settings.r, settings.g, settings.b, settings.a)
 		new_obj.sprite:texture_coords(settings.tx, settings.ty, settings.tw, settings.th)
 		new_obj.sprite:make_polar(settings.polar)
 		new_obj.sprite:size(settings.width, settings.height)
@@ -69,20 +69,23 @@ game_object = {
 	end,
 
 	update = function (self, seconds)
-		self.sprite:update(seconds)
-		self.sprite:render()		
-		for k, v in pairs(self._update_callbacks) do
+		local spr = self.sprite
+		spr:update(seconds)
+
+		local callbacks = self._update_callbacks
+		for k, v in ipairs(callbacks) do
 			v(self, seconds)
 		end
 		
-		for k, v in pairs(self.__index._update_callbacks) do
+		callbacks = self.__index._update_callbacks
+		for k, v in ipairs(callbacks) do
 			v(self, seconds)
 		end
 		
-		self.sprite:apply_transform()
+		spr:apply_transform()
 			if self.drawable then
-				self.sprite:draw()
+				spr:draw()
 			end
-		self.sprite:remove_transform()
+		spr:remove_transform()
 	end
 }

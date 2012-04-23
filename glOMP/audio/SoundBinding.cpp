@@ -35,6 +35,18 @@ int glomp_sound_play(lua_State *L) {
 	return 0;
 }
 
+int glomp_sound_play_loop(lua_State *L) {
+	Sound *sound = glomp_checksound(L, 1);
+	sound->play_loop();
+	return 0;
+}
+
+int glomp_sound_stop(lua_State *L) {
+	Sound *sound = glomp_checksound(L, 1);
+	sound->stop();
+	return 0;
+}
+
 int glomp_sound_load_wav(lua_State *L) {
 	Sound *sound = glomp_checksound(L, 1);
 
@@ -52,6 +64,8 @@ static const struct luaL_Reg glomp_sound_main [] = {
 
 static const struct luaL_Reg glomp_sound_funcs [] = {
 	{"play", glomp_sound_play},
+	{"stop", glomp_sound_stop},
+	{"play_loop", glomp_sound_play_loop},
 	{"load_wav", glomp_sound_load_wav},
 	{"__gc", glomp_sound_gc},
 	{NULL, NULL}

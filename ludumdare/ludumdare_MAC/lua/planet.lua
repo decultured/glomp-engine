@@ -1,6 +1,3 @@
-planet_tex = image.new()
-planet_tex:load("world2.tga")
-
 planet = {
 	obj = object2d.new(),
 	radius = 448

@@ -14,19 +14,6 @@
 #include <GL/glfw.h>
 #include "InputTriggers.h"
 
-#define KEY_UP			1
-#define KEY_DOWN 		2
-#define KEY_IS_DOWN 	3
-#define KEY_IS_UP		4
-#define MOUSE_UP		10
-#define MOUSE_DOWN		11
-#define MOUSE_IS_UP		12
-#define MOUSE_IS_DOWN	13
-#define JOYSTICK_UP		20
-#define JOYSTICK_DOWN	21
-#define JOYSTICK_IS_UP	22
-#define JOYSTICK_IS_DOWN 23
-
 namespace glomp {
 namespace input {
 

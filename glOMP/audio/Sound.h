@@ -30,11 +30,14 @@ private:
     //The audio format (bits per sample, number of channels)
     ALenum format;
 
+    bool playing;
 public:
 	Sound();
 	virtual ~Sound();
 	bool load_wav(const char *filename);
 	void play();
+	void stop();
+	void play_loop();
 };
 
 } /* namespace audio */

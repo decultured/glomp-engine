@@ -21,6 +21,8 @@ Sound::Sound() {
 	position[2] = 0.0;
 
 	format = 0;
+
+	playing = false;
 }
 
 Sound::~Sound() {
@@ -34,7 +36,7 @@ Sound::~Sound() {
 bool Sound::load_wav(const char *filename) {
     //Loading of the WAVE file
     FILE *fp = 0;
-    fp = fopen("Sound.wav", "rb");
+    fp = fopen(filename, "rb");
     if (!fp) {
     	std::cerr << "Failed to open file";
     	return false;
@@ -99,7 +101,7 @@ bool Sound::load_wav(const char *filename) {
 
     unsigned char* file_buffer= new unsigned char[dataSize];
     fread(file_buffer, sizeof(unsigned char), dataSize, fp);
-//    std::cout <<  << " bytes loaded\n";
+//    std::cout << fread(file_buffer, sizeof(unsigned char), dataSize, fp) << " bytes loaded\n";
 
     fclose(fp);
 
@@ -112,8 +114,33 @@ bool Sound::load_wav(const char *filename) {
 	alGenSources(1, &source);
 
 	//Error during buffer/source generations
-	if(alGetError() != AL_NO_ERROR) {
-		std::cerr << "Error GenSource";
+	int alerr = alGetError();
+	if(alerr != AL_NO_ERROR) {
+		std::cerr << "Error GenSource : " << alerr << " : ";
+		switch (alerr) {
+			case ALC_NO_ERROR:
+				std::cout << "AL_NO_ERROR";
+				break;
+			case ALC_INVALID_DEVICE:
+				std::cout << "ALC_INVALID_DEVICE";
+				break;
+			case ALC_INVALID_CONTEXT:
+				std::cout << "ALC_INVALID_CONTEXT";
+				break;
+			case ALC_INVALID_ENUM:
+				std::cout << "ALC_INVALID_ENUM";
+				break;
+			case ALC_INVALID_VALUE:
+				std::cout << "ALC_INVALID_VALUE";
+				break;
+			case ALC_OUT_OF_MEMORY:
+				std::cout << "ALC_OUT_OF_MEMORY";
+				break;
+			default:
+				std::cout << "no such error code";
+				break;
+		}
+		std::cout << "\n";
 		return false;
 	}
 
@@ -162,9 +189,31 @@ bool Sound::load_wav(const char *filename) {
 
 void Sound::play() {
     //PLAY
+	playing = false;
+	alSourcei(source, AL_LOOPING,  AL_FALSE  );
     alSourcePlay(source);
     if(alGetError() != AL_NO_ERROR) {
     	std::cerr << "Error playing sound";
+    }
+}
+
+void Sound::play_loop() {
+    //PLAY
+	if (!playing) {
+		alSourcei(source, AL_LOOPING,  AL_TRUE  );
+		alSourcePlay(source);
+		if(alGetError() != AL_NO_ERROR) {
+			std::cerr << "Error playing sound\n";
+		}
+	}
+	playing = true;
+}
+
+void Sound::stop() {
+	playing = false;
+	alSourceStop(source);
+    if(alGetError() != AL_NO_ERROR) {
+    	std::cerr << "Error stopping sound\n";
     }
 }
 

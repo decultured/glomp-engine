@@ -1,19 +1,7 @@
-performance_timer = timer.new()
-
-game_window = window.new()
-game_window:init(game_options.screen_width, 
-				game_options.screen_height,
-				true)
-game_frame_time = 0
-game_time = 0
-game_timer = timer.new()
-game_input = input.new()
-game_audio = audio.new()
-
 active = true
 
 function bind_actions(actions)
-	for idx, row in ipairs(actions) do	
+	for idx, row in ipairs(actions) do
 		game_input:bind(row[1], row[2], row[3])
 	end
 end
@@ -23,13 +11,11 @@ game_input:on("quit", function ()
 	active = false
 end)
 
-game_input:on("fire", function ()
-	zap:play()
-	player:update(1.0)
-end)
+game_options.draw_width = game_options.draw_width or game_options.screen_width
+game_options.draw_height = game_options.draw_height or game_options.screen_height
 
-game_window:start_2d(game_options.screen_width, 
-		game_options.screen_height,
+game_window:start_2d(game_options.draw_width, 
+		game_options.draw_height,
 		0, 0)
 
 local elapsed_time = 1.0
