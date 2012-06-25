@@ -4,4 +4,5 @@
 */Debug/
 .cproject
 .project
+*.sh
 RemoteSystemsTempFiles/
