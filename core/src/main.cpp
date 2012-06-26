@@ -2,7 +2,9 @@
 #include "ofAppGlutWindow.h"
 
 #include <iostream>
-#include <dirent.h>
+#include <string>
+
+#include "platform.h"
 
 extern "C" {
     #include "lua.h"
@@ -19,24 +21,21 @@ void report_errors(lua_State *L, int status)
 }
 
 int main(int argc, char** argv){
+    platform_init();
+    
     lua_State *L = lua_open();
     
     luaL_openlibs(L);
     
-    const char* file = "./main.lua";
+    const char* file = "data";
+    std::string data_folder;
+    std::string filename;
     
-    DIR *Dir;
-    struct dirent *DirEntry;
-    Dir = opendir("./data");
+    platform_builtin_file_path(data_folder, file);
+
+    filename = data_folder + "/main.lua";
     
-    while((DirEntry=readdir(Dir)))
-    {
-        cout << DirEntry->d_name << "\n";
-    }
-    
-    std::cerr << "-- Loading file: " << file << std::endl;
-    
-    int s = luaL_loadfile(L, file);
+    int s = luaL_loadfile(L, filename.c_str());
     
     if ( s==0 ) {
         // execute Lua program
