@@ -19,10 +19,9 @@ char file_name_buffer[1024];
 
 bool platform_init() {
     mainBundle = CFBundleGetMainBundle();
-    
-    if(!mainBundle) {
+
+    if(!mainBundle)
         return false;
-    }
     
     return true;
 }
@@ -35,13 +34,11 @@ bool platform_builtin_file_path(std::string &output, const char *name_of_file_in
     resourceURL = CFBundleCopyResourceURL(mainBundle, cf_file_name, NULL, NULL);
     
     if(!resourceURL) {
-//        throw new message_list("Failed to locate a file in the loaded bundle!");
         std::cerr << "Failed to locate a file in the loaded bundle!\n";
         return false;
     }
     
     if(!CFURLGetFileSystemRepresentation(resourceURL, true, (UInt8*)file_name_buffer, 200)) {
-//        throw new message_list("Failed to turn a bundle resource URL into a filesystem path representation!");
         std::cerr << "Failed to turn a bundle resource URL into a filesystem path representation!\n";
         return false;
     }
@@ -53,12 +50,10 @@ bool platform_builtin_file_path(std::string &output, const char *name_of_file_in
 
 void platform_print_directory_contents(const char *dir) {
     DIR *Dir;
-
     struct dirent *DirEntry;
     Dir = opendir(dir);
     
-    while((DirEntry=readdir(Dir)))
-    {
+    while((DirEntry=readdir(Dir))) {
         std::cout << DirEntry->d_name << "\n";
     }
 }
