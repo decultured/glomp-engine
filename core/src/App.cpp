@@ -2,9 +2,12 @@
 #include "platform.h"
 
 void App::setup(){
+    logger.capture_iostream();
     platform_init();
     lua_wrap.init();
     
+    log_file.open("/Users/decultured/development/game_dev/of_0071_osx_release/apps/myApps/glOMP/bin/output.txt");
+
     platform_builtin_file_path(internal_data_folder, "data");
     external_data_folder = "/Users/decultured/development/game_dev/of_0071_osx_release/apps/myApps/glOMP/bin/";
     
@@ -14,12 +17,14 @@ void App::setup(){
 
 void App::exit() {
     lua_wrap.shutdown();
-    logger.log("Shutting down");
-//    logger.print_to_file(external_data_folder + "logs.txt");
+    logger.release_iostream();
+    log_file.flush();
+    log_file.close();
 }
 
 void App::update(){
-
+    log_file << logger.get_buffer();
+    logger.clear();
 }
 
 void App::draw(){

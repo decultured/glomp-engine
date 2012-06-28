@@ -17,7 +17,7 @@ static int l_print(lua_State* L) {
     
     for (int i=1; i <= nargs; i++) {
         if (lua_isstring(L, i)) {
-            std::cout << lua_tostring(L, i);
+            std::cout << lua_tostring(L, i) << std::endl;
         }
         else {
             /* Do something with non-strings? */

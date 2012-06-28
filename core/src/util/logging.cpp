@@ -16,29 +16,36 @@ namespace glomp {
 namespace util {
 
 
-Logger::Logger() {}
+Logger::Logger() {
+    
+}
 
 Logger::~Logger() {
-    print_to_file("output.txt");
+    release_iostream();
+}
+
+void Logger::capture_iostream() {
+    old_cout = std::cout.rdbuf(buffer.rdbuf());
+    old_cerr = std::cerr.rdbuf(buffer.rdbuf());
+    
+    std::cout << "IOStream Redirected" << std::endl;
+}
+
+void Logger::release_iostream() {
+    std::cout.rdbuf(old_cout);
+    std::cerr.rdbuf(old_cerr);
 }
 
 void Logger::log(const char *message) {
-    this->messages.push_back(message);
-    std::cout << message << std::endl;
+    buffer << message;
 }
 
-void Logger::print_to_file(const char *filename) {
-    std::ofstream out_file;
-    out_file.open(filename);
-    
-    while (!messages.empty())
-    {
-        out_file << messages.front() << std::endl;
-        std::cout << messages.front() << std::endl;
-        messages.pop_front();
-    }
-    
-    out_file.close();
+std::string Logger::get_buffer() {
+    return buffer.str();
+}
+
+void Logger::clear() {
+    buffer.str("");
 }
 
 }

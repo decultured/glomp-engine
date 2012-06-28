@@ -10,20 +10,30 @@
 #define glOMP_logging_h
 
 #include <string>
-#include <deque>
+#include <sstream>
 
 namespace glomp {
 namespace util {
 
 class Logger {
+private:
+    std::streambuf *old_cout;
+    std::streambuf *old_cerr;
+    std::stringbuf *old_clog;
+
 public:
-    std::deque<std::string> messages;
+    std::stringstream buffer;
     
     Logger();
     ~Logger();
-    void log(const char *message);
-    void print_to_file(const char *filename);
+    
+    void capture_iostream();
+    void release_iostream();
 
+    void log(const char *message);
+    
+    std::string get_buffer();
+    void clear();
 };    
 
 }
