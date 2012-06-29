@@ -52,31 +52,31 @@ void App::draw(){
 }
 
 void App::keyPressed(int key){
-    std::cout << "Pressed: " << key << std::endl;
+    lua_wrap.keyPressed(key);
 }
 
 void App::keyReleased(int key){
-    std::cout << "Released: " << key << std::endl;
+    lua_wrap.keyReleased(key);
 }
 
 void App::mouseMoved(int x, int y){
-    std::cout << "Mouse Moved, X:" << x << " Y:" << y << std::endl;
+    lua_wrap.mouseMoved(x, y);
 }
 
 void App::mouseDragged(int x, int y, int button){
-    std::cout << "Mouse Dragged, X:" << x << " Y:" << y << " Button:" << button << std::endl;
+    lua_wrap.mouseDragged(x, y, button);
 }
 
 void App::mousePressed(int x, int y, int button){
-    std::cout << "Mouse Pressed, X:" << x << " Y:" << y << " Button:" << button << std::endl;
+    lua_wrap.mousePressed(x, y, button);
 }
 
 void App::mouseReleased(int x, int y, int button){
-    std::cout << "Mouse Released, X:" << x << " Y:" << y << " Button:" << button << std::endl;
+    lua_wrap.mouseReleased(x, y, button);
 }
 
 void App::windowResized(int w, int h){
-    std::cout << "Window Resized, W:" << w << " H:" << h << std::endl;
+    lua_wrap.windowResized(w, h);
 }
 
 void App::gotMessage(ofMessage msg){

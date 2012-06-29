@@ -32,6 +32,14 @@ public:
     void print(const char *message);
     void report_errors(lua_State *L, int status);
     void load_file(const char *filename);
+
+    void keyPressed(int key);
+    void keyReleased(int key);
+    void mouseMoved(int x, int y);
+    void mouseDragged(int x, int y, int button);
+    void mousePressed(int x, int y, int button);
+    void mouseReleased(int x, int y, int button);
+    void windowResized(int w, int h);
 };
     
 }
