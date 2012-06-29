@@ -53,6 +53,10 @@ void LuaWrapper::report_errors(lua_State *L, int status)
         lua_pop(L, 1);
     }
 }
+
+void LuaWrapper::print(const char *message) {
+    if (L) lua_print(L, message);
+}
     
 }
 }

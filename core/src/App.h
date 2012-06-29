@@ -7,6 +7,9 @@
 #include "lua/lua_wrapper.h"
 #include "util/logging.h"
 
+#include "graphic.h"
+#include "text.h"
+
 class App : public ofBaseApp{
 private:
     glomp::lua::LuaWrapper lua_wrap;
@@ -16,6 +19,12 @@ private:
     std::string external_data_folder;
     
     std::ofstream log_file;
+    
+    ofTrueTypeFont	console_font;
+    std::string console_output;
+    
+    Graphic root_graphic;
+    Text log_line;
     
 public:
     void setup();
