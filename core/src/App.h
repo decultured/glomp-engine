@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <fstream>
 
 #include "ofMain.h"
 #include "lua/lua_wrapper.h"
@@ -17,8 +16,6 @@ private:
     
     std::string internal_data_folder;
     std::string external_data_folder;
-    
-    std::ofstream log_file;
     
     ofTrueTypeFont	console_font;
     std::string console_output;

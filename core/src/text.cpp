@@ -28,4 +28,11 @@ void Text::set_font(ofTrueTypeFont *new_font) {
 
 void Text::set_text(const char *text) {
     this->text = text;
+    ofRectangle rect = font->getStringBoundingBox(text, 0, 0);
+    size(rect.width, rect.height);
 }
+
+void Text::add_text(const char *text) {
+    set_text((this->text + text).c_str());
+}
+

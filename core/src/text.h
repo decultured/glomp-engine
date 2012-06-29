@@ -22,6 +22,7 @@ public:
 
     void set_font(ofTrueTypeFont *new_font);
     void set_text(const char *text);
+    void add_text(const char *text);
     
 private:
     std::string text;
