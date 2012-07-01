@@ -13,6 +13,9 @@
 #include "graphic.h"
 #include <string>
 
+namespace glomp {
+namespace graphics {
+
 class Text : public Graphic {
 public:
     Text();
@@ -29,5 +32,7 @@ private:
     ofTrueTypeFont *font;
 };
 
+}
+}
 
 #endif

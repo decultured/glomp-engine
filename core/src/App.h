@@ -20,8 +20,8 @@ private:
     ofTrueTypeFont	console_font;
     std::string console_output;
     
-    Graphic root_graphic;
-    Text log_line;
+    glomp::graphics::Graphic root_graphic;
+    glomp::graphics::Text log_line;
     
 public:
     void setup();

@@ -19,6 +19,7 @@ void App::setup(){
     log_line.position(10, 758);
     root_graphic.add_child(&log_line);
 
+    lua_wrap.set_lua_path(ofToDataPath("", true).c_str());
     lua_wrap.load_file(ofToDataPath("main.lua").c_str());
 }
 

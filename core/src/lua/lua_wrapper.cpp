@@ -7,8 +7,10 @@
 //
 
 #include <iostream>
+#include <string>
 #include "lua_wrapper.h"
 #include "lua_print.h"
+#include "lua_graphic.h"
 
 namespace glomp {
 namespace lua {
@@ -27,6 +29,7 @@ void LuaWrapper::init() {
     L = lua_open();
     luaL_openlibs(L);
     luaopen_luaprintlib(L);
+    glomp::graphics::luaopen_graphic(L);
 }
 
 void LuaWrapper::shutdown() {
@@ -37,6 +40,28 @@ void LuaWrapper::shutdown() {
     L = NULL;
 }
     
+void LuaWrapper::set_require_path(const char *path) {
+    lua_pushstring(L, path);
+    lua_setglobal(L, "LUA_PATH");
+}
+
+
+int LuaWrapper::set_lua_path(const char* path)  
+{
+    std::string new_path;
+    lua_getglobal(L, "package");
+    lua_getfield(L, -1, "path"); // get field "path" from table at top of stack (-1)
+    new_path = lua_tostring( L, -1 ); // grab path string from top of stack
+    new_path = new_path + ";"; // do your path magic here
+    new_path = new_path + path;
+    new_path = new_path + "?.lua";
+    lua_pop( L, 1 ); // get rid of the string on the stack we just pushed on line 5
+    lua_pushstring( L, new_path.c_str()); // push the new one
+    lua_setfield( L, -2, "path" ); // set the field "path" in table at -2 with value at top of stack
+    lua_pop( L, 1 ); // get rid of package table from top of stack
+    return 0; // all done!
+}
+
 void LuaWrapper::load_file(const char *filename) {
     int s = luaL_loadfile(L, filename);
     if ( s==0 ) {

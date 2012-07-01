@@ -12,6 +12,9 @@
 #include "resource.h"
 #include <list>
 
+namespace glomp {
+namespace graphics {
+
 class Graphic : public Resource {
 public:
     Graphic();
@@ -33,11 +36,14 @@ private:
     virtual void Draw();
     virtual void PostDraw();
 
+    Graphic *parent;
     std::list<Graphic *> children;
     std::list<Graphic *>::iterator draw_iter;
 
-    float x, y, rot, width, height;
+    float x, y, rot, width, height, x_scale, y_scale;
 };
 
+}
+}
 
 #endif

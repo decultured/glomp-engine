@@ -1,3 +1,7 @@
+require("test_bed")
+
+print(package.path)
+
 print("Loading Glomp Lua Libraries")
 
 function _glomp_key_pressed(key)
@@ -8,9 +12,6 @@ function _glomp_key_released(key)
     print ("Key released from lua:", key)
 end
 
-function _glomp_mouse_moved(x, y)
-    print ("Mouse moved from lua:", x, y)
-end
 
 function _glomp_mouse_dragged(x, y, button)
     print ("Mouse dragged from lua:", x, y, button)
