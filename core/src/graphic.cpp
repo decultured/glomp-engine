@@ -13,12 +13,12 @@ namespace glomp {
 namespace graphics {
 
 Graphic::Graphic() {
-    parent = NULL;
-    x = 0;
-    y = 0;
-    rot = 0;
-    x_scale = 1.0f;
-    y_scale = 1.0f;
+    _parent = NULL;
+    _x = 0;
+    _y = 0;
+    _rot = 0;
+    _x_scale = 1.0f;
+    _y_scale = 1.0f;
 }
 
 Graphic::~Graphic() {
@@ -26,7 +26,7 @@ Graphic::~Graphic() {
 }
 
 Graphic *Graphic::add_child(Graphic *new_child) {
-    children.push_back(new_child);
+    _children.push_back(new_child);
 }
 
 void Graphic::Render() {
@@ -37,9 +37,9 @@ void Graphic::Render() {
 
 void Graphic::PreDraw() {
     ofPushMatrix();
-    ofTranslate(x, y);
-    ofRotate(rot);
-    ofScale(x_scale, y_scale);
+    ofTranslate(_x, _y);
+    ofRotate(_rot);
+    ofScale(_x_scale, _y_scale);
 }
 
 void Graphic::Draw() {
@@ -47,19 +47,10 @@ void Graphic::Draw() {
 }
 
 void Graphic::PostDraw() {
-    for (draw_iter = children.begin(); draw_iter != children.end(); ++draw_iter) {
-        (*draw_iter)->Render();
+    for (_draw_iter = _children.begin(); _draw_iter != _children.end(); ++_draw_iter) {
+        (*_draw_iter)->Render();
     }
     ofPopMatrix();
-}
-
-void Graphic::position(float x, float y) {
-    this->x = x;
-    this->y = y;
-}
-
-void Graphic::rotation(float rot) {
-    this->rot = rot;
 }
 
 }

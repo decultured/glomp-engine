@@ -28,8 +28,12 @@ public:
     void add_text(const char *text);
     
 private:
-    std::string text;
-    ofTrueTypeFont *font;
+    std::string _text;
+    ofTrueTypeFont *_font;
+    int _color;
+    
+    bool _word_wrap;
+    bool _multi_line;
 };
 
 }

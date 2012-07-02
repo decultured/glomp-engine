@@ -14,7 +14,10 @@ namespace graphics {
 
 
 Text::Text() {
-    font = NULL;
+    _font = NULL;
+    _color = 0x67E09D;
+    _word_wrap = false;
+    _multi_line = true;
 }
 
 Text::~Text() {
@@ -22,22 +25,25 @@ Text::~Text() {
 }
 
 void Text::Draw() {
-    if (font && text.length())
-        font->drawString(text, 0, 0);
+    if (!_font || !_text.length())
+        return;
+    
+    ofSetHexColor(_color);
+    _font->drawString(_text, 0, 0);
 }
 
 void Text::set_font(ofTrueTypeFont *new_font) {
-    font = new_font;
+    _font = new_font;
 }
 
 void Text::set_text(const char *text) {
-    this->text = text;
-    ofRectangle rect = font->getStringBoundingBox(text, 0, 0);
+    _text = text;
+    ofRectangle rect = _font->getStringBoundingBox(_text, 0, 0);
     size(rect.width, rect.height);
 }
 
 void Text::add_text(const char *text) {
-    set_text((this->text + text).c_str());
+    set_text((_text + text).c_str());
 }
 
 }

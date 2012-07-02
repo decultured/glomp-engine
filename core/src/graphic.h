@@ -23,24 +23,28 @@ public:
     void Render();
     Graphic *add_child(Graphic *new_child);
     
-    void position(float x, float y);
-    void rotation(float rot);
-    
-    void size(float w, float h) { width = w; height = h; }
-    
-    float get_height() {return height;}
-    float get_width() {return width;}
+    virtual void position(float x, float y) { _x = x; _y = y; }
+    virtual void rotation(float angle) { _rot = angle; }
+    virtual void size(float width, float height) { _width = width; _height = height; }
+    virtual void height(float height) { _height = height; }
+    virtual void width(float width) { _width = width; }
+
+    virtual float rotation() {return _rot;}
+    virtual float x() {return _x;}
+    virtual float y() {return _y;}
+    virtual float height() {return _height;}
+    virtual float width() {return _width;}
     
 private:
     virtual void PreDraw();
     virtual void Draw();
     virtual void PostDraw();
 
-    Graphic *parent;
-    std::list<Graphic *> children;
-    std::list<Graphic *>::iterator draw_iter;
+    Graphic *_parent;
+    std::list<Graphic *> _children;
+    std::list<Graphic *>::iterator _draw_iter;
 
-    float x, y, rot, width, height, x_scale, y_scale;
+    float _x, _y, _rot, _width, _height, _x_scale, _y_scale;
 };
 
 }

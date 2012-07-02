@@ -33,7 +33,7 @@ void App::update(){
     if (logger.get_buffer().length()) {
         log_line.add_text(logger.get_buffer().c_str());
         logger.clear();
-        log_line.position(10, ofGetHeight() - 10 - log_line.get_height());
+        log_line.position(10, ofGetHeight() - 10 - log_line.height());
     }
     
     lua_wrap.__update();
@@ -41,7 +41,7 @@ void App::update(){
 
 void App::draw(){
     ofBackgroundHex(0x042E2A);
-    ofSetHexColor(0x67E09D);
+    
     
     root_graphic.Render();
 }
@@ -71,7 +71,8 @@ void App::mouseReleased(int x, int y, int button){
 }
 
 void App::windowResized(int w, int h){
-    log_line.position(10, ofGetHeight() - 10 - log_line.get_height());
+    log_line.position(10, ofGetHeight() - 10 - log_line.height());
+    root_graphic.size(ofGetWidth(), ofGetHeight());
 }
 
 void App::gotMessage(ofMessage msg){

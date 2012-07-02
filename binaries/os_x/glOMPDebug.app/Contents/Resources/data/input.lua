@@ -10,6 +10,10 @@ function _glomp_key_released(key)
     if key == glomp_keys.U then
     	print("updates: "..glomp_update_count)
     end
+
+    if key == glomp_keys.Q then
+    	__glomp_terminate()
+    end
 end
 
 function _glomp_mouse_moved(x, y)

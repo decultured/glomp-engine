@@ -11,6 +11,7 @@
 #include "lua_wrapper.h"
 #include "lua_print.h"
 #include "lua_graphic.h"
+#include "lua_app.h"
 
 namespace glomp {
 namespace lua {
@@ -30,6 +31,7 @@ void LuaWrapper::init() {
     luaL_openlibs(L);
     luaopen_luaprintlib(L);
     glomp::graphics::luaopen_graphic(L);
+    luaopen_app(L);
 }
 
 void LuaWrapper::shutdown() {
