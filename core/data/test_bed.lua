@@ -1,5 +1,3 @@
-print("Here we are!")
-
-function _glomp_mouse_moved(x, y)
-    print ("Mouse moved from lua:", x, y)
-end
+new_gfk = graphic.new()
+new_gfk = nil
+collectgarbage()

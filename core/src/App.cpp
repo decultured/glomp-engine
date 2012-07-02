@@ -5,6 +5,7 @@ void App::setup(){
     ofBackground(54, 54, 54, 255);
     ofTrueTypeFont::setGlobalDpi(72);
 
+    int test = OF_KEY_BACKSPACE;
     logger.capture_iostream();
     platform_init();
     lua_wrap.init();
@@ -29,14 +30,13 @@ void App::exit() {
 }
 
 void App::update(){
-
     if (logger.get_buffer().length()) {
-        lua_wrap.print(logger.get_buffer().c_str());
         log_line.add_text(logger.get_buffer().c_str());
         logger.clear();
-        
         log_line.position(10, ofGetHeight() - 10 - log_line.get_height());
     }
+    
+    lua_wrap.__update();
 }
 
 void App::draw(){
@@ -44,7 +44,6 @@ void App::draw(){
     ofSetHexColor(0x67E09D);
     
     root_graphic.Render();
-//    console_font.drawString(console_output, 10, 25);
 }
 
 void App::keyPressed(int key){

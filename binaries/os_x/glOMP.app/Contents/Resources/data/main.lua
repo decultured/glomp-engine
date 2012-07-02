@@ -1,30 +1,26 @@
-require("test_bed")
-
-print(package.path)
-
-print("Loading Glomp Lua Libraries")
-
-function _glomp_key_pressed(key)
-    print ("Key pressed from lua:", key)
+builtin_dofile = dofile
+function dofile(filename)
+	local f, err = loadfile(filename)
+	if not f then
+		err = string.gsub(err, "(.-/)", "")
+		pos = string.find(err, ":%s")
+		err_one = string.sub(err, 1, pos+1)
+		err_two = "    "..string.sub(err, pos+2, -1)
+		print(err_one)
+		print(err_two)
+		return
+	end
+	f()
 end
 
-function _glomp_key_released(key)
-    print ("Key released from lua:", key)
+
+function glomp_load_libs()
+	dofile(LUA_PATH.."input_defines.lua")
+	dofile(LUA_PATH.."test_bed.lua")
+	dofile(LUA_PATH.."input.lua")
+	dofile(LUA_PATH.."window.lua")
+	dofile(LUA_PATH.."util.lua")
 end
 
+glomp_load_libs()
 
-function _glomp_mouse_dragged(x, y, button)
-    print ("Mouse dragged from lua:", x, y, button)
-end
-
-function _glomp_mouse_pressed(x, y, button)
-    print ("Mouse pressed from lua:", x, y, button)
-end
-
-function _glomp_mouse_released(x, y, button)
-    print ("Mouse released from lua:", x, y, button)
-end
-
-function _glomp_window_resized(w, h)
-    print ("Window resized from lua:", w, h)
-end

@@ -27,8 +27,6 @@ Logger::~Logger() {
 void Logger::capture_iostream() {
     old_cout = std::cout.rdbuf(buffer.rdbuf());
     old_cerr = std::cerr.rdbuf(buffer.rdbuf());
-    
-    std::cout << "IOStream Redirected" << std::endl;
 }
 
 void Logger::release_iostream() {

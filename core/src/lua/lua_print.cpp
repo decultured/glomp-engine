@@ -22,7 +22,7 @@ void lua_print(lua_State *L, const char *message) {
     lua_pushstring(L, message);
     
     if (lua_pcall(L, 1, 0, 0) != 0) {
-        std::cout << "error calling lua print: %s\n" << lua_tostring(L, -1);
+        std::cout << "error calling lua print: %s\n" << lua_tostring(L, -1) << std::endl;
         return;
     }
 }

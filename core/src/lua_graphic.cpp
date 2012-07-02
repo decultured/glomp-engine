@@ -16,12 +16,12 @@ namespace graphics {
     
 int glomp_graphic_new(lua_State *L) {
     Graphic **new_graphic = (Graphic **)lua_newuserdata(L, sizeof(Graphic *));
-    luaL_getmetatable(L, "glomp.image");
+    luaL_getmetatable(L, "glomp.graphic");
     lua_setmetatable(L, -2);
     
     *new_graphic = new Graphic();
     
-    std::cout << "Graphic Created" << new_graphic;
+    std::cout << "Graphic Created: " << new_graphic << std::endl;
     
     return 1;
 }
@@ -29,7 +29,7 @@ int glomp_graphic_new(lua_State *L) {
 int glomp_image_gc(lua_State *L) {
     Graphic *graphic = glomp_checkgraphic(L, 1);
 
-    std::cout << "Graphic Killed" << graphic;
+    std::cout << "Graphic Killed: " << graphic << std::endl;
 
     delete graphic;
 
@@ -82,7 +82,7 @@ int luaopen_graphic(lua_State *L) {
 //    luaL_newlib(L, glomp_graphic_main);
 //    lua_setglobal(L, "image");
 
-    luaL_register(L, NULL, glomp_graphic);
+    luaL_register(L, NULL, glomp_graphic_methods);
     luaL_register(L, "graphic", glomp_graphic);
     
     return 1;

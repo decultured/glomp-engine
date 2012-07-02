@@ -40,12 +40,6 @@ void LuaWrapper::shutdown() {
     L = NULL;
 }
     
-void LuaWrapper::set_require_path(const char *path) {
-    lua_pushstring(L, path);
-    lua_setglobal(L, "LUA_PATH");
-}
-
-
 int LuaWrapper::set_lua_path(const char* path)  
 {
     std::string new_path;
@@ -59,19 +53,37 @@ int LuaWrapper::set_lua_path(const char* path)
     lua_pushstring( L, new_path.c_str()); // push the new one
     lua_setfield( L, -2, "path" ); // set the field "path" in table at -2 with value at top of stack
     lua_pop( L, 1 ); // get rid of package table from top of stack
+    lua_pushstring(L, path);
+    lua_setglobal(L, "LUA_PATH");
     return 0; // all done!
 }
 
-void LuaWrapper::load_file(const char *filename) {
-    int s = luaL_loadfile(L, filename);
-    if ( s==0 ) {
-        s = lua_pcall(L, 0, LUA_MULTRET, 0);
-    }
-    report_errors(L, s);
+void LuaWrapper::error (lua_State *L, const char *fmt, ...) {
+    va_list argp;
+    va_start(argp, fmt);
+    vfprintf(stderr, fmt, argp);
+    va_end(argp);
+//    lua_close(L);
+//    this->L = NULL;
+//    exit(EXIT_FAILURE);
 }
+
+
+bool LuaWrapper::load_file(const char *filename) {
+    if (luaL_loadfile(L, filename) || lua_pcall(L, 0, LUA_MULTRET, 0)) {
+        std::cout << "### cannot run config. file:" << std::endl 
+                    << "###     " << lua_tostring(L, -1);
+        lua_pop(L, 1);
+        
+        return false;
+    }
+    return true;
+}
+
     
 void LuaWrapper::report_errors(lua_State *L, int status)
 {
+    std::cout << "Errors Found: " << status;
     if ( status!=0 ) {
         std::cerr << "-- " << lua_tostring(L, -1) << std::endl;
 
@@ -196,7 +208,18 @@ void LuaWrapper::windowResized(int w, int h){
     }
 }
     
+void LuaWrapper::__update() {
+    lua_getglobal(L, "_glomp_update");
+    if(!lua_isfunction(L,-1)) {
+        lua_pop(L,1);
+        return;
+    }
     
+    if (lua_pcall(L, 0, 0, 0) != 0) {
+        std::cout << "error calling lua _glomp_update: %s\n" << lua_tostring(L, -1);
+        return;
+    }
+}
     
 }
 }

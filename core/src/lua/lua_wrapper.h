@@ -29,13 +29,15 @@ public:
     void init();
     void shutdown();
     
-    void set_require_path(const char *path);
     int set_lua_path(const char* path);
 
     void print(const char *message);
     void report_errors(lua_State *L, int status);
-    void load_file(const char *filename);
+    bool load_file(const char *filename);
+    void error (lua_State *L, const char *fmt, ...);
 
+    void terminate_app();
+    void __update();
     void keyPressed(int key);
     void keyReleased(int key);
     void mouseMoved(int x, int y);
