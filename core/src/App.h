@@ -6,6 +6,7 @@
 #include "lua/lua_wrapper.h"
 #include "util/logging.h"
 
+#include "text_view_event.h"
 #include "game_thread.h"
 #include "graphic.h"
 #include "text.h"
@@ -40,4 +41,6 @@ public:
     void windowResized(int w, int h);
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
+
+    void textViewEvent(TextViewEvent &args);
 };

@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include "lua_print.h"
+#include "text_view_event.h"
 
 namespace glomp {
 
@@ -41,8 +42,22 @@ static int l_print(lua_State* L) {
     return 0;
 }
 
+static int lua_print_text_event(lua_State *L) {
+    static TextViewEvent event;
+
+    event.name = luaL_checkstring(L, 1);
+    event.text = luaL_checkstring(L, 2);
+    event.x = luaL_checknumber(L, 3);
+    event.y = luaL_checknumber(L, 4);
+    
+    ofNotifyEvent(TextViewEvent::events, event);
+    
+    return 0;
+}
+
 static const struct luaL_reg printlib [] = {
     {"print", l_print},
+    {"print_more", lua_print_text_event},
     {NULL, NULL}
 };
 

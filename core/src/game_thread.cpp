@@ -35,6 +35,8 @@ void GameThread::init() {
     ofAddListener(ofEvents().mousePressed, this, &GameThread::mousePressed);
     ofAddListener(ofEvents().mouseReleased, this, &GameThread::mouseReleased);
     ofAddListener(ofEvents().windowResized, this, &GameThread::windowResized);
+    //ofAddListener(ofEvents().messageEvent, this, &GameThread::gotMessage);
+    ofRegisterGetMessages(this);
 }
 
 void GameThread::shutdown() {
@@ -45,6 +47,7 @@ void GameThread::shutdown() {
     ofRemoveListener(ofEvents().mousePressed, this, &GameThread::mousePressed);
     ofRemoveListener(ofEvents().mouseReleased, this, &GameThread::mouseReleased);
     ofRemoveListener(ofEvents().windowResized, this, &GameThread::windowResized);
+    ofUnregisterGetMessages(this);
 
     lua_wrap.shutdown();
 }
@@ -74,6 +77,11 @@ void GameThread::mouseReleased(ofMouseEventArgs &args){
 }
 
 void GameThread::windowResized(ofResizeEventArgs &args){
+
+}
+
+void GameThread::gotMessage(ofMessage &msg){
+
 }
 
 }

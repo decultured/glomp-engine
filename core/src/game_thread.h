@@ -34,7 +34,7 @@ public:
     void mousePressed(ofMouseEventArgs &args);
     void mouseReleased(ofMouseEventArgs &args);
     void windowResized(ofResizeEventArgs &args);
-
+    void gotMessage(ofMessage &msg);
 };
 
 }

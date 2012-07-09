@@ -19,6 +19,8 @@ void App::setup(){
     log_line.position(10, 758);
     root_graphic.add_child(&log_line);
 
+    ofAddListener(TextViewEvent::events, this, &App::textViewEvent);
+
     game_thread.startThread(true, true);
 }
 
@@ -67,7 +69,11 @@ void App::windowResized(int w, int h){
 }
 
 void App::gotMessage(ofMessage msg){
+    std::cout << msg.message;
+}
 
+void App::textViewEvent(TextViewEvent &args) {
+    std::cout << args.name << " " << args.text << " " << args.x << " " << args.y << std::endl;
 }
 
 void App::dragEvent(ofDragInfo dragInfo){ 
