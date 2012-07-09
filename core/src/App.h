@@ -10,6 +10,13 @@
 #include "game_thread.h"
 #include "graphic.h"
 #include "text.h"
+#include <map>
+
+#if defined __GNUC__ || defined __APPLE__
+#include <ext/hash_map>
+#else
+#include <hash_map>
+#endif
 
 class App : public ofBaseApp{
 private:
@@ -25,6 +32,8 @@ private:
     glomp::Text log_line;
 
     glomp::GameThread game_thread;
+    
+    std::map<string, glomp::Text *> texts;
     
 public:
     void setup();

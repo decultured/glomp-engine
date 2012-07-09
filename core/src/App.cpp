@@ -73,7 +73,18 @@ void App::gotMessage(ofMessage msg){
 }
 
 void App::textViewEvent(TextViewEvent &args) {
-    std::cout << args.name << " " << args.text << " " << args.x << " " << args.y << std::endl;
+    glomp::Text *new_texts;
+    
+    if (!texts.count(args.name)) {
+        texts[args.name] = new_texts = new glomp::Text();
+        new_texts->set_font(&console_font);
+        root_graphic.add_child(new_texts);
+    } else {
+        new_texts = texts[args.name];
+    }
+    
+    new_texts->position(args.x, args.y);
+    new_texts->set_text(args.text.c_str());
 }
 
 void App::dragEvent(ofDragInfo dragInfo){ 
