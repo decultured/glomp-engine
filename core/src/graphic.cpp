@@ -10,7 +10,6 @@
 #include "ofMain.h"
 
 namespace glomp {
-namespace graphics {
 
 Graphic::Graphic() {
     _parent = NULL;
@@ -53,5 +52,4 @@ void Graphic::PostDraw() {
     ofPopMatrix();
 }
 
-}
 }

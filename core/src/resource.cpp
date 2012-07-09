@@ -9,10 +9,14 @@
 
 #include "resource.h"
 
-Resource::Resource() {
+namespace glomp {
 
+Resource::Resource(const char *_name) {
+    name = _name;
 }
 
 Resource::~Resource() {
     
+}
+
 }

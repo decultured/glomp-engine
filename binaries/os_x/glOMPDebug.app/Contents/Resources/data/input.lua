@@ -1,5 +1,5 @@
 function _glomp_key_pressed(key)
-    -- print ("Key pressed from lua:", key)
+    print ("Key pressed from lua:", key)
 end
 
 function _glomp_key_released(key)
@@ -14,6 +14,20 @@ function _glomp_key_released(key)
     if key == glomp_keys.Q then
     	__glomp_terminate()
     end
+
+    if key == glomp_keys.I then
+        print("#########################")
+        print("## Reloading Input Lib ##")
+        print("#########################")
+        print("")
+
+            dofile(LUA_PATH.."input.lua")
+
+        print("")
+        print("")
+        print("")
+    end
+
 end
 
 function _glomp_mouse_moved(x, y)

@@ -9,13 +9,21 @@
 #ifndef glOMP_resource_h
 #define glOMP_resource_h
 
+#include <string>
+
+namespace glomp {
+
 class Resource {
 public:    
-    Resource();
+    std::string name; 
+
+    Resource(const char *_name = "steve");
     virtual ~Resource();
         
 private:
     
 };
+
+}
 
 #endif

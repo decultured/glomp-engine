@@ -10,7 +10,6 @@
 #include "lua_app.h"
 
 namespace glomp {
-namespace lua {
 
 static int l_terminate(lua_State* L) {
     std::exit(EXIT_SUCCESS);
@@ -28,5 +27,4 @@ extern int luaopen_app(lua_State *L) {
     lua_pop(L, 1);
 }
 
-}
 }

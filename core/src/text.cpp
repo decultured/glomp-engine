@@ -10,7 +10,6 @@
 #include "text.h"
 
 namespace glomp {
-namespace graphics {
 
 
 Text::Text() {
@@ -46,5 +45,4 @@ void Text::add_text(const char *text) {
     set_text((_text + text).c_str());
 }
 
-}
 }

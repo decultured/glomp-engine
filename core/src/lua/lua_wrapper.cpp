@@ -14,7 +14,6 @@
 #include "lua_app.h"
 
 namespace glomp {
-namespace lua {
 
 LuaWrapper::LuaWrapper() {
     L = NULL;
@@ -223,5 +222,4 @@ void LuaWrapper::__update() {
     }
 }
     
-}
 }

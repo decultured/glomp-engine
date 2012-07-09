@@ -16,7 +16,6 @@ extern "C" {
 }
 
 namespace glomp {
-namespace lua {
 
 class LuaWrapper {
 private:
@@ -47,7 +46,6 @@ public:
     void windowResized(int w, int h);
 };
     
-}
 }
         
 #endif

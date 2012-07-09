@@ -14,7 +14,6 @@
 #include <string>
 
 namespace glomp {
-namespace graphics {
 
 class Text : public Graphic {
 public:
@@ -36,7 +35,6 @@ private:
     bool _multi_line;
 };
 
-}
 }
 
 #endif

@@ -8,7 +8,6 @@ void App::setup(){
     int test = OF_KEY_BACKSPACE;
     logger.capture_iostream();
     platform_init();
-    lua_wrap.init();
     
     platform_builtin_file_path(internal_data_folder, "data");
     ofSetDataPathRoot(internal_data_folder + "/");
@@ -20,12 +19,11 @@ void App::setup(){
     log_line.position(10, 758);
     root_graphic.add_child(&log_line);
 
-    lua_wrap.set_lua_path(ofToDataPath("", true).c_str());
-    lua_wrap.load_file(ofToDataPath("main.lua").c_str());
+    game_thread.startThread(true, true);
 }
 
 void App::exit() {
-    lua_wrap.shutdown();
+    game_thread.stopThread();
     logger.release_iostream();
 }
 
@@ -36,7 +34,6 @@ void App::update(){
         log_line.position(10, ofGetHeight() - 10 - log_line.height());
     }
     
-    lua_wrap.__update();
 }
 
 void App::draw(){
@@ -47,27 +44,21 @@ void App::draw(){
 }
 
 void App::keyPressed(int key){
-    lua_wrap.keyPressed(key);
 }
 
 void App::keyReleased(int key){
-    lua_wrap.keyReleased(key);
 }
 
 void App::mouseMoved(int x, int y){
-    lua_wrap.mouseMoved(x, y);
 }
 
 void App::mouseDragged(int x, int y, int button){
-    lua_wrap.mouseDragged(x, y, button);
 }
 
 void App::mousePressed(int x, int y, int button){
-    lua_wrap.mousePressed(x, y, button);
 }
 
 void App::mouseReleased(int x, int y, int button){
-    lua_wrap.mouseReleased(x, y, button);
 }
 
 void App::windowResized(int w, int h){

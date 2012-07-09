@@ -16,13 +16,11 @@ extern "C" {
 }
 
 namespace glomp {
-namespace lua {
 
 void lua_print(lua_State *L, const char *message);
 static int l_print(lua_State* L);
 extern int luaopen_luaprintlib(lua_State *L);
     
-}
 }
         
 #endif

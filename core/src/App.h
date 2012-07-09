@@ -6,12 +6,12 @@
 #include "lua/lua_wrapper.h"
 #include "util/logging.h"
 
+#include "game_thread.h"
 #include "graphic.h"
 #include "text.h"
 
 class App : public ofBaseApp{
 private:
-    glomp::lua::LuaWrapper lua_wrap;
     glomp::util::Logger logger;
     
     std::string internal_data_folder;
@@ -20,8 +20,10 @@ private:
     ofTrueTypeFont	console_font;
     std::string console_output;
     
-    glomp::graphics::Graphic root_graphic;
-    glomp::graphics::Text log_line;
+    glomp::Graphic root_graphic;
+    glomp::Text log_line;
+
+    glomp::GameThread game_thread;
     
 public:
     void setup();
