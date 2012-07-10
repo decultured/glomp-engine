@@ -1,5 +1,5 @@
 function _glomp_key_pressed(key)
-    print ("Key pressed from lua:", key)
+    -- print ("Key pressed from lua:", key)
 end
 
 function _glomp_key_released(key)
@@ -16,17 +16,13 @@ function _glomp_key_released(key)
     end
 
     if key == glomp_keys.I or key == glomp_keys.i then
-        print("#########################")
-        print("## Reloading Input Lib ##")
-        print("#########################")
-        print("")
-
-            dofile(LUA_PATH.."input.lua")
-
-        print("")
-        print("")
-        print("")
+        dofile(LUA_PATH.."input.lua")
     end
+
+    if key == glomp_keys.BACKSPACE then
+        dofile(LUA_PATH.."model.lua")
+        dofile(LUA_PATH.."model_tests.lua")
+    end        
 
 end
 
@@ -36,7 +32,7 @@ function _glomp_mouse_moved(x, y)
 end
 
 function _glomp_mouse_dragged(x, y, button)
-    print_more("mouse.dragged", "Mouse Dragged", x, y + 30);
+    print_more("mouse.dragged", "Mouse Dragged", x, y - 30);
     -- print ("Mouse dragged from lua:", x, y, button)
 end
 

@@ -35,7 +35,7 @@ void App::update(){
         logger.clear();
         log_line.position(10, ofGetHeight() - 10 - log_line.height());
     }
-    
+    ofSleepMillis(10);
 }
 
 void App::draw(){

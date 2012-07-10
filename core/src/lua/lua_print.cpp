@@ -55,6 +55,13 @@ static int lua_print_text_event(lua_State *L) {
     return 0;
 }
 
+static int lua_pack_and_send_table(lua_State *L) {
+    
+    
+    
+    return 0;
+}
+
 static const struct luaL_reg printlib [] = {
     {"print", l_print},
     {"print_more", lua_print_text_event},

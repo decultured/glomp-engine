@@ -12,7 +12,6 @@ base = {
 	end
 }
 
-
 function base:__index(key) 
  	local field = rawget(getmetatable(self), key); 
         local retval = nil; 
