@@ -6,7 +6,6 @@ void App::setup(){
     ofTrueTypeFont::setGlobalDpi(72);
 
     int test = OF_KEY_BACKSPACE;
-    logger.capture_iostream();
     platform_init();
     
     platform_builtin_file_path(internal_data_folder, "data");
@@ -26,15 +25,9 @@ void App::setup(){
 
 void App::exit() {
     game_thread.stopThread();
-    logger.release_iostream();
 }
 
 void App::update(){
-    if (logger.get_buffer().length()) {
-        log_line.add_text(logger.get_buffer().c_str());
-        logger.clear();
-        log_line.position(10, ofGetHeight() - 10 - log_line.height());
-    }
     ofSleepMillis(10);
 }
 

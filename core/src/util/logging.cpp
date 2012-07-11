@@ -25,25 +25,25 @@ Logger::~Logger() {
 }
 
 void Logger::capture_iostream() {
-    old_cout = std::cout.rdbuf(buffer.rdbuf());
-    old_cerr = std::cerr.rdbuf(buffer.rdbuf());
+//    old_cout = std::cout.rdbuf(buffer.rdbuf());
+//    old_cerr = std::cerr.rdbuf(buffer.rdbuf());
 }
 
 void Logger::release_iostream() {
-    std::cout.rdbuf(old_cout);
-    std::cerr.rdbuf(old_cerr);
+//    std::cout.rdbuf(old_cout);
+//    std::cerr.rdbuf(old_cerr);
 }
 
 void Logger::log(const char *message) {
-    buffer << message;
+//    buffer << message;
 }
 
 std::string Logger::get_buffer() {
-    return buffer.str();
+//    return buffer.str();
 }
 
 void Logger::clear() {
-    buffer.str("");
+//    buffer.str("");
 }
 
 }

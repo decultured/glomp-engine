@@ -16,7 +16,7 @@ void GameThread::threadedFunction() {
         
     while(isThreadRunning()) {
         lua_wrap.__update();
-        ofSleepMillis(10);
+        this->sleep(10);
     }
 
     shutdown();
