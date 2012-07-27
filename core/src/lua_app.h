@@ -16,10 +16,25 @@ extern "C" {
 }
 
 namespace glomp {
-            
-static int l_terminate(lua_State* L);
-extern int luaopen_app(lua_State *L);
-   
+    
+    class LuaApp : public LuaWrapper {
+    public:
+        LuaApp();
+        ~LuaApp();
+        
+        void init();
+        void shutdown();
+        
+        void terminate_app();
+        void update();
+        void keyPressed(int key);
+        void keyReleased(int key);
+        void mouseMoved(int x, int y);
+        void mouseDragged(int x, int y, int button);
+        void mousePressed(int x, int y, int button);
+        void mouseReleased(int x, int y, int button);
+        void windowResized(int w, int h);
+    };
     
 }
 

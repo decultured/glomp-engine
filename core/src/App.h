@@ -7,7 +7,8 @@
 #include "util/logging.h"
 
 #include "text_view_event.h"
-#include "game_thread.h"
+#include "lua_game_thread.h"
+#include "lua_app.h"
 #include "graphic.h"
 #include "text.h"
 #include <map>
@@ -32,6 +33,7 @@ private:
     glomp::Text log_line;
 
     glomp::GameThread game_thread;
+    glomp::LuaApp lua_app;
     
     std::map<string, glomp::Text *> texts;
     

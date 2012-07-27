@@ -10,7 +10,6 @@
 #define glOMP_text_view_event_h
 
 #include "ofMain.h"
-#include "Poco/Delegate.h"
 
 class TextViewEvent : public ofEventArgs {
     

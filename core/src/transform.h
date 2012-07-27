@@ -20,6 +20,9 @@ public:
     
     Transform();
     ~Transform();
+    
+    void push();
+    void pop();
 };
 
 }

@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include "transform.h"
+#include "ofMain.h"
 
 namespace glomp {
     
@@ -17,6 +18,17 @@ Transform::Transform() {
 
 Transform::~Transform() {
 
+}
+
+void Transform::push() {
+    ofPushMatrix();
+    ofTranslate(x, y);
+    ofRotate(rotation);
+    ofScale(scale_x, scale_y);
+}
+
+void Transform::pop() {
+    ofPopMatrix();
 }
 
 }

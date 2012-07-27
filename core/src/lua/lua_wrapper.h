@@ -18,7 +18,7 @@ extern "C" {
 namespace glomp {
 
 class LuaWrapper {
-private:
+protected:
     lua_State *L;
     
 public:
@@ -34,16 +34,6 @@ public:
     void report_errors(lua_State *L, int status);
     bool load_file(const char *filename);
     void error (lua_State *L, const char *fmt, ...);
-
-    void terminate_app();
-    void __update();
-    void keyPressed(int key);
-    void keyReleased(int key);
-    void mouseMoved(int x, int y);
-    void mouseDragged(int x, int y, int button);
-    void mousePressed(int x, int y, int button);
-    void mouseReleased(int x, int y, int button);
-    void windowResized(int w, int h);
 };
     
 }

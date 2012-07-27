@@ -5,8 +5,6 @@ print ("investigate thread safety -- we be crashing ")
 
 function glomp_load_libs()
 	dofile(LUA_PATH.."input_defines.lua")
-	dofile(LUA_PATH.."input.lua")
-	dofile(LUA_PATH.."window.lua")
 	dofile(LUA_PATH.."model.lua")
 	dofile(LUA_PATH.."model_tests.lua")
 end
@@ -18,4 +16,3 @@ end
 
 
 glomp_load_libs()
-
