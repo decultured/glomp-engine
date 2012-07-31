@@ -7,11 +7,13 @@
 #include "util/logging.h"
 
 #include "text_view_event.h"
-#include "lua_game_thread.h"
+#include "lua_worker_thread.h"
 #include "lua_app.h"
 #include "graphic.h"
 #include "text.h"
 #include <map>
+
+#include "poco/TimedNotificationQueue.h"
 
 #if defined __GNUC__ || defined __APPLE__
 #include <ext/hash_map>
@@ -32,12 +34,16 @@ private:
     glomp::Graphic root_graphic;
     glomp::Text log_line;
 
-    glomp::GameThread game_thread;
+    Poco::TimedNotificationQueue main_queue;
+
+    glomp::WorkerThread game_thread;
     glomp::LuaApp lua_app;
     
     std::map<string, glomp::Text *> texts;
     
 public:
+    App() : game_thread(main_queue) {}
+
     void setup();
     void exit();
     void update();

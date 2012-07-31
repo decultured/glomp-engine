@@ -26,6 +26,8 @@ namespace glomp {
         
         void init();
         void shutdown();
+
+        void update();
     };
     
 }

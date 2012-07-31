@@ -26,4 +26,17 @@ void LuaGame::shutdown() {
     LuaWrapper::shutdown();
 }
 
+void LuaGame::update() {
+    lua_getglobal(L, "_glomp_update");
+    if(!lua_isfunction(L,-1)) {
+        lua_pop(L,1);
+        return;
+    }
+    
+    if (lua_pcall(L, 0, 0, 0) != 0) {
+        std::cout << "error calling lua _glomp_update: %s\n" << lua_tostring(L, -1);
+        return;
+    }
+}
+
 }

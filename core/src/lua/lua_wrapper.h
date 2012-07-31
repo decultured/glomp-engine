@@ -34,6 +34,8 @@ public:
     void report_errors(lua_State *L, int status);
     bool load_file(const char *filename);
     void error (lua_State *L, const char *fmt, ...);
+    
+    void update();
 };
     
 }

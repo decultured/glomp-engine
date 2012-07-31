@@ -10,6 +10,7 @@
 #include <string>
 #include "lua_wrapper.h"
 #include "lua_print.h"
+#include "lua_marshal.h"
 
 namespace glomp {
 
@@ -27,6 +28,7 @@ void LuaWrapper::init() {
     L = lua_open();
     luaL_openlibs(L);
     luaopen_luaprintlib(L);
+    luaopen_marshal(L);
 }
 
 void LuaWrapper::shutdown() {
@@ -91,5 +93,19 @@ void LuaWrapper::report_errors(lua_State *L, int status)
 void LuaWrapper::print(const char *message) {
     if (L) lua_print(L, message);
 }
+
+void LuaWrapper::update() {
+    lua_getglobal(L, "_glomp_update");
+    if(!lua_isfunction(L,-1)) {
+        lua_pop(L,1);
+        return;
+    }
+    
+    if (lua_pcall(L, 0, 0, 0) != 0) {
+        std::cout << "error calling lua _glomp_update: %s\n" << lua_tostring(L, -1);
+        return;
+    }
+}
+
        
 }

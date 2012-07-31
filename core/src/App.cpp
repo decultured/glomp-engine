@@ -83,6 +83,7 @@ void App::textViewEvent(TextViewEvent &args) {
     glomp::Text *new_texts;
     
     if (!texts.count(args.name)) {
+        std::cout << args.name << std::endl;
         texts[args.name] = new_texts = new glomp::Text();
         new_texts->set_font(&console_font);
         root_graphic.add_child(new_texts);

@@ -15,7 +15,7 @@ void GameThread::threadedFunction() {
     init();
         
     while(isThreadRunning()) {
-//        lua_game.__update();
+        lua_game.update();
         this->sleep(10);
     }
 
@@ -26,12 +26,11 @@ void GameThread::init() {
     lua_game.init();
 
     lua_game.set_lua_path(ofToDataPath("lua/", true).c_str());
-    lua_game.load_file(ofToDataPath("lua/game_main.lua").c_str());
+    lua_game.load_file(ofToDataPath("lua/worker_main.lua").c_str());
 }
 
 void GameThread::shutdown() {
     lua_game.shutdown();
 }
-
 
 }

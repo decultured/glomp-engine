@@ -12,6 +12,22 @@ function glomp_printobj(obj)
 	end
 end
 
+function glomp_sprintobj(obj)
+	local str = "Object: "
+
+	-- object = 
+	-- for key, val in ipairs(obj) do
+	-- 	str .. key .. ", " .. val .. "\n"
+	-- end
+
+	-- if (obj.__index) then
+	-- 	print ("\n__Index:")	
+	-- 	for key, val in ipairs(obj.__index) do
+	-- 		print(key, val)
+	-- 	end
+	-- end
+end
+
 -- This runs a script within a specified environment
 -- this prevents it from polluting the global namespace
 function run(scriptfile)

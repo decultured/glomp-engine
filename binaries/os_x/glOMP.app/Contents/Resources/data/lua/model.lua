@@ -7,8 +7,11 @@ glomp.Model = {
 	_changed = {},
 
 	has = function (attr)
-			return attributes[attr] not nil
-		end
+			if attributes[attr] not nil then
+				return true
+			end
+			return false
+		end,
 
 	set = function (attr, val)
 			previous[attr] = attributes[attr] 

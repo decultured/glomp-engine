@@ -22,6 +22,7 @@ function _glomp_key_released(key)
     if key == glomp_keys.BACKSPACE then
         dofile(LUA_PATH.."model.lua")
         dofile(LUA_PATH.."model_tests.lua")
+        dofile(LUA_PATH.."app_testing.lua")
     end        
 
 end

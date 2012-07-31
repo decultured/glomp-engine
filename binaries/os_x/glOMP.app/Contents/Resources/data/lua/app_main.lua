@@ -1,3 +1,5 @@
+
+dofile(LUA_PATH.."json.lua")
 dofile(LUA_PATH.."util.lua")
 
 print ("investigate thread safety -- we be crashing ")
@@ -14,6 +16,7 @@ end
 function glomp_run_current()
 	dofile(LUA_PATH.."model.lua")
 	dofile(LUA_PATH.."model_tests.lua")
+	dofile(LUA_PATH.."app_testing.lua")
 end
 
 
