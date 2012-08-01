@@ -1,25 +1,36 @@
 _ = _ or {}
 
-_.deepcopy = function(object)
+_.deep_copy = function(table)
     local lookup_table = {}
-    local function _copy(object)
-        if type(object) ~= "table" then
-            return object
-        elseif lookup_table[object] then
-            return lookup_table[object]
+    local function _copy(table)
+        if type(table) ~= "table" then
+            return table
+        elseif lookup_table[table] then
+            return lookup_table[table]
         end
         local new_table = {}
-        lookup_table[object] = new_table
-        for index, value in pairs(object) do
+        lookup_table[table] = new_table
+        for index, value in pairs(table) do
             new_table[_copy(index)] = _copy(value)
         end
-        return setmetatable(new_table, getmetatable(object))
+        return setmetatable(new_table, getmetatable(table))
     end
-    return _copy(object)
+    return _copy(table)
 end
 
+_.shallow_copy = function(table)
+	local new_table = {}
+
+	for k,v in pairs(table) do
+		new_table[k] = v
+	end
+	return setmetatable(new_table, getmetatable(table))
+end
+
+_.clone = _.shallow_copy
+
 _.extend = function(first, second)
-	local new_table = _.deepcopy(first)
+	local new_table = _.shallow_copy(first)
 
 	for k,v in pairs(second) do 
 		new_table[k] = v
@@ -27,6 +38,8 @@ _.extend = function(first, second)
 
 	return new_table
 end
+
+_.merge = _.extend
 
 _.each = function(table, iter)
 	for k,v in pairs(table) do 
@@ -50,7 +63,6 @@ _.reduce = function (table, iter, memo)
 end
 
 _.find = function (table, iter)
-	
 	for k,v in pairs(table) do 
 		if iter(v, k) then
 			return v
@@ -70,3 +82,57 @@ _.filter = function (table, iter)
 	return results
 end
 
+_.select = _.filter
+
+_.every = function (table, iter)
+	_.each(table, function(val, key)
+		if not iter(val, key) then 
+			return false
+		end
+	end)
+	return true
+end
+
+_.any = function (table, iter)
+	for k, v in pairs(table) do
+		if iter(v, k) then
+			return true
+		end
+	end
+	return false
+end
+
+_.raw_contains = function (table, target)
+	for k,v in pairs(table) do
+		if rawcompare(v, target) then
+			return true
+		end
+	end
+	return false
+end
+
+_.max = function (table, iter)
+	local val = nil
+	iter = iter or math.max
+	for k, v in pairs(table) do
+		if val then
+			val = iter(val, v)
+		else
+			val = v
+		end
+	end
+	return val
+end
+
+_.min = function (table, iter)
+	local val = nil
+	iter = iter or math.min
+	for k, v in pairs(table) do
+		if val then
+			val = iter(val, v)
+		else
+			val = v
+		end
+	end
+	return val
+end

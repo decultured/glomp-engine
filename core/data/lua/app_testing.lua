@@ -19,11 +19,15 @@ function print(...)
 
 	for k,v in pairs(arg) do
 		if type (v) == "table" then
-			arg[k] = json.encode(v)
+			if v then
+				arg[k] = tostring(v)	
+			else
+				arg[k] = json.encode(v)
+			end
 		end
 	end
 
-	out = table.concat(arg, ", ") .. "\n"
+	out = table.concat(arg, " ") .. "\n"
 	-- for i,v in ipairs(arg) do
 	-- 	if i ~= 0 then
  --        	out = out .. ", " .. tostring(v)
@@ -78,3 +82,12 @@ end
 -- print_more("decode_test", second_out, 10, 140)
 
 -- print("Console Goes Here")
+
+-- local a = 5
+-- local b = {5}
+
+-- if type(a) == "table" then
+-- 	print(pairs(a))
+-- end
+
+

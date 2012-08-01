@@ -1,3 +1,6 @@
+function error(...)
+	print(...)
+end
 
 function glomp_printobj(obj, indent)
 	indent = indent or ""
@@ -63,8 +66,6 @@ end
 local builtin_dofile = dofile
 function dofile(filename)
 	local printname = string.gsub(filename, "(.-/)", "")
-	print("## Loading "..printname.."...")
-	
 	local f, err = loadfile(filename)
 	if not f then
 		print_error(err)
