@@ -1,17 +1,12 @@
 
 glomp = glomp or {}
 
--- Descriptions have state
-glomp.Description = {
-	_previous = {},
-	_attributes = {},
-	_changed = {},
-
-	has = function (attr)
-			return attributes[attr] ~= nil
+local _description_proto = {
+	has = function (self, attr)
+			return self._attributes[attr] ~= nil
 		end,
 
-	set = function (self, attr, val)
+	set = function (self, attr, val, silent)
 			self._previous[attr] = self._attributes[attr] 
 			self._attributes[attr] = val
 			self._changed[attr] = 1
@@ -51,6 +46,25 @@ glomp.Description = {
 	unmarshal = function (marshalled_data)
 			self.set(marshal.decode(marshalled_data))
 		end
+}
+
+_description_proto.__index = _description_proto
+
+-- Descriptions have state
+glomp.Description = {
+	new = function (initial)
+			local new_description = {
+						_previous = {},
+						_attributes = {},
+						_changed = {},
+					}
+			setmetatable(new_description, _description_proto)
+			if initial then
+				-- TODO
+				-- new_description:set(initial, silent)
+			end
+			return new_description
+		end,
 }
 
 -- Collections are groups of similar descriptions
