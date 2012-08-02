@@ -40,7 +40,11 @@ private:
     glomp::LuaApp lua_app;
     
     std::map<string, glomp::Text *> texts;
-    
+
+    unsigned long micros;
+    unsigned long elapsed;
+    unsigned long start_time_micros;
+    double frame_time;
 public:
     App() : game_thread(main_queue) {}
 
@@ -58,6 +62,7 @@ public:
     void windowResized(int w, int h);
     void dragEvent(ofDragInfo dragInfo);
     void gotMessage(ofMessage msg);
-
+    void windowEntry(int state);
+    
     void textViewEvent(TextViewEvent &args);
 };

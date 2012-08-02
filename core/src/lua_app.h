@@ -26,7 +26,7 @@ namespace glomp {
         void shutdown();
         
         void terminate_app();
-        void update();
+        void update(double frame_time);
         void keyPressed(int key);
         void keyReleased(int key);
         void mouseMoved(int x, int y);
@@ -34,6 +34,7 @@ namespace glomp {
         void mousePressed(int x, int y, int button);
         void mouseReleased(int x, int y, int button);
         void windowResized(int w, int h);
+        void windowEntry(int state);
     };
     
 }

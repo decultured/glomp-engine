@@ -160,15 +160,32 @@ namespace glomp {
         }
     }
     
-    void LuaApp::update() {
+    void LuaApp::update(double frame_time) {
         lua_getglobal(L, "_glomp_update");
         if(!lua_isfunction(L,-1)) {
             lua_pop(L,1);
             return;
         }
         
-        if (lua_pcall(L, 0, 0, 0) != 0) {
+        lua_pushnumber(L, frame_time);
+        
+        if (lua_pcall(L, 1, 0, 0) != 0) {
             std::cout << "error calling lua _glomp_update: %s\n" << lua_tostring(L, -1);
+            return;
+        }
+    }
+    
+    void LuaApp::windowEntry(int state) {
+        lua_getglobal(L, "_glomp_window_entry");
+        if(!lua_isfunction(L,-1)) {
+            lua_pop(L,1);
+            return;
+        }
+        
+        lua_pushnumber(L, state);
+        
+        if (lua_pcall(L, 1, 0, 0) != 0) {
+            std::cout << "error calling lua _glomp_window_entry: %s\n" << lua_tostring(L, -1);
             return;
         }
     }

@@ -2,6 +2,7 @@
 #include "platform.h"
 
 void App::setup(){
+
     ofBackground(54, 54, 54, 255);
     ofTrueTypeFont::setGlobalDpi(72);
 
@@ -25,6 +26,8 @@ void App::setup(){
     lua_app.load_file(ofToDataPath("lua/app_main.lua").c_str());
 
     game_thread.startThread(true, true);
+    ofResetElapsedTimeCounter();
+    start_time_micros = ofGetSystemTimeMicros();
 }
 
 void App::exit() {
@@ -34,8 +37,18 @@ void App::exit() {
 }
 
 void App::update(){
-    ofSleepMillis(10);
-    lua_app.update();
+    micros = ofGetSystemTimeMicros();
+    elapsed = micros - start_time_micros;
+
+    if (elapsed < 1000) {
+        ofSleepMillis(1);
+        micros = ofGetSystemTimeMicros();
+        elapsed = micros - start_time_micros;
+    }
+    
+    start_time_micros = micros;
+
+    lua_app.update(elapsed * 0.000001);
 }
 
 void App::draw(){
@@ -98,4 +111,8 @@ void App::textViewEvent(TextViewEvent &args) {
 
 void App::dragEvent(ofDragInfo dragInfo){ 
 
+}
+
+void App::windowEntry(int state) {
+    lua_app.windowEntry(state);
 }
