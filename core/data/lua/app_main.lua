@@ -2,8 +2,7 @@ dofile(LUA_PATH.."util.lua")
 dofile("printing")
 dofile("json")
 
-function glomp_run_current()
-	dofile("lunatest")
+function glomp_run_stuff()
 	dofile("underscore")
 	dofile("model")
 	dofile("model_tests")
@@ -15,5 +14,5 @@ function glomp_load_libs()
 	dofile("window")
 end
 
+glomp_run_stuff()
 glomp_load_libs()
-glomp_run_current()

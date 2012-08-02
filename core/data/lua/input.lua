@@ -16,11 +16,12 @@ function _glomp_key_released(key)
     end
 
     if key == glomp_keys.I or key == glomp_keys.i then
-        dofile(LUA_PATH.."input.lua")
+        dofile("input")
     end
 
     if key == glomp_keys.SPACE then
-        glomp_run_current()
+        glomp_load_libs()
+        glomp_run_stuff()
     end        
 end
 

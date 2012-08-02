@@ -57,28 +57,23 @@ print_message_test = print_message_test or {
 }
 
 function print(...)
-	local out = ""
-	local arg = {...}
+	local out = "\n"
+	local args = {}
+	local arg
 
-	for k,v in pairs(arg) do
-		if type (v) == "table" then
-			if v.tostring then
-				arg[k] = v.tostring(v)
+	for i = 1, select("#",...) do
+		arg = select(i, ...)
+		if not arg then 
+			arg = "nil"
+		elseif type (arg) == "table" then
+			if arg.tostring then
+				arg = arg.tostring()
 			else
-				arg[k] = json.encode(v)
+				arg = json.encode(arg)
 			end
-
-			-- else
-
-			-- if v then
-			-- 	arg[k] = tostring(v)	
-			-- else
-				-- arg[k] = json.encode(v)
-			-- end
 		end
+		out = string.format("%s %s", out, tostring(arg))
 	end
-
-	out = table.concat(arg, " ") .. "\n"
 
 	glomp_print_queue[#glomp_print_queue + 1] = out
 	print_message_test.data.text = print_message_test.data.text .. out

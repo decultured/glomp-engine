@@ -769,6 +769,37 @@ function run(hooks, suite_filter)
 end
 
 
+function run_embeded(table, name, verbose)
+  name = name or "Tests"
+
+  if verbose == true then
+      hooks = verbose_hooks
+  else
+      hooks = hooks or {}
+  end
+
+   setmetatable(hooks, {__index = default_hooks})
+
+   local results = result_table("main")
+   results.t_pre = now()
+
+   if hooks.begin then hooks.begin(results, suites) end
+
+   local tests = {}
+   for name,test in pairs(table) do
+      if type(test) == "function" then
+        tests[name] = test
+      end
+   end
+   run_suite(hooks, {}, results, nil, name, tests)
+   results.t_post = now()
+   if hooks.done then hooks.done(results) end
+
+   local failures = failure_or_error_count(results)
+   if failures > 0 then os.exit(failures) end
+   if #failed_suites > 0 then os.exit(#failed_suites) end
+end
+
 -- ########################
 -- # Randomization basics #
 -- ########################
