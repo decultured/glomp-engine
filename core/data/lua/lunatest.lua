@@ -121,7 +121,7 @@ local passMT = {__index=RPass}
 function RPass:tostring_char() return "." end
 function RPass:add(s, name) s.pass[name] = self end
 function RPass:type() return "pass" end
-function passMT:__tostring(name)
+function RPass:tostring(name)
    return fmt("PASS: %s%s%s",
               name or "(unknown)", msec(self.elapsed),
               self.msg and (": " .. tostring(self.msg)) or "")
@@ -133,7 +133,7 @@ local failMT = {__index=RFail}
 function RFail:tostring_char() return "F" end
 function RFail:add(s, name) s.fail[name] = self end
 function RFail:type() return "fail" end
-function failMT:__tostring(name)
+function RFail:tostring(name)
    return fmt("FAIL: %s%s: %s%s",
               name or "(unknown)",
               msec(self.elapsed), self.reason or "",
@@ -146,7 +146,7 @@ local skipMT = {__index=RSkip}
 function RSkip:tostring_char() return "s" end
 function RSkip:add(s, name) s.skip[name] = self end
 function RSkip:type() return "skip" end
-function skipMT:__tostring(name)
+function RSkip:tostring(name)
    return fmt("SKIP: %s()%s", name or "unknown",
               self.msg and (" - " .. tostring(self.msg)) or "")
 end
@@ -157,7 +157,7 @@ local errorMT = {__index=RError}
 function RError:tostring_char() return "E" end
 function RError:add(s, name) s.err[name] = self end
 function RError:type() return "error" end
-function errorMT:__tostring(name)
+function RError:tostring(name)
    return self.msg or
       fmt("ERROR (in %s%s, couldn't get traceback)",
           msec(self.elapsed), name or "(unknown)")

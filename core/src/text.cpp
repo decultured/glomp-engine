@@ -28,6 +28,8 @@ void Text::Draw() {
         return;
     
     ofSetHexColor(_color);
+    
+    ofTranslate(0, -this->height());
     _font->drawString(_text, 0, 0);
 }
 

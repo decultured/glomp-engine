@@ -22,7 +22,6 @@ function _glomp_key_released(key)
     if key == glomp_keys.SPACE then
         glomp_run_current()
     end        
-
 end
 
 function _glomp_mouse_moved(x, y)

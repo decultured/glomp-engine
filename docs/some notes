@@ -1,0 +1,13 @@
+Actors have no data, only provide functions for binding to descriptions, collections or compositions, they only return an id-ed dummy class for calling functions (which just trigger events)
+
+I.E. a Label would be created by:
+
+local new_label = label.from(description)
+
+new_label.load() -> sends a "load" event to the label through the notification system
+
+	-> main thread would catch load and handle it, set "loaded" on description
+
+	-> new_label could then act on the event "change:loaded" from main_thread, do someting like 		draw()
+
+This could all be implemented as metamethods! (Roles just add metamethods to a description???)

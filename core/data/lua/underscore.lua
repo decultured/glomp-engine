@@ -20,7 +20,6 @@ end
 
 _.shallow_copy = function(table)
 	local new_table = {}
-
 	for k,v in pairs(table) do
 		new_table[k] = v
 	end
@@ -136,3 +135,12 @@ _.min = function (table, iter)
 	end
 	return val
 end
+
+_.group_by = function (table, iter)
+	local results = {}
+	for k, v in pairs(table) do
+		results[iter(v, k)] = v
+	end
+	return results
+end
+

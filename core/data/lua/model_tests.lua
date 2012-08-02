@@ -1,8 +1,6 @@
 require("lunatest")
 
-glomp = glomp or {}
-
-local test_model = _.extend(glomp.Model, { })
+local test_model = _.extend(glomp.Description, { })
 local testbed = {1,2,3,4,5,6,7,8,9,10}
 
 function test_model_set_get()

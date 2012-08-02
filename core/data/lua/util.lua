@@ -1,42 +1,6 @@
-function error(...)
-	print(...)
-end
-
-function glomp_printobj(obj, indent)
-	indent = indent or ""
-	print (indent .. "Object:")
-	indent = indent .. "\t"
-	for key, val in pairs(obj) do
-		if type(val) == "table" then
-			print(indent .. key, "-", "Object:")
-			glomp_printobj(val, indent)
-		else
-			print(indent .. key, "-", val)
-		end
-	end
-
-	if (obj.__index) then
-		print ("__Index:")	
-		for key, val in ipairs(obj.__index) do
-			print(key, val)
-		end
-	end
-end
-
-function glomp_sprintobj(obj)
-	local str = "Object: "
-
-	-- object = 
-	-- for key, val in ipairs(obj) do
-	-- 	str .. key .. ", " .. val .. "\n"
-	-- end
-
-	-- if (obj.__index) then
-	-- 	print ("\n__Index:")	
-	-- 	for key, val in ipairs(obj.__index) do
-	-- 		print(key, val)
-	-- 	end
-	-- end
+-- break os.exit
+os.exit = function (...)
+	-- error("Exit not allowed, params: (".. ... .. ")")
 end
 
 -- This runs a script within a specified environment
@@ -64,8 +28,10 @@ function print_error(err)
 end
 
 local builtin_dofile = dofile
-function dofile(filename)
-	local printname = string.gsub(filename, "(.-/)", "")
+dofile = function(filename)
+	filename = LUA_PATH .. filename .. ".lua"
+	-- local printname = string.gsub(filename, "(.-/)", "")
+	-- print(printname)
 	local f, err = loadfile(filename)
 	if not f then
 		print_error(err)
@@ -77,3 +43,47 @@ function dofile(filename)
 	end
 end
 
+glomp_print_queue = glomp_print_queue or {}
+
+print_message_test = print_message_test or {
+	action = "update",
+	name = "game.print",
+	type = "label",
+	data = {
+		text = "",
+		x = 10,
+		y = 580
+	}
+}
+
+function print(...)
+	local out = ""
+	local arg = {...}
+
+	for k,v in pairs(arg) do
+		if type (v) == "table" then
+			if v.tostring then
+				arg[k] = v.tostring(v)
+			else
+				arg[k] = json.encode(v)
+			end
+
+			-- else
+
+			-- if v then
+			-- 	arg[k] = tostring(v)	
+			-- else
+				-- arg[k] = json.encode(v)
+			-- end
+		end
+	end
+
+	out = table.concat(arg, " ") .. "\n"
+
+	glomp_print_queue[#glomp_print_queue + 1] = out
+	print_message_test.data.text = print_message_test.data.text .. out
+	
+	if process_event then
+		process_event(print_message_test)
+	end
+end

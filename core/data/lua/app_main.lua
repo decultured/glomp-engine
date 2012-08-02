@@ -1,20 +1,18 @@
-dofile(LUA_PATH.."json.lua")
-dofile(LUA_PATH.."app_testing.lua")
 dofile(LUA_PATH.."util.lua")
-
-print ("investigate thread safety -- we be crashing ")
+dofile("printing")
+dofile("json")
 
 function glomp_run_current()
-	dofile(LUA_PATH.."lunatest.lua")
-	dofile(LUA_PATH.."underscore.lua")
-	dofile(LUA_PATH.."model.lua")
-	dofile(LUA_PATH.."model_tests.lua")
+	dofile("lunatest")
+	dofile("underscore")
+	dofile("model")
+	dofile("model_tests")
 end
 
 function glomp_load_libs()
-	dofile(LUA_PATH.."input_defines.lua")
-	dofile(LUA_PATH.."input.lua")
-	dofile(LUA_PATH.."window.lua")
+	dofile("input_defines")
+	dofile("input")
+	dofile("window")
 end
 
 glomp_load_libs()

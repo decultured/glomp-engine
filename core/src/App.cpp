@@ -28,6 +28,7 @@ void App::setup(){
 }
 
 void App::exit() {
+    game_thread.waitForThread(true);
     game_thread.stopThread();
     lua_app.shutdown();
 }

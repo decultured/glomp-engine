@@ -19,24 +19,23 @@ function print(...)
 
 	for k,v in pairs(arg) do
 		if type (v) == "table" then
-			if v then
-				arg[k] = tostring(v)	
+			if v.tostring then
+				arg[k] = v.tostring(v)
 			else
-				arg[k] = json.encode(v)
+				arg[k] = tostring(v)
 			end
+
+			-- else
+
+			-- if v then
+			-- 	arg[k] = tostring(v)	
+			-- else
+				-- arg[k] = json.encode(v)
+			-- end
 		end
 	end
 
 	out = table.concat(arg, " ") .. "\n"
-	-- for i,v in ipairs(arg) do
-	-- 	if i ~= 0 then
- --        	out = out .. ", " .. tostring(v)
- --        else
- --        	out = tostring(v)
- --        end
- --    end
- --    out = out .. "\n"
-
 
 	glomp_print_queue[#glomp_print_queue + 1] = out
 	print_message_test.data.text = print_message_test.data.text .. out
@@ -54,40 +53,60 @@ function print_event(name, data)
 	print_more(name, data.text, data.x, data.y)
 end
 
--- local message_test = {
--- 	action = "update",
--- 	name = "game.framerate",
--- 	type = "label",
--- 	data = {
--- 		text = "This is my textsss",
--- 		x = 10,
--- 		y = 170
--- 	}
--- }
-
--- local json_output = json.encode(message_test)
-
--- local binary_output = marshal.encode(message_test)
-
--- print_more("message_test", json_output, 10, 80)
-
--- print_more("binary_test", binary_output, 10, 110)
-
--- local out = marshal.decode(binary_output)
-
--- process_event(out)
-
--- local second_out = json.encode(out)
-
--- print_more("decode_test", second_out, 10, 140)
-
--- print("Console Goes Here")
-
--- local a = 5
--- local b = {5}
-
--- if type(a) == "table" then
--- 	print(pairs(a))
+-- local old_error = error
+-- error = function(...)
+-- 	print(...)
+-- 	old_error()
 -- end
 
+function glomp_printobj(obj, indent)
+	indent = indent or ""
+	print (indent .. "Object:")
+	indent = indent .. "\t"
+	for key, val in pairs(obj) do
+		if type(val) == "table" then
+			print(indent .. key, "-", "Object:")
+			glomp_printobj(val, indent)
+		else
+			print(indent .. key, "-", val)
+		end
+	end
 
+	if (obj.__index) then
+		print ("__Index:")	
+		for key, val in ipairs(obj.__index) do
+			print(key, val)
+		end
+	end
+end
+
+function glomp_sprintobj(obj)
+	local str = "Object: "
+
+	-- object = 
+	-- for key, val in ipairs(obj) do
+	-- 	str .. key .. ", " .. val .. "\n"
+	-- end
+
+	-- if (obj.__index) then
+	-- 	print ("\n__Index:")	
+	-- 	for key, val in ipairs(obj.__index) do
+	-- 		print(key, val)
+	-- 	end
+	-- end
+end
+
+function print_error(err)
+	local err = string.gsub(err, "(.-/)", "")
+	local pos = string.find(err, ":%s")
+
+	if not pos then
+		print (err)
+		return
+	end
+
+	local err_one = string.sub(err, 1, pos+1)
+	local err_two = "    "..string.sub(err, pos+2, -1)
+	print(err_one)
+	print(err_two)
+end
