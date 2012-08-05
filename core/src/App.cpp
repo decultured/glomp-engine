@@ -38,13 +38,7 @@ void App::exit() {
 
 void App::update(){
     static int mode = 0;
-    
-    int new_mode = ofGetWindowMode();
-    if (mode != new_mode) {
-        mode = new_mode;
-        std::cout << "Mode: " << mode << std::endl;
-    }
-    
+        
     micros = ofGetSystemTimeMicros();
     elapsed = micros - start_time_micros;
 

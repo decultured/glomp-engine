@@ -134,7 +134,31 @@ namespace glomp {
         return 0;
     }
     
-    static int draw_filled(lua_State *L) {
+    static int set_line_width(lua_State *L) {
+        float w = luaL_checknumber(L, 1);
+        
+        ofSetLineWidth(w);
+        
+        return 0;
+    }
+    
+    static int set_circle_resolution(lua_State *L) {
+        int res = luaL_checknumber(L, 1);
+        
+        ofSetCircleResolution(res);
+        
+        return 0;
+    }
+    
+    static int set_curve_resolution(lua_State *L) {
+        int res = luaL_checknumber(L, 1);
+        
+        ofSetCurveResolution(res);
+        
+        return 0;
+    }
+    
+    static int draw_fills(lua_State *L) {
         if (lua_toboolean(L, 1)) {
             ofFill();
         } else {
@@ -151,6 +175,16 @@ namespace glomp {
     
     static int disable_alpha_blending(lua_State *L) {
         ofDisableAlphaBlending();
+        return 0;
+    }
+    
+    static int enable_smoothing(lua_State *L) {
+        ofEnableSmoothing();
+        return 0;
+    }
+    
+    static int disable_smoothing(lua_State *L) {
+        ofDisableSmoothing();
         return 0;
     }
     
@@ -200,14 +234,19 @@ namespace glomp {
         {"rotate", rotate},
         {"translate", translate},
         {"scale", scale},
-        {"rect", rect},
+        {"rectangle", rect},
         {"circle", circle},
         {"ellipse", ellipse},
         {"line", line},
         {"curve", curve},
+        {"set_curve_resolution", set_curve_resolution},
+        {"set_circle_resolution", set_circle_resolution},
         {"enable_alpha_blending", enable_alpha_blending},
         {"disable_alpha_blending", disable_alpha_blending},
-        {"draw_filled", draw_filled},
+        {"enable_smoothing", enable_smoothing},
+        {"disable_smoothing", disable_smoothing},
+        {"set_line_width", set_line_width},
+        {"draw_fills", draw_fills},
         {"set_viewport", set_viewport},
         {"set_ortho", set_ortho},
         {"set_perspective", set_perspective},

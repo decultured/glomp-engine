@@ -35,13 +35,14 @@ function _glomp_window_entry(state)
 end
 
 function _glomp_update(frame_time)
-	-- TODO : Set with table!
-	g_time:set("frame_time", frame_time)
-	g_time:set("total_time", g_time:get("total_time") + frame_time)
-	g_time:set("update_count", g_time:get("update_count") + 1)
-	g_clear_color:set("b", g_time:get("update_count") * 0.1)
-	graphics.set_color(0, g_time:get("update_count") * 0.1, 0, 255)
+	g_time:set({
+			frame_time = frame_time,
+			total_time = g_time:get("total_time") + frame_time,
+			update_count = g_time:get("update_count") + 1
+		})
 
+	g_clear_color:set("b", g_time:get("update_count") * 0.1)
+	
 	-- TODO : this is *massively* inefficient
 	print_more("update.count", "Updates: " .. g_time:get("update_count"), 700, 40)
 	print_more("update.time", "Elapsed: " .. g_time:get("frame_time"), 700, 60)
@@ -53,4 +54,14 @@ end
 
 function _glomp_draw()
 	graphics.clear(g_clear_color:get("r"), g_clear_color:get("g"), g_clear_color:get("b"))
+
+	graphics.set_color(0, g_time:get("update_count") * 0.1, 0, 255)
+	graphics.draw_fills(true)
+	graphics.enable_smoothing()
+	graphics.rectangle(10, 10, 500, 200)
+	graphics.draw_fills(false)
+	graphics.set_circle_resolution(100)
+	graphics.set_line_width(3)
+	graphics.set_color(100,0,0, 255)
+	graphics.rectangle(10, 10, 500, 200)
 end
