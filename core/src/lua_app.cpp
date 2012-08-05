@@ -13,6 +13,7 @@
 #include "lua_graphic.h"
 #include "lua_app.h"
 #include "lua_graphics.h"
+#include "lua_font.h"
 
 namespace glomp {
 
@@ -43,6 +44,7 @@ namespace glomp {
         LuaWrapper::init();
         luaopen_app(L);
         luaopen_graphics(L);
+        luaopen_font(L);
     }
     
     void LuaApp::shutdown() {
