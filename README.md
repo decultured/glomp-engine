@@ -1,6 +1,4 @@
-### Warning: glOMP engine is very early in development and may change in drastic ways within a short time.  While I welcome comments, contributions, and participation, I can't recommend its use for anything serious until more work is complete.
-
-### Warning Update: I am scrapping the original source for this and moving to OpenFrameworks as my foundation. Updates coming soon.
+### Warning: glOMP engine is early in development and may change in drastic ways within a short time.  While I welcome comments, contributions, and participation, I can't recommend its use for anything serious until more work is complete.
 
 GLOMP engine
 ============
