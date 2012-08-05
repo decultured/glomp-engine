@@ -8,8 +8,8 @@ glomp.mouse = Description.new({
                     y = 0,
                 })
 
-g_keyboard = glomp.keyboard
-g_mouse = glomp.mouse
+local g_keyboard = glomp.keyboard
+local g_mouse = glomp.mouse
 
 for k, v in pairs(inv_glomp_keys) do
     g_keyboard:set(v, 0)
@@ -20,11 +20,14 @@ for k, v in pairs(inv_mouse_buttons) do
 end
 
 function _glomp_key_pressed(key)
-    g_keyboard:set(inv_glomp_keys[key], g_keyboard:get(inv_glomp_keys[key]) + 1)
+    key = inv_glomp_keys[key]
+
+    g_keyboard:set(key, g_keyboard:get(key) + 1)
 end
 
 function _glomp_key_released(key)
-
+    key = inv_glomp_keys[key]
+    
     if g_keyboard:get("R") > 0 then
     	glomp_load_libs()
     end
@@ -46,7 +49,7 @@ function _glomp_key_released(key)
         glomp_run_stuff()
     end        
 
-    g_keyboard:set(inv_glomp_keys[key], 0)
+    g_keyboard:set(key, 0)
 end
 
 function _glomp_mouse_moved(x, y)
@@ -57,21 +60,32 @@ function _glomp_mouse_moved(x, y)
 end
 
 function _glomp_mouse_dragged(x, y, button)
+    button = inv_mouse_buttons[button]
+    
     g_mouse:set({
             x = x,
-            y = y
+            y = y,
+            [button] = g_mouse:get(button) + 1
         })
-
-    g_mouse:set(inv_mouse_buttons[button], g_mouse:get(inv_mouse_buttons[button]) + 1)
 end
 
 function _glomp_mouse_pressed(x, y, button)
-    -- print_more("mouse.pressed", "Mouse Clicked", x, y);
-    -- print ("Mouse pressed from lua:", x, y, button)
+    button = inv_mouse_buttons[button]
+    
+    g_mouse:set({
+            x = x,
+            y = y,
+            [button] = g_mouse:get(button) + 1
+        })
 end
 
 function _glomp_mouse_released(x, y, button)
-    -- print_more("mouse.released", "Mouse Released", x, y + 30);
-    -- print ("Mouse released from lua:", x, y, button)
+    button = inv_mouse_buttons[button]
+    
+    g_mouse:set({
+            x = x,
+            y = y,
+            [button] = g_mouse:get(button) + 1
+        })
 end
 

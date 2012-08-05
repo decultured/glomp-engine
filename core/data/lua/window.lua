@@ -1,4 +1,6 @@
-glomp = glomp or {}
+local graphics = graphics
+local glomp = glomp or {}
+local Description = Description
 
 glomp.time = Description.new({
 								last_frame_time = 0,
@@ -23,6 +25,7 @@ local g_window = glomp.window
 local g_clear_color = glomp.clear_color
 local g_mouse = glomp.mouse
 
+
 function _glomp_window_resized(w, h)
     g_window:set({w = w, h = h})
 end
@@ -37,6 +40,7 @@ function _glomp_update(frame_time)
 	g_time:set("total_time", g_time:get("total_time") + frame_time)
 	g_time:set("update_count", g_time:get("update_count") + 1)
 	g_clear_color:set("b", g_time:get("update_count") * 0.1)
+	graphics.set_color(0, g_time:get("update_count") * 0.1, 0, 255)
 
 	-- TODO : this is *massively* inefficient
 	print_more("update.count", "Updates: " .. g_time:get("update_count"), 700, 40)
