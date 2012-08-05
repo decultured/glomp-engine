@@ -15,7 +15,7 @@ void WorkerThread::threadedFunction() {
     init();
         
     while(isThreadRunning()) {
-        lua_wrap.update();
+        lua_wrap.update(10);
         this->sleep(10);
     }
 

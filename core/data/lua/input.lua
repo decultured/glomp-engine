@@ -1,38 +1,68 @@
+glomp = glomp or {}
+
+glomp.keyboard = Description.new()
+
+
+glomp.mouse = Description.new({
+                    x = 0,
+                    y = 0,
+                })
+
+g_keyboard = glomp.keyboard
+g_mouse = glomp.mouse
+
+for k, v in pairs(inv_glomp_keys) do
+    g_keyboard:set(v, 0)
+end
+
+for k, v in pairs(inv_mouse_buttons) do
+    g_mouse:set(v, 0)
+end
+
 function _glomp_key_pressed(key)
-    -- print ("Key pressed from lua:", key)
+    g_keyboard:set(inv_glomp_keys[key], g_keyboard:get(inv_glomp_keys[key]) + 1)
 end
 
 function _glomp_key_released(key)
-    if key == glomp_keys.R or key == glomp_keys.r then
+
+    if g_keyboard:get("R") > 0 then
     	glomp_load_libs()
     end
 
-    if key == glomp_keys.U or key == glomp_keys.u then
+    if g_keyboard:get("U") > 0 then
     	print("updates: "..glomp_update_count)
     end
 
-    if key == glomp_keys.Q or key == glomp_keys.q then
+    if g_keyboard:get("Q") > 0 then
     	__glomp_terminate()
     end
 
-    if key == glomp_keys.I or key == glomp_keys.i then
+    if g_keyboard:get("I") > 0 then
         dofile("input")
     end
 
-    if key == glomp_keys.SPACE then
+    if g_keyboard:get("SPACE") > 0 then
         glomp_load_libs()
         glomp_run_stuff()
     end        
+
+    g_keyboard:set(inv_glomp_keys[key], 0)
 end
 
 function _glomp_mouse_moved(x, y)
-    print_more("mouse.moved", "<=", x, y);
-    -- print ("Mouse moved from lua:", x, y)
+    g_mouse:set({
+            x = x,
+            y = y
+        })
 end
 
 function _glomp_mouse_dragged(x, y, button)
-    -- print_more("mouse.dragged", "Mouse Dragged", x, y - 30);
-    -- print ("Mouse dragged from lua:", x, y, button)
+    g_mouse:set({
+            x = x,
+            y = y
+        })
+
+    g_mouse:set(inv_mouse_buttons[button], g_mouse:get(inv_mouse_buttons[button]) + 1)
 end
 
 function _glomp_mouse_pressed(x, y, button)

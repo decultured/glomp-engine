@@ -12,36 +12,6 @@
 
 namespace glomp {
 
-void lua_print(lua_State *L, const char *message) {
-    lua_getglobal(L, "print");
-    if(!lua_isfunction(L,-1)) {
-        lua_pop(L,1);
-        return;
-    }
-
-    lua_pushstring(L, message);
-    
-    if (lua_pcall(L, 1, 0, 0) != 0) {
-        std::cout << "error calling lua print: %s\n" << lua_tostring(L, -1) << std::endl;
-        return;
-    }
-}
-
-static int l_print(lua_State* L) {
-    int nargs = lua_gettop(L);
-    
-    for (int i=1; i <= nargs; i++) {
-        if (lua_isstring(L, i)) {
-            std::cout << lua_tostring(L, i) << " ";
-        }
-        else {
-            /* Do something with non-strings? */
-        }
-    }
-    std::cout << std::endl;
-    return 0;
-}
-
 static int lua_print_text_event(lua_State *L) {
     static TextViewEvent event;
 
@@ -55,15 +25,7 @@ static int lua_print_text_event(lua_State *L) {
     return 0;
 }
 
-static int lua_pack_and_send_table(lua_State *L) {
-    
-    
-    
-    return 0;
-}
-
 static const struct luaL_reg printlib [] = {
-    {"print", l_print},
     {"print_more", lua_print_text_event},
     {NULL, NULL}
 };

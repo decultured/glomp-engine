@@ -9,6 +9,10 @@
 #ifndef glOMP_lua_wrapper_h
 #define glOMP_lua_wrapper_h
 
+#include <iostream>
+#include <sstream>
+#include <string>
+
 extern "C" {
     #include "lua.h"
     #include "lualib.h"
@@ -31,11 +35,11 @@ public:
     int set_lua_path(const char* path);
 
     void print(const char *message);
-    void report_errors(lua_State *L, int status);
+    void print(std::string &message);
+    void report_errors(lua_State *L, const char *message);
     bool load_file(const char *filename);
-    void error (lua_State *L, const char *fmt, ...);
     
-    void update();
+    void update(double frame_time);
 };
     
 }

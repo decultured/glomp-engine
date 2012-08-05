@@ -1,28 +1,36 @@
 
-glomp = glomp or {}
-
 local _description_proto = {}
 
 function _description_proto:has(attr)
 	return self._attributes[attr] ~= nil
 end
 
-function _description_proto:set(attr, val, silent)
-	self._previous[attr] = self._attributes[attr] 
-	self._attributes[attr] = val
-	self._changed[attr] = 1
+function _description_proto:set(attr, val, options)
+	if type(attr) == "table" then
+		for k, v in pairs (attr) do
+			if type(v) == "table" then
+				error("Values set to a description must only be basic types")
+			end
+
+			self:set(tostring(k), v, options)
+		end
+	else
+		self._previous[attr] = self._attributes[attr] 
+		self._attributes[attr] = val
+		self._changed[attr] = 1
+	end
 end
 
 function _description_proto:get(attr)
 	return self._attributes[attr]
 end
 
-function _description_proto:remove(attr)
+function _description_proto:unset(attr)
 	self:set(attr, nil)
 end
 	
 function _description_proto:clear(self)
-
+	
 end
 
 function _description_proto:on(event, callback)
@@ -52,9 +60,14 @@ end
 _description_proto.__index = _description_proto
 
 -- Descriptions have state
-glomp.Description = {}
+Description = {}
 
-function glomp.Description.new(initial)
+function Description.new(name, initial, options)
+	if type(name) == "table" then
+		options = initial
+		initial = name
+	end
+
 	local new_description = {
 				_previous = {},
 				_attributes = {},
@@ -62,17 +75,23 @@ function glomp.Description.new(initial)
 			}
 	setmetatable(new_description, _description_proto)
 	if initial then
-		-- TODO
-		-- new_description:set(initial, silent)
+		new_description:set(initial, true)
 	end
 	return new_description
 end
 
 -- Collections are groups of similar descriptions
-glomp.collection = {}
+-- Descriptions in a Collection are like rows in a table
+-- Only store references
+Collection = {}
 
 -- Compositions are groups of dissimilar but related descriptions
-glomp.composition = {}
+-- Descriptions in a Composition are like join tables
+-- Only store references
+Composition = {}
+
+-- Contexts apply roles to Descriptions, Collections, and/or Compositions and act upon them
+Contexts = {}
 
 -- Roles allow descriptions to do things, but have no state themselves
-glomp.Role = {}
+Role = {}

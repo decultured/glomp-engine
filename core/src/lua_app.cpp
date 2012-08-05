@@ -12,6 +12,7 @@
 #include "lua_print.h"
 #include "lua_graphic.h"
 #include "lua_app.h"
+#include "lua_graphics.h"
 
 namespace glomp {
 
@@ -41,6 +42,7 @@ namespace glomp {
     void LuaApp::init() {
         LuaWrapper::init();
         luaopen_app(L);
+        luaopen_graphics(L);
     }
     
     void LuaApp::shutdown() {
@@ -57,7 +59,7 @@ namespace glomp {
         lua_pushnumber(L, key);
         
         if (lua_pcall(L, 1, 0, 0) != 0) {
-            std::cout << "error calling lua _glomp_key_pressed: %s\n" << lua_tostring(L, -1);
+            report_errors(L, "_glomp_key_pressed");
             return;
         }
     }
@@ -72,7 +74,7 @@ namespace glomp {
         lua_pushnumber(L, key);
         
         if (lua_pcall(L, 1, 0, 0) != 0) {
-            std::cout << "error calling lua _glomp_key_released: %s\n" << lua_tostring(L, -1);
+            report_errors(L, "_glomp_key_released");
             return;
         }
     }
@@ -88,7 +90,7 @@ namespace glomp {
         lua_pushnumber(L, y);
         
         if (lua_pcall(L, 2, 0, 0) != 0) {
-            std::cout << "error calling lua _glomp_mouse_moved: %s\n" << lua_tostring(L, -1);
+            report_errors(L, "_glomp_mouse_moved");
             return;
         }
     }
@@ -105,7 +107,7 @@ namespace glomp {
         lua_pushnumber(L, button);
         
         if (lua_pcall(L, 3, 0, 0) != 0) {
-            std::cout << "error calling lua _glomp_mouse_dragged: %s\n" << lua_tostring(L, -1);
+            report_errors(L, "_glomp_mouse_dragged");
             return;
         }
     }
@@ -122,7 +124,7 @@ namespace glomp {
         lua_pushnumber(L, button);
         
         if (lua_pcall(L, 3, 0, 0) != 0) {
-            std::cout << "error calling lua _glomp_mouse_pressed: %s\n" << lua_tostring(L, -1);
+            report_errors(L, "_glomp_mouse_pressed");
             return;
         }
     }
@@ -139,7 +141,7 @@ namespace glomp {
         lua_pushnumber(L, button);
         
         if (lua_pcall(L, 3, 0, 0) != 0) {
-            std::cout << "error calling lua _glomp_mouse_released: %s\n" << lua_tostring(L, -1);
+            report_errors(L, "_glomp_mouse_released");
             return;
         }
     }
@@ -155,22 +157,20 @@ namespace glomp {
         lua_pushnumber(L, h);
         
         if (lua_pcall(L, 2, 0, 0) != 0) {
-            std::cout << "error calling lua _glomp_window_resized: %s\n" << lua_tostring(L, -1);
+            report_errors(L, "_glomp_window_resized");
             return;
         }
     }
     
-    void LuaApp::update(double frame_time) {
-        lua_getglobal(L, "_glomp_update");
+    void LuaApp::draw() {
+        lua_getglobal(L, "_glomp_draw");
         if(!lua_isfunction(L,-1)) {
             lua_pop(L,1);
             return;
         }
         
-        lua_pushnumber(L, frame_time);
-        
-        if (lua_pcall(L, 1, 0, 0) != 0) {
-            std::cout << "error calling lua _glomp_update: %s\n" << lua_tostring(L, -1);
+        if (lua_pcall(L, 0, 0, 0) != 0) {
+            report_errors(L, "_glomp_draw");
             return;
         }
     }
@@ -185,7 +185,7 @@ namespace glomp {
         lua_pushnumber(L, state);
         
         if (lua_pcall(L, 1, 0, 0) != 0) {
-            std::cout << "error calling lua _glomp_window_entry: %s\n" << lua_tostring(L, -1);
+            report_errors(L, "_glomp_window_entry");
             return;
         }
     }

@@ -5,9 +5,6 @@
 //  Created by Jeffrey Graves on 6/27/12.
 //  Copyright (c) 2012 Decultured. All rights reserved.
 //
-
-#include <iostream>
-#include <string>
 #include "lua_wrapper.h"
 #include "lua_print.h"
 #include "lua_marshal.h"
@@ -57,52 +54,55 @@ int LuaWrapper::set_lua_path(const char* path)
     return 0; // all done!
 }
 
-void LuaWrapper::error (lua_State *L, const char *fmt, ...) {
-    va_list argp;
-    va_start(argp, fmt);
-    vfprintf(stderr, fmt, argp);
-    va_end(argp);
-//    lua_close(L);
-//    this->L = NULL;
-//    exit(EXIT_FAILURE);
-}
-
-
 bool LuaWrapper::load_file(const char *filename) {
+    // TODO : Change to direct lua dofile call?
+    // Would have to wrap dofile from c at that point
     if (luaL_loadfile(L, filename) || lua_pcall(L, 0, LUA_MULTRET, 0)) {
-        std::cout << "### cannot run config. file:" << std::endl 
-                    << "###     " << lua_tostring(L, -1);
         lua_pop(L, 1);
-        
         return false;
     }
     return true;
 }
-
     
-void LuaWrapper::report_errors(lua_State *L, int status)
+void LuaWrapper::report_errors(lua_State *L, const char *message)
 {
-    std::cout << "Errors Found: " << status;
-    if ( status!=0 ) {
-        std::cerr << "-- " << lua_tostring(L, -1) << std::endl;
+    std::ostringstream str_stream;
+    str_stream << "Error: " << message << ":" << std::endl 
+                            << "     " << lua_tostring(L, -1);
 
-        lua_pop(L, 1);
-    }
+    print(str_stream.str().c_str());
+}
+
+void LuaWrapper::print(std::string &message) {
+    print(message.c_str());
 }
 
 void LuaWrapper::print(const char *message) {
-    if (L) lua_print(L, message);
+    lua_getglobal(L, "print");
+    if(!lua_isfunction(L,-1)) {
+        lua_pop(L,1);
+        return;
+    }
+    
+    lua_pushstring(L, message);
+    
+    if (lua_pcall(L, 1, 0, 0) != 0) {
+        std::cout << "error calling lua print: %s\n" << lua_tostring(L, -1) << std::endl;
+        return;
+    }
 }
 
-void LuaWrapper::update() {
+void LuaWrapper::update(double frame_time) {
     lua_getglobal(L, "_glomp_update");
     if(!lua_isfunction(L,-1)) {
         lua_pop(L,1);
         return;
     }
     
-    if (lua_pcall(L, 0, 0, 0) != 0) {
-        std::cout << "error calling lua _glomp_update: %s\n" << lua_tostring(L, -1);
+    lua_pushnumber(L, frame_time);
+
+    if (lua_pcall(L, 1, 0, 0) != 0) {
+        report_errors(L, "_glomp_update");
         return;
     }
 }

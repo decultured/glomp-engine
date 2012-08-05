@@ -4,7 +4,7 @@ dofile("json")
 
 function glomp_run_stuff()
 	dofile("underscore")
-	dofile("model")
+	dofile("description")
 	dofile("model_tests")
 end
 

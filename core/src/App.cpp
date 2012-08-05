@@ -60,9 +60,7 @@ void App::update(){
 }
 
 void App::draw(){
-    ofBackgroundHex(0x042E2A);
-    
-    
+    lua_app.draw();
     root_graphic.Render();
 }
 
