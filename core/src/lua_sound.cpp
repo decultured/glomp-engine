@@ -60,7 +60,7 @@ namespace glomp {
     static int set_loop(lua_State *L) {
         ofSoundPlayer *sound= glomp_checksound(L, 1);
         
-        bool looping = lua_toboolean(L, 1);
+        bool looping = lua_toboolean(L, 2);
         
         sound->setLoop(looping);
         
@@ -70,17 +70,25 @@ namespace glomp {
     static int set_position(lua_State *L) {
         ofSoundPlayer *sound= glomp_checksound(L, 1);
         
-        float pos = luaL_checknumber(L, 1);
+        float pos = luaL_checknumber(L, 2);
         
         sound->setPosition(pos);
         
         return 0;
     }
     
+    static int get_position(lua_State *L) {
+        ofSoundPlayer *sound= glomp_checksound(L, 1);
+        
+        lua_pushnumber(L, sound->getPosition());
+        
+        return 1;
+    }
+    
     static int set_speed(lua_State *L) {
         ofSoundPlayer *sound= glomp_checksound(L, 1);
         
-        float speed = luaL_checknumber(L, 1);
+        float speed = luaL_checknumber(L, 2);
         
         sound->setSpeed(speed);
         
@@ -90,7 +98,7 @@ namespace glomp {
     static int set_volume(lua_State *L) {
         ofSoundPlayer *sound= glomp_checksound(L, 1);
         
-        float volume = luaL_checknumber(L, 1);
+        float volume = luaL_checknumber(L, 2);
         
         sound->setVolume(volume);
         
@@ -100,7 +108,7 @@ namespace glomp {
     static int set_paused(lua_State *L) {
         ofSoundPlayer *sound= glomp_checksound(L, 1);
         
-        bool paused = lua_toboolean(L, 1);
+        bool paused = lua_toboolean(L, 2);
         
         sound->setPaused(paused);
         
@@ -110,7 +118,7 @@ namespace glomp {
     static int set_pan(lua_State *L) {
         ofSoundPlayer *sound= glomp_checksound(L, 1);
         
-        float pan = luaL_checknumber(L, 1);
+        float pan = luaL_checknumber(L, 2);
         
         sound->setPan(pan);
         
@@ -136,6 +144,7 @@ namespace glomp {
         {"stop", stop_sound},
         {"set_loop", set_loop},
         {"set_position", set_position},
+        {"get_position", get_position},
         {"set_speed", set_speed},
         {"set_volume", set_volume},
         {"set_paused", set_paused},
