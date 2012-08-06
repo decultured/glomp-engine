@@ -20,16 +20,16 @@ namespace glomp {
         bool antialiased = lua_toboolean(L, 3);
         bool full_char_set = lua_toboolean(L, 4);
         bool make_contours = lua_toboolean(L, 5);
-        float simplify_amount = luaL_checknumber(L, 6);
-        int dpi = luaL_checkint(L, 7);
+        float simplify_amount = lua_isnumber(L, 6) ? luaL_checknumber(L, 6) : 0.3;
+        int dpi = lua_isnumber(L, 7) ? luaL_checkint(L, 7) : 0;
         
-        ofTrueTypeFont *font= *(ofTrueTypeFont **)lua_newuserdata(L, sizeof(ofTrueTypeFont *));
+        ofTrueTypeFont **font= (ofTrueTypeFont **)lua_newuserdata(L, sizeof(ofTrueTypeFont *));
         luaL_getmetatable(L, "glomp.font");
         lua_setmetatable(L, -2);
         
-        font= new ofTrueTypeFont();
+        *font= new ofTrueTypeFont();
 
-        font->loadFont(filename.c_str(), fontsize, 
+        (*font)->loadFont(filename.c_str(), fontsize, 
                         antialiased, full_char_set,
                         make_contours, simplify_amount, dpi);
         
@@ -47,7 +47,7 @@ namespace glomp {
     static int set_line_height(lua_State *L) {
         ofTrueTypeFont *font= glomp_checkfont(L, 1);
 
-        float line_height = luaL_checknumber(L, 1);
+        float line_height = luaL_checknumber(L, 2);
         
         font->setLineHeight(line_height);
         
@@ -57,7 +57,7 @@ namespace glomp {
     static int set_letter_spacing(lua_State *L) {
         ofTrueTypeFont *font= glomp_checkfont(L, 1);
         
-        float letter_spacing = luaL_checknumber(L, 1);
+        float letter_spacing = luaL_checknumber(L, 2);
         
         font->setLetterSpacing(letter_spacing);
         
@@ -67,7 +67,7 @@ namespace glomp {
     static int set_space_size(lua_State *L) {
         ofTrueTypeFont *font= glomp_checkfont(L, 1);
         
-        float space_size = luaL_checknumber(L, 1);
+        float space_size = luaL_checknumber(L, 2);
         
         font->setSpaceSize(space_size);
         
@@ -87,7 +87,7 @@ namespace glomp {
     static int get_string_height(lua_State *L) {
         ofTrueTypeFont *font= glomp_checkfont(L, 1);
         
-        const char * out = luaL_checkstring(L, 1);
+        const char * out = luaL_checkstring(L, 2);
         
         float height = font->stringHeight(out);
         lua_pushnumber(L, height);
@@ -98,7 +98,7 @@ namespace glomp {
     static int get_string_width(lua_State *L) {
         ofTrueTypeFont *font= glomp_checkfont(L, 1);
         
-        const char * out = luaL_checkstring(L, 1);
+        const char * out = luaL_checkstring(L, 2);
         
         float width = font->stringHeight(out);
         lua_pushnumber(L, width);
@@ -118,9 +118,9 @@ namespace glomp {
     static int draw_string(lua_State *L) {
         ofTrueTypeFont *font= glomp_checkfont(L, 1);
         
-        const char * out = luaL_checkstring(L, 1);
-        float x = luaL_checknumber(L, 2);
-        float y = luaL_checknumber(L, 3);
+        const char * out = luaL_checkstring(L, 2);
+        float x = luaL_checknumber(L, 3);
+        float y = luaL_checknumber(L, 4);
         
         font->drawString(out, x, y);
         float height = font->stringHeight(out);
@@ -134,9 +134,9 @@ namespace glomp {
     static int draw_string_as_shapes(lua_State *L) {
         ofTrueTypeFont *font= glomp_checkfont(L, 1);
         
-        const char * out = luaL_checkstring(L, 1);
-        float x = luaL_checknumber(L, 2);
-        float y = luaL_checknumber(L, 3);
+        const char * out = luaL_checkstring(L, 2);
+        float x = luaL_checknumber(L, 3);
+        float y = luaL_checknumber(L, 4);
         
         font->drawStringAsShapes(out, x, y);
         float height = font->stringHeight(out);

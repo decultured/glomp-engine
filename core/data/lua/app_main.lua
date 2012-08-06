@@ -4,8 +4,8 @@ dofile("json")
 
 function glomp_run_stuff()
 	dofile("underscore")
+	dofile("event")
 	dofile("description")
-	dofile("model_tests")
 end
 
 function glomp_load_libs()
@@ -14,5 +14,11 @@ function glomp_load_libs()
 	dofile("window")
 end
 
+function glomp_run_tests()
+	dofile("model_tests")
+	dofile("playground")
+end
+
 glomp_run_stuff()
 glomp_load_libs()
+glomp_run_tests()

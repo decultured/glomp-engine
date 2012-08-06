@@ -10,7 +10,6 @@
 #include <string>
 #include "lua_wrapper.h"
 #include "lua_print.h"
-#include "lua_graphic.h"
 #include "lua_app.h"
 #include "lua_graphics.h"
 #include "lua_font.h"

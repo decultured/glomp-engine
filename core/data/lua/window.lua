@@ -64,4 +64,8 @@ function _glomp_draw()
 	graphics.set_line_width(3)
 	graphics.set_color(100,0,0, 255)
 	graphics.rectangle(10, 10, 500, 200)
+
+	if fnt then 
+		fnt:draw("WASSUP", 50, 50)
+	end
 end

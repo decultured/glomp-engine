@@ -75,7 +75,7 @@ namespace glomp {
         {"save_viewport", save_viewport},
         {"alert", system_alert},
         {"save_dialog", system_save_dialog},
-        {"load_dialog", system_save_dialog},
+        {"load_dialog", system_load_dialog},
         {NULL, NULL}
     };
     

@@ -31,9 +31,9 @@ void App::setup(){
 }
 
 void App::exit() {
+    lua_app.shutdown();
     game_thread.waitForThread(true);
     game_thread.stopThread();
-    lua_app.shutdown();
 }
 
 void App::update(){
@@ -43,7 +43,7 @@ void App::update(){
     elapsed = micros - start_time_micros;
 
     if (elapsed < 1000) {
-        ofSleepMillis(1);
+//        ofSleepMillis(1);
         micros = ofGetSystemTimeMicros();
         elapsed = micros - start_time_micros;
     }

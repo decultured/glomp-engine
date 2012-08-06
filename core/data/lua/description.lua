@@ -6,6 +6,9 @@ function _description_proto:has(attr)
 end
 
 function _description_proto:set(attr, val, options)
+	if not attr then
+		return
+	end
 	if type(attr) == "table" then
 		for k, v in pairs (attr) do
 			if type(v) == "table" then
@@ -14,15 +17,22 @@ function _description_proto:set(attr, val, options)
 
 			self:set(tostring(k), v, options)
 		end
+		return
 	else
 		self._previous[attr] = self._attributes[attr] 
 		self._attributes[attr] = val
 		self._changed[attr] = 1
+		self._event_pump:trigger("change" .. ":" .. attr, val)
 	end
+
 end
 
-function _description_proto:get(attr)
-	return self._attributes[attr]
+function _description_proto:get(attr, default)
+	if self._attributes[attr] then
+		return self._attributes[attr]
+	else 
+		return default
+	end
 end
 
 function _description_proto:unset(attr)
@@ -34,7 +44,11 @@ function _description_proto:clear(self)
 end
 
 function _description_proto:on(event, callback)
-		
+	self._event_pump:on(event, callback)
+end
+
+function _description_proto:off(event, callback)
+	self._event_pump:off(event, callback)
 end
 
 function _description_proto:__tostring()
@@ -72,6 +86,7 @@ function Description.new(name, initial, options)
 				_previous = {},
 				_attributes = {},
 				_changed = {},
+				_event_pump = EventPump.new(name)
 			}
 	setmetatable(new_description, _description_proto)
 	if initial then

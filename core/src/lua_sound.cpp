@@ -18,14 +18,14 @@ namespace glomp {
         bool stream = lua_toboolean(L, 2);
         bool multiplay = lua_toboolean(L, 3);
         
-        ofSoundPlayer *sound= *(ofSoundPlayer **)lua_newuserdata(L, sizeof(ofSoundPlayer *));
+        ofSoundPlayer **sound= (ofSoundPlayer **)lua_newuserdata(L, sizeof(ofSoundPlayer *));
         luaL_getmetatable(L, "glomp.sound");
         lua_setmetatable(L, -2);
         
-        sound = new ofSoundPlayer();
+        *sound = new ofSoundPlayer();
         
-        sound->setMultiPlay(multiplay);
-        sound->loadSound(filename, stream);
+        (*sound)->setMultiPlay(multiplay);
+        (*sound)->loadSound(filename, stream);
 
         return 1;
     }
@@ -33,7 +33,8 @@ namespace glomp {
     static int sound_gc(lua_State *L) {
         ofSoundPlayer *sound= glomp_checksound(L, 1);
         
-        sound->unloadSound();
+        if (sound->isLoaded())
+            sound->unloadSound();
         
         delete sound;
         
@@ -151,7 +152,7 @@ namespace glomp {
         lua_setfield(L, -2, "__index");
         
         luaL_register(L, NULL, glomp_sound_methods);
-        luaL_register(L, "font", glomp_sound);
+        luaL_register(L, "sound", glomp_sound);
         
         return 1;
     }
