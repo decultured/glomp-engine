@@ -53,16 +53,16 @@ function _glomp_update(frame_time)
 end
 
 function _glomp_draw()
-	graphics.clear(g_clear_color:get("r"), g_clear_color:get("g"), g_clear_color:get("b"))
+	graphics.clear(hex_to_rgb("#fdf6e3"))
 
-	graphics.set_color(0, g_time:get("update_count") * 0.1, 0, 255)
+	graphics.set_color(hex_to_rgb("#ede9d6"))
 	graphics.draw_fills(true)
 	graphics.enable_smoothing()
 	graphics.rectangle(10, 10, 500, 200)
 	graphics.draw_fills(false)
 	graphics.set_circle_resolution(100)
 	graphics.set_line_width(3)
-	graphics.set_color(100,0,0, 255)
+	graphics.set_color(hex_to_rgb("#5a6e75"))
 	graphics.rectangle(10, 10, 500, 200)
 
 	if fnt then 

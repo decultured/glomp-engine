@@ -87,10 +87,27 @@ function split(inputstr, sep)
     if sep == nil then
         sep = "%s"
     end
-    t={} ; i=1
-    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
-        t[i] = str
-        i = i + 1
+    local t={}
+    local pat = "([^"..sep.."]+)"
+    for str in string.gmatch(inputstr, pat) do
+        t[#t + 1] = str
     end
     return t
+end
+
+-- TODO : this is likely slow, copypasta
+function hex_to_rgb(hex)
+	hex = hex:gsub("#","")
+	return tonumber("0x"..hex:sub(1,2)), tonumber("0x"..hex:sub(3,4)), tonumber("0x"..hex:sub(5,6))
+end
+
+function rgb_to_hex ( nR, nG, nB )
+    local sColor = "#"
+    nR = string.format ( "%X", nR )
+    sColor = sColor .. ( ( string.len ( nR ) == 1 ) and ( "0" .. nR ) or nR )
+    nG = string.format ( "%X", nG )
+    sColor = sColor .. ( ( string.len ( nG ) == 1 ) and ( "0" .. nG ) or nG )
+    nB = string.format ( "%X", nB )
+    sColor = sColor .. ( ( string.len ( nB ) == 1 ) and ( "0" .. nB ) or nB )
+    return sColor
 end

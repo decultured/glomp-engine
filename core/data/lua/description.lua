@@ -1,38 +1,80 @@
 
+-- nil, boolean, number, string, function, userdata, thread, table
+
 local _description_proto = {}
 
 function _description_proto:has(attr)
 	return self._attributes[attr] ~= nil
 end
 
-function _description_proto:set(attr, val, options)
-	if not attr then
-		return
-	end
-	if type(attr) == "table" then
-		for k, v in pairs (attr) do
+function _description_proto:set_many(table, options)
+	if type(table) == "table" then
+		for k, v in pairs (table) do
 			if type(v) == "table" then
 				error("Values set to a description must only be basic types")
 			end
 
-			self:set(tostring(k), v, options)
+			self:set(tostring(k), v, {silent = true})
+			self._event_pump:trigger(tostring(k), v, self)
 		end
+	end
+	self._event_pump:trigger("changed", self)
+end
+
+function _description_proto:set(attr, val, options)
+	if val == nil then
+		self:set_many(attr)
 		return
-	else
-		self._previous[attr] = self._attributes[attr] 
-		self._attributes[attr] = val
-		self._changed[attr] = 1
-		self._event_pump:trigger("change" .. ":" .. attr, val)
 	end
 
+	local val_type = type(val)
+
+	if val_type == "number" or val_type == "string" or val_type == "boolean" then
+		if self._attributes[attr] == val or not attr then
+			return
+		end
+		self._previous[attr] = self._attributes[attr]
+		self._attributes[attr] = val
+		self._changed[attr] = 1
+
+		if options and options.silent then
+			return
+		end
+	elseif val_type == "table" then
+		self:set_many(val)
+		return
+	else
+		error("Descriptions can only store numbers, strings or booleans, " .. val_type .. " was provided.")
+		return
+	end
+	self._event_pump:trigger(attr, val, self)
+	self._event_pump:trigger("changed", self)
+end
+
+function _description_proto:apply_to(attr, funct)
+	self:set(attr, funct(self._attributes[attr]))
+end
+
+function _description_proto:add_to(attr, val)
+	if self._attributes[attr] then
+		self:set(attr, self._attributes[attr] + val)
+	end
+end
+
+function _description_proto:multiply(attr, val)
+	if self._attributes[attr] then
+		self:set(attr, self._attributes[attr] * val)
+	end
+end
+
+function _description_proto:concat(attr, val)
+	if self._attributes[attr] then
+		self:set(attr, self._attributes[attr] .. val)
+	end
 end
 
 function _description_proto:get(attr, default)
-	if self._attributes[attr] then
-		return self._attributes[attr]
-	else 
-		return default
-	end
+	return self._attributes[attr] or default
 end
 
 function _description_proto:unset(attr)
@@ -49,6 +91,26 @@ end
 
 function _description_proto:off(event, callback)
 	self._event_pump:off(event, callback)
+end
+
+function _description_proto:when(event, callback, truth_check, ...)
+	self._event_pump:when(event, callback, truth_check, ...)
+end
+
+function _description_proto:when_equals(event, callback, val)
+	self._event_pump:when_equals(event, callback, val)
+end
+
+function _description_proto:when_not_equals(event, callback, val)
+	self._event_pump:when_not_equals(event, callback, val)
+end
+
+function _description_proto:when_greater_than(event, callback, val)
+	self._event_pump:when_greater_than(event, callback, val)
+end
+
+function _description_proto:when_less_than(event, callback, val)
+	self._event_pump:when_less_than(event, callback, val)
 end
 
 function _description_proto:__tostring()
@@ -90,7 +152,7 @@ function Description.new(name, initial, options)
 			}
 	setmetatable(new_description, _description_proto)
 	if initial then
-		new_description:set(initial, true)
+		new_description:set_many(initial, {silent = true})
 	end
 	return new_description
 end

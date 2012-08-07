@@ -7,42 +7,64 @@ local playground = Description.new({
 		pan = 0
 	})
 
+local _keys = glomp.keyboard
 
-glomp.keyboard:on("change:A", function(data) 
-	if data == 1 then
+_keys:when_equals("A", function() 
 		snd:play()
 		snd:set_position(playground:get("offset"))
-	elseif data == 0 then
+end, 1)
+
+_keys:when_equals("S", function() 
 		playground:set("offset", snd:get_position())
 		snd:stop()
-	end
+end, 1)
+
+_keys:when_greater_than("UP", function() 
+	playground:add_to("speed", 0.02)
+end, 0)
+
+_keys:when_greater_than("DOWN", function() 
+	playground:add_to("speed", -0.02)
+end, 0)
+
+_keys:when_greater_than("LEFT", function()
+	playground:add_to("pan", -0.02)
+end, 0)
+
+_keys:when_greater_than("RIGHT", function()
+	playground:add_to("pan", 0.02)
+end, 0)
+
+playground:on("speed", function(data)
+	snd:set_speed(data)
 end)
 
-glomp.keyboard:on("change:UP", function(data) 
-	if data > 0 then
-		playground:set("speed", playground:get("speed") + 0.02)
-		snd:set_speed(playground:get("speed"))
-	end
+playground:on("pan", function(data)
+	snd:set_pan(data)
 end)
+		
+_keys:when_greater_than("R", function()
+    glomp_run_tests()
+end, 0)
 
-glomp.keyboard:on("change:DOWN", function(data) 
-	if data > 0 then
-		playground:set("speed", playground:get("speed") - 0.02)
-		snd:set_speed(playground:get("speed"))
-	end
-end)
+_keys:when_greater_than("U", function()
+   	print("updates: "..glomp_update_count)
+end, 0)
 
+_keys:when_greater_than("Q", function()
+    __glomp_terminate()
+end, 0)
 
-glomp.keyboard:on("change:LEFT", function(data)
-	if data > 0 then
-		playground:set("pan", playground:get("pan") - 0.02)
-		snd:set_pan(playground:get("pan"))
-	end
-end)
+_keys:when_greater_than("I", function()
+    dofile("input")
+end, 0)
 
-glomp.keyboard:on("change:RIGHT", function(data)
-	if data > 0 then
-		playground:set("pan", playground:get("pan") + 0.02)
-		snd:set_pan(playground:get("pan"))
-	end
-end)
+_keys:when_greater_than("SPACE", function()
+    glomp_load_libs()
+    glomp_run_stuff()
+    glomp_run_tests()
+end, 0)
+
+_keys:when_greater_than("O", function()
+    system.save_screen("~/test")
+end, 0)

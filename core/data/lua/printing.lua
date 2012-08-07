@@ -24,8 +24,10 @@ function glomp_printobj(obj, indent)
 		if type(val) == "table" then
 			print(indent .. key, "-", "Object:")
 			glomp_printobj(val, indent)
+		elseif type(val) == "function" then
+			print(indent .. tostring(key), "-", "function")
 		else
-			print(indent .. key, "-", val)
+			print(indent .. tostring(key), "-", tostring(val))
 		end
 	end
 

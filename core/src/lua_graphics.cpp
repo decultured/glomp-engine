@@ -25,7 +25,7 @@ namespace glomp {
         float r = luaL_checknumber(L, 1);
         float g = luaL_checknumber(L, 2);
         float b = luaL_checknumber(L, 3);
-        float a = luaL_checknumber(L, 4);
+        float a = lua_isnumber(L, 4) ? lua_tonumber(L, 4) : 255;
         
         ofSetColor(r, g, b, a);
         
