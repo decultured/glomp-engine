@@ -51,30 +51,34 @@ function _description_proto:set(attr, val, options)
 	self._event_pump:trigger("changed", self)
 end
 
-function _description_proto:apply_to(attr, funct)
-	self:set(attr, funct(self._attributes[attr]))
+function _description_proto:apply_to(attr, funct, options)
+	self:set(attr, funct(self._attributes[attr]), options)
 end
 
-function _description_proto:add_to(attr, val)
+function _description_proto:add_to(attr, val, options)
 	if self._attributes[attr] then
-		self:set(attr, self._attributes[attr] + val)
+		self:set(attr, self._attributes[attr] + val, options)
 	end
 end
 
-function _description_proto:multiply(attr, val)
+function _description_proto:multiply(attr, val, options)
 	if self._attributes[attr] then
-		self:set(attr, self._attributes[attr] * val)
+		self:set(attr, self._attributes[attr] * val, options)
 	end
 end
 
-function _description_proto:concat(attr, val)
+function _description_proto:concat(attr, val, options)
 	if self._attributes[attr] then
-		self:set(attr, self._attributes[attr] .. val)
+		self:set(attr, self._attributes[attr] .. val, options)
 	end
 end
 
 function _description_proto:get(attr, default)
 	return self._attributes[attr] or default
+end
+
+function _description_proto:all()
+	return self._attributes
 end
 
 function _description_proto:unset(attr)
@@ -139,12 +143,17 @@ _description_proto.__index = _description_proto
 Description = {}
 
 function Description.new(name, initial, options)
-	if type(name) == "table" then
+	if not name then
+		name = UUID()
+	elseif type(name) == "table" then
 		options = initial
 		initial = name
+		name = UUID()
 	end
 
+	print("New object: "..name)
 	local new_description = {
+				_name = name,
 				_previous = {},
 				_attributes = {},
 				_changed = {},

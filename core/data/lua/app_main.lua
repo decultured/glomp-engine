@@ -1,8 +1,10 @@
 dofile(LUA_PATH.."util.lua")
 dofile("printing")
 dofile("json")
+dofile("UUID")
 
 function glomp_run_stuff()
+	dofile("UUID")
 	dofile("underscore")
 	dofile("event")
 	dofile("description")

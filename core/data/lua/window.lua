@@ -34,6 +34,8 @@ function _glomp_window_entry(state)
    g_window:set({entered = state})
 end
 
+local new_img = image.new("assets/images/openFrameworks.png")
+
 function _glomp_update(frame_time)
 	g_time:set({
 			frame_time = frame_time,
@@ -64,6 +66,8 @@ function _glomp_draw()
 	graphics.set_line_width(3)
 	graphics.set_color(hex_to_rgb("#5a6e75"))
 	graphics.rectangle(10, 10, 500, 200)
+
+	new_img:draw(30, 30)
 
 	if fnt then 
 		fnt:draw("WASSUP", 50, 50)

@@ -1,5 +1,5 @@
-snd = sound.new("assets/know.mp3", true)
-fnt = font.new("assets/fonts/Cousine-Regular.ttf", 30, true, false, true, 0.9, 100)
+local snd = sound.new("assets/know.mp3", true)
+local fnt = font.new("assets/fonts/Cousine-Regular.ttf", 30, true, false, true, 0.9, 100)
 
 local playground = Description.new({
 		offset = 0,
@@ -7,6 +7,14 @@ local playground = Description.new({
 		pan = 0
 	})
 
+playground:on("speed", function(data)
+	snd:set_speed(data)
+end)
+
+playground:on("pan", function(data)
+	snd:set_pan(data)
+end)
+		
 local _keys = glomp.keyboard
 
 _keys:when_equals("A", function() 
@@ -35,20 +43,13 @@ _keys:when_greater_than("RIGHT", function()
 	playground:add_to("pan", 0.02)
 end, 0)
 
-playground:on("speed", function(data)
-	snd:set_speed(data)
-end)
-
-playground:on("pan", function(data)
-	snd:set_pan(data)
-end)
-		
 _keys:when_greater_than("R", function()
     glomp_run_tests()
 end, 0)
 
 _keys:when_greater_than("U", function()
-   	print("updates: "..glomp_update_count)
+   	print("UUID: "..UUID())
+
 end, 0)
 
 _keys:when_greater_than("Q", function()

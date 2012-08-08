@@ -17,12 +17,11 @@ end
 local _event_pump_proto = {}
 
 function _event_pump_proto:on(event, callback)
-	self._callbacks[event] = self._callbacks[event] or {}
-	local new_thing = { 
-			["callback"] = callback,
-		}
-
-	table.insert(self._callbacks[event], new_thing)
+	local list = self._callbacks[event] or {}
+	table.insert(list, { 
+			callback = callback
+		})
+	self._callbacks[event] = list
 end
 
 function _event_pump_proto:when(event, callback, truth_check, ...)
@@ -36,43 +35,19 @@ function _event_pump_proto:when(event, callback, truth_check, ...)
 end
 
 function _event_pump_proto:when_not_equals(event, callback, val)
-	local list = self._callbacks[event] or {}
-	list[#list + 1] = { 
-			callback = callback,
-			truth_check = _not_equals,
-			params = val
-		}
-	self._callbacks[event] = list
+	self:when(event, callback, _not_equals, val)
 end
 
 function _event_pump_proto:when_equals(event, callback, val)
-	local list = self._callbacks[event] or {}
-	list[#list + 1] = { 
-			callback = callback,
-			truth_check = _equals,
-			params = val
-		}
-	self._callbacks[event] = list
+	self:when(event, callback, _equals, val)
 end
 
 function _event_pump_proto:when_greater_than(event, callback, val)
-	local list = self._callbacks[event] or {}
-	list[#list + 1] = { 
-			callback = callback,
-			truth_check = _greater_than,
-			params = val
-		}
-	self._callbacks[event] = list
+	self:when(event, callback, _greater_than, val)
 end
 
 function _event_pump_proto:when_less_than(event, callback, val)
-	local list = self._callbacks[event] or {}
-	list[#list + 1] = { 
-			callback = callback,
-			truth_check = _less_than,
-			params = val
-		}
-	self._callbacks[event] = list
+	self:when(event, callback, _less_than, val)
 end
 
 function _event_pump_proto:off(event, callback)
