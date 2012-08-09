@@ -1,6 +1,8 @@
 Base Types
 ==========
 
+This is out of date and inaccurate - plz ignore
+
 Identifier
 ----------
 

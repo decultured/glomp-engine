@@ -14,6 +14,14 @@ local function _less_than(data, param)
 	return data < param
 end
 
+local function _between(data, min, max)
+	return min < param < max
+end
+
+local function _not_between(data, min, max)
+	return not (min < param < max)
+end
+
 local _event_pump_proto = {}
 
 function _event_pump_proto:on(event, callback)
@@ -48,6 +56,14 @@ end
 
 function _event_pump_proto:when_less_than(event, callback, val)
 	self:when(event, callback, _less_than, val)
+end
+
+function _event_pump_proto:when_between(event, callback, min, max)
+	self:when(event, callback, _between, val)
+end
+
+function _event_pump_proto:when_not_between(event, callback, min, max)
+	self:when(event, callback, _not_between, val)
 end
 
 function _event_pump_proto:off(event, callback)

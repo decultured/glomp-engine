@@ -1,5 +1,16 @@
-
--- nil, boolean, number, string, function, userdata, thread, table
+-- Descriptions store state and trigger events based on state change
+--
+-- Fields:
+--     Can store:
+--         number, string, boolean, nil (as empty field)
+--     Can't store:
+--         function, userdata, thread, table
+--
+-- Definitions:
+-- 
+-- IDs:
+--     Must be unique
+--     Can be generated automatically using a pseudo-UUID algorithm
 
 local _description_proto = {}
 
@@ -117,6 +128,14 @@ function _description_proto:when_less_than(event, callback, val)
 	self._event_pump:when_less_than(event, callback, val)
 end
 
+function _description_proto:when_between(event, callback, val)
+	self._event_pump:when_between(event, callback, val)
+end
+
+function _description_proto:when_not_between(event, callback, val)
+	self._event_pump:when_not_between(event, callback, val)
+end
+
 function _description_proto:__tostring()
 	return json.encode(self._attributes)
 end
@@ -139,7 +158,6 @@ end
 
 _description_proto.__index = _description_proto
 
--- Descriptions have state
 Description = {}
 
 function Description.new(name, initial, options)
@@ -165,19 +183,3 @@ function Description.new(name, initial, options)
 	end
 	return new_description
 end
-
--- Collections are groups of similar descriptions
--- Descriptions in a Collection are like rows in a table
--- Only store references
-Collection = {}
-
--- Compositions are groups of dissimilar but related descriptions
--- Descriptions in a Composition are like join tables
--- Only store references
-Composition = {}
-
--- Contexts apply roles to Descriptions, Collections, and/or Compositions and act upon them
-Contexts = {}
-
--- Roles allow descriptions to do things, but have no state themselves
-Role = {}

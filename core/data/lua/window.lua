@@ -9,22 +9,13 @@ glomp.time = Description.new({
 							})
 
 glomp.window = Description.new({
-								x = 0,
-								y = 0,
+								w = 0,
+								h = 0,
 								entered = 1,
-							})
-
-glomp.clear_color = Description.new({
-								r = 0,
-								g = 0,
-								b = 0
 							})
 
 local g_time = glomp.time
 local g_window = glomp.window
-local g_clear_color = glomp.clear_color
-local g_mouse = glomp.mouse
-
 
 function _glomp_window_resized(w, h)
     g_window:set({w = w, h = h})
@@ -42,16 +33,6 @@ function _glomp_update(frame_time)
 			total_time = g_time:get("total_time") + frame_time,
 			update_count = g_time:get("update_count") + 1
 		})
-
-	g_clear_color:set("b", g_time:get("update_count") * 0.1)
-	
-	-- TODO : this is *massively* inefficient
-	print_more("update.count", "Updates: " .. g_time:get("update_count"), 700, 40)
-	print_more("update.time", "Elapsed: " .. g_time:get("frame_time"), 700, 60)
-	print_more("update.time_avg", "Average: " .. g_time:get("total_time") / g_time:get("update_count"), 700, 80)
-	print_more("update.fps", "FPS: " .. g_time:get("update_count") / g_time:get("total_time"), 700, 100)
-	print_more("update.total", "Total: " .. g_time:get("total_time"), 700, 120)
-	print_more("mouse.moved", "<=", g_mouse:get("x"), g_mouse:get("y"));
 end
 
 function _glomp_draw()
@@ -67,7 +48,12 @@ function _glomp_draw()
 	graphics.set_color(hex_to_rgb("#5a6e75"))
 	graphics.rectangle(10, 10, 500, 200)
 
-	new_img:draw(30, 30)
+	graphics.enable_alpha_blending()
+		graphics.set_color(hex_to_rgb("#FFFFFF"))
+		new_img:draw(30, 30)
+	graphics.disable_alpha_blending()
+
+	graphics.set_color(hex_to_rgb("#5a6e75"))
 
 	if fnt then 
 		fnt:draw("WASSUP", 50, 50)

@@ -16,6 +16,8 @@
 #include "lua_sound.h"
 #include "lua_system.h"
 #include "lua_image.h"
+#include "lua_window.h"
+
 
 namespace glomp {
 
@@ -50,6 +52,7 @@ namespace glomp {
         luaopen_sound(L);
         luaopen_glomp_system(L);
         luaopen_image(L);
+        luaopen_window(L);
     }
     
     void LuaApp::shutdown() {

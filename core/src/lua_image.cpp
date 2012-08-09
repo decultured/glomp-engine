@@ -70,6 +70,23 @@ namespace glomp {
         return 0;
     }
     
+    static int draw_subsection(lua_State *L) {
+        ofImage *image = glomp_checkimage(L, 1);
+        
+        float x = luaL_checknumber(L, 2);
+        float y = luaL_checknumber(L, 3);
+        float w = luaL_checknumber(L, 4);
+        float h = luaL_checknumber(L, 5);
+        float sx = luaL_checknumber(L, 6);
+        float sy = luaL_checknumber(L, 7);
+        float sw = luaL_checknumber(L, 8);
+        float sh = luaL_checknumber(L, 9);
+
+        image->drawSubsection(x, y, w, h, sx, sy, sw, sh);
+        
+        return 0;
+    }
+    
     static int get_width(lua_State *L) {
         ofImage *image = glomp_checkimage(L, 1);
         
@@ -145,6 +162,7 @@ namespace glomp {
     
     static const struct luaL_Reg glomp_image_methods [] = {
         {"draw", draw_image},
+        {"draw_subsection", draw_subsection},
         {"get_width", get_width},
         {"get_height", get_height},
         {"get_color_at", get_color_at},
