@@ -69,6 +69,22 @@ namespace glomp {
         return 3;
     }
     
+    static int app_exit(lua_State *L) {
+        int status = lua_isnumber(L, 1) ? lua_tointeger(L, 1) : 0;
+        
+        ofExit(status);
+        
+        return 0;
+    }
+    
+    static int app_sleep_millis(lua_State *L) {
+        int millis = luaL_checkinteger(L, 1);
+        
+        ofSleepMillis(millis);
+        
+        return 0;
+    }
+    
     static const struct luaL_Reg glomp_system[] = {
         {"launch_browser", launch_browser},
         {"save_screen", save_screen},
@@ -76,6 +92,8 @@ namespace glomp {
         {"alert", system_alert},
         {"save_dialog", system_save_dialog},
         {"load_dialog", system_load_dialog},
+        {"exit", app_exit},
+        {"sleep", app_sleep_millis},
         {NULL, NULL}
     };
     

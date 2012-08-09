@@ -134,6 +134,26 @@ namespace glomp {
         return 0;
     }
     
+    static int bitmap_print(lua_State *L) {
+        const char *text = luaL_checkstring(L, 1);
+        float x = luaL_checknumber(L, 2);
+        float y = luaL_checknumber(L, 3);
+        
+        ofDrawBitmapString(text, x, y);
+        
+        return 0;
+    }
+    
+    static int bitmap_highlight_print(lua_State *L) {
+        const char *text = luaL_checkstring(L, 1);
+        float x = luaL_checknumber(L, 2);
+        float y = luaL_checknumber(L, 3);
+        
+        ofDrawBitmapStringHighlight(text, x, y);
+        
+        return 0;
+    }
+    
     static int set_line_width(lua_State *L) {
         float w = luaL_checknumber(L, 1);
         
@@ -239,6 +259,8 @@ namespace glomp {
         {"ellipse", ellipse},
         {"line", line},
         {"curve", curve},
+        {"print", bitmap_print},
+        {"print_highlight", bitmap_highlight_print},
         {"set_curve_resolution", set_curve_resolution},
         {"set_circle_resolution", set_circle_resolution},
         {"enable_alpha_blending", enable_alpha_blending},
