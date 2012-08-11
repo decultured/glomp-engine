@@ -7,15 +7,24 @@
 //
 
 #include <iostream>
-#include "lua_worker_thread.h"
+#include "worker_thread.h"
 
 namespace glomp {
+
+WorkerThread::WorkerThread(Poco::TimedNotificationQueue& main_queue)
+                :_main_queue(main_queue) {
+    L = NULL;
+}
+
+WorkerThread::~WorkerThread() {
+    shutdown();
+}
 
 void WorkerThread::threadedFunction() {
     init();
         
     while(isThreadRunning()) {
-        lua_wrap.update(10);
+        glOMP::lua_worker_callback_update(L, 10);
         this->sleep(10);
     }
 
@@ -23,14 +32,19 @@ void WorkerThread::threadedFunction() {
 }
 
 void WorkerThread::init() {
-    lua_wrap.init();
-
-    lua_wrap.set_lua_path(ofToDataPath("lua/", true).c_str());
-    lua_wrap.load_file(ofToDataPath("lua/worker_main.lua").c_str());
+    if (L) {
+        glOMP::lua_worker_shutdown(L);
+    }
+    L = glOMP::lua_worker_init();
+    glOMP::lua_set_path(L, ofToDataPath("lua/", true).c_str());
+    glOMP::lua_load_file(L, ofToDataPath("lua/worker_main.lua").c_str());
 }
 
 void WorkerThread::shutdown() {
-    lua_wrap.shutdown();
+    if (L) {
+        glOMP::lua_worker_shutdown(L);
+        L = NULL;
+    }
 }
 
 }

@@ -10,21 +10,21 @@
 #define glOMP_game_thread_h
 
 #include "ofMain.h"
-#include "lua_game.h"
-#include "ofEvents.h"
-
 #include "Poco/TimedNotificationQueue.h"
+
+#include "lua_worker.h"
 
 namespace glomp {
 
 class WorkerThread : public ofThread {
 private:
-    LuaWrapper lua_wrap;
+    lua_State *L;
 
     Poco::TimedNotificationQueue& _main_queue;
 
 public:
-    WorkerThread(Poco::TimedNotificationQueue& main_queue) : _main_queue(main_queue) {}
+    WorkerThread(Poco::TimedNotificationQueue& main_queue);
+    ~WorkerThread();
 
     void init();
 

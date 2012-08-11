@@ -63,7 +63,7 @@ namespace glOMP {
     }
     
     void lua_print(lua_State * L, std::string &message) {
-        lua_print(message.c_str());
+        lua_print(L, message.c_str());
     }
     
     void lua_report_errors(lua_State *L, const char *message)
@@ -72,7 +72,7 @@ namespace glOMP {
         str_stream << "Error: " << message << ":" << std::endl
         << "     " << lua_tostring(L, -1);
         
-        print(str_stream.str().c_str());
+        lua_print(L, str_stream.str().c_str());
     }
     
     int lua_set_path(lua_State *L, const char* path)

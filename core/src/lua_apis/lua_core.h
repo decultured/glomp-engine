@@ -23,18 +23,17 @@ namespace glOMP {
     
     lua_State *lua_core_init() {
         lua_State *L = lua_open();
-
         luaL_openlibs(L);
-
         luaopen_marshal(L);
-        luaopen_app(L);
         luaopen_graphics(L);
         luaopen_font(L);
         luaopen_sound(L);
-        luaopen_glomp_system(L);
+        luaopen_system(L);
         luaopen_image(L);
         luaopen_window(L);
         luaopen_directory(L);
+        
+        return L;
     }
     
     void lua_core_shutdown(lua_State *L) {
@@ -164,7 +163,7 @@ namespace glOMP {
         lua_pushnumber(L, frame_time);
         
         if (lua_pcall(L, 1, 0, 0) != 0) {
-            report_errors(L, "_glomp_update");
+            lua_report_errors(L, "_glomp_update");
             return;
         }
     }
@@ -196,6 +195,15 @@ namespace glOMP {
             return;
         }
     }
+    
+    void lua_core_callback_got_message(lua_State *L, ofMessage msg) {
+        
+    }
+    
+    void lua_core_callback_drag_event(lua_State *L, ofDragInfo dragInfo) {
+
+    }
+
     
 }
 

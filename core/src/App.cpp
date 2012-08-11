@@ -7,9 +7,9 @@ void App::setup(){
 
     ofSetDataPathRoot(internal_data_folder + "/");
 
-    lua_app.init();
-    lua_app.set_lua_path(ofToDataPath("lua/", true).c_str());
-    lua_app.load_file(ofToDataPath("lua/app_main.lua").c_str());
+    L = glOMP::lua_core_init();
+    glOMP::lua_set_path(L, ofToDataPath("lua/", true).c_str());
+    glOMP::lua_load_file(L, ofToDataPath("lua/app_main.lua").c_str());
 
     game_thread.startThread(true, true);
     ofResetElapsedTimeCounter();
@@ -17,7 +17,11 @@ void App::setup(){
 }
 
 void App::exit() {
-    lua_app.shutdown();
+    if (L) {
+        glOMP::lua_core_shutdown(L);
+        L = NULL;
+    }
+    
     game_thread.waitForThread(true);
     game_thread.stopThread();
 }
@@ -36,49 +40,49 @@ void App::update(){
     
     start_time_micros = micros;
 
-    lua_app.update(elapsed * 0.000001);
+    glOMP::lua_core_callback_update(L, elapsed * 0.000001);
 }
 
 void App::draw(){
-    lua_app.draw();
+    glOMP::lua_core_callback_draw(L);
 }
 
 void App::keyPressed(int key){
-    lua_app.keyPressed(key);
+    glOMP::lua_core_callback_key_pressed(L, key);
 }
 
 void App::keyReleased(int key){
-    lua_app.keyReleased(key);
+    glOMP::lua_core_callback_key_released(L, key);
 }
 
 void App::mouseMoved(int x, int y){
-    lua_app.mouseMoved(x, y);
+    glOMP::lua_core_callback_mouse_moved(L, x, y);
 }
 
 void App::mouseDragged(int x, int y, int button){
-    lua_app.mouseDragged(x, y, button);
+    glOMP::lua_core_callback_mouse_dragged(L, x, y, button);
 }
 
 void App::mousePressed(int x, int y, int button){
-    lua_app.mousePressed(x, y, button);
+    glOMP::lua_core_callback_mouse_pressed(L, x, y, button);
 }
 
 void App::mouseReleased(int x, int y, int button){
-    lua_app.mouseReleased(x, y, button);
+    glOMP::lua_core_callback_mouse_released(L, x, y, button);
 }
 
 void App::windowResized(int w, int h){
-    lua_app.windowResized(w, h);
+    glOMP::lua_core_callback_window_resized(L, w, h);
 }
 
 void App::gotMessage(ofMessage msg){
-    lua_app.gotMessage(msg);
+    glOMP::lua_core_callback_got_message(L, msg);
 }
 
 void App::dragEvent(ofDragInfo dragInfo){
-    lua_app.drag_event(dragInfo);
+    glOMP::lua_core_callback_drag_event(L, dragInfo);
 }
 
 void App::windowEntry(int state) {
-    lua_app.windowEntry(state);
+    glOMP::lua_core_callback_window_entry(L, state);
 }

@@ -1,21 +1,13 @@
 #pragma once
 
 #include <string>
-
-#include "ofMain.h"
-#include "lua/lua_wrapper.h"
-
-#include "lua_worker_thread.h"
-#include "lua_app.h"
 #include <map>
 
+#include "ofMain.h"
 #include "poco/TimedNotificationQueue.h"
 
-#if defined __GNUC__ || defined __APPLE__
-#include <ext/hash_map>
-#else
-#include <hash_map>
-#endif
+#include "lua_core.h"
+#include "worker_thread.h"
 
 class App : public ofBaseApp{
 private:
@@ -25,7 +17,8 @@ private:
     Poco::TimedNotificationQueue main_queue;
 
     glomp::WorkerThread game_thread;
-    glomp::LuaApp lua_app;
+
+    lua_State *L;
     
     unsigned long micros;
     unsigned long elapsed;

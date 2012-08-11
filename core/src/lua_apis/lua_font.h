@@ -150,7 +150,7 @@ namespace glOMP {
     }
     
     static const struct luaL_Reg lua_font_methods[] = {
-        {"load", font_load},
+        {"load", lua_font_load},
         {NULL, NULL}
     };
     

@@ -6,8 +6,8 @@
 //  Copyright (c) 2012 Decultured. All rights reserved.
 //
 
-#ifndef glOMP_lua_utils_h
-#define glOMP_lua_utils_h
+#ifndef glOMP_lua_system_h
+#define glOMP_lua_system_h
 
 #include "lua_util.h"
 #include "ofMain.h"
@@ -100,7 +100,7 @@ namespace glOMP {
         {NULL, NULL}
     };
     
-    void luaopen_glomp_system(lua_State *L) {
+    void luaopen_system(lua_State *L) {
         register_module(L, "system", lua_system_methods);
     }
 
