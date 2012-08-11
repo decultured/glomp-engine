@@ -88,3 +88,5 @@ end)
 glomp.mouse:on("changed", function(g_mouse)
 	print_more("mouse.moved", "<=", g_mouse:get("x"), g_mouse:get("y"));	
 end)
+
+print(glOMP.directory.list("/"))

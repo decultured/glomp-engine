@@ -17,6 +17,7 @@
 #include "lua_system.h"
 #include "lua_image.h"
 #include "lua_window.h"
+#include "lua_directory.h"
 
 
 namespace glomp {
@@ -53,6 +54,7 @@ namespace glomp {
         luaopen_glomp_system(L);
         luaopen_image(L);
         luaopen_window(L);
+        luaopen_directory(L);
     }
     
     void LuaApp::shutdown() {
