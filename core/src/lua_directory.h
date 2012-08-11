@@ -12,14 +12,7 @@
 #include "lua_util.h"
 #include "ofMain.h"
 
-extern "C" {
-#include "lua.h"
-#include "luaconf.h"
-#include "lauxlib.h"
-#include "lualib.h"
-}
-
-namespace glomp {
+namespace glOMP {
     
     static int lua_directory_is_directory(lua_State *L) {
         const char *path = luaL_checkstring(L, 1);
@@ -31,7 +24,7 @@ namespace glomp {
         return 1;
     }
     
-    static int lua_directory_list_contents(lua_State *L) {
+    static int lua_directory_list(lua_State *L) {
         const char *path = luaL_checkstring(L, 1);
         
         ofDirectory dir;
@@ -48,7 +41,7 @@ namespace glomp {
         return 1;
     }
     
-    static int lua_directory_list_contents_full(lua_State *L) {
+    static int lua_directory_list_full(lua_State *L) {
         const char *path = luaL_checkstring(L, 1);
         
         ofDirectory dir;
@@ -94,6 +87,20 @@ namespace glomp {
         
         return 1;
     }
+    
+    static int lua_directory_create(lua_State *L) {
+        const char *path = luaL_checkstring(L, 1);
+        bool relative = lua_toboolean(L, 2);
+        
+        ofDirectory dir;
+        
+        dir.createDirectory(path, relative);
+        
+        lua_pushboolean(L, dir.isHidden());
+        
+        return 1;
+    }
+    
     /*
      static int lua_directory_can_read(lua_State *L) {
      const char *path = luaL_checkstring(L, 1);
@@ -126,19 +133,6 @@ namespace glomp {
      }
      */
     
-    static int lua_directory_create(lua_State *L) {
-        const char *path = luaL_checkstring(L, 1);
-        bool relative = lua_toboolean(L, 2);
-        
-        ofDirectory dir;
-        
-        dir.createDirectory(path, relative);
-        
-        lua_pushboolean(L, dir.isHidden());
-        
-        return 1;
-    }
-    
     /*
      {"can_read", lua_directory_can_read},
      {"can_execute", lua_directory_can_execute},
@@ -147,8 +141,8 @@ namespace glomp {
     
     static const struct luaL_Reg lua_directory_methods[] = {
         {"is_directory", lua_directory_is_directory},
-        {"list", lua_directory_list_contents},
-        {"list_full", lua_directory_list_contents_full},
+        {"list", lua_directory_list},
+        {"list_full", lua_directory_list_full},
         {"num_files", lua_directory_num_files},
         {"is_empty", lua_directory_is_empty},
         {"is_hidden", lua_directory_is_hidden},
@@ -156,31 +150,9 @@ namespace glomp {
         {NULL, NULL}
     };
     
-    void register_glomp_module(lua_State *L, const luaL_Reg *l, const char *module_name) {
-        lua_getglobal(L, "glOMP");
-        if (!lua_istable(L, -1)) {
-            lua_pop(L, 1);
-            lua_newtable(L);
-        }
-        
-        lua_newtable(L);
-        
-        for (; l->name; l++) {
-            lua_pushcclosure(L, l->func, 0);
-            lua_setfield(L, -2, l->name);
-            std::cout << l->name;
-        }
-        
-        lua_setfield(L, -2, module_name);
-        lua_setglobal(L, "glOMP");
-        
-        return 0;
-    }
-    
     void luaopen_directory(lua_State *L) {
-        register_glomp_module(L, lua_directory_methods, "directory");
+        register_module(L, "directory", lua_directory_methods);
     }
-    
 }
 
 #endif

@@ -9,6 +9,11 @@
 #ifndef __glOMP__lua_path__
 #define __glOMP__lua_path__
 
-#include <iostream>
+#include "lua_main.h"
+#include "ofMain.h"
 
-#endif /* defined(__glOMP__lua_path__) */
+namespace glOMP {
+    
+}
+
+#endif

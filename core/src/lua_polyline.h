@@ -9,6 +9,11 @@
 #ifndef __glOMP__lua_polyline__
 #define __glOMP__lua_polyline__
 
-#include <iostream>
+#include "lua_util.h"
+#include "ofMain.h"
 
-#endif /* defined(__glOMP__lua_polyline__) */
+namespace glOMP {
+    
+}
+
+#endif

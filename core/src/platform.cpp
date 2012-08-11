@@ -13,6 +13,8 @@
 
 #include "CoreFoundation/CFBundle.h"
 
+namespace glOMP {
+
 CFBundleRef mainBundle;
 
 char file_name_buffer[1024];
@@ -56,4 +58,6 @@ void platform_print_directory_contents(const char *dir) {
     while((DirEntry=readdir(Dir))) {
         std::cout << DirEntry->d_name << "\n";
     }
+}
+
 }

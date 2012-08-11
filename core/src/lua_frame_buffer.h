@@ -9,6 +9,11 @@
 #ifndef __glOMP__lua_frame_buffer__
 #define __glOMP__lua_frame_buffer__
 
-#include <iostream>
+#include "lua_util.h"
+#include "ofMain.h"
 
-#endif /* defined(__glOMP__lua_frame_buffer__) */
+namespace glOMP {
+    
+}
+
+#endif

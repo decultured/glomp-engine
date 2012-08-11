@@ -9,6 +9,12 @@
 #ifndef __glOMP__lua_shader__
 #define __glOMP__lua_shader__
 
-#include <iostream>
+#include "lua_util.h"
+#include "ofMain.h"
 
-#endif /* defined(__glOMP__lua_shader__) */
+namespace glOMP {
+
+
+}
+
+#endif
