@@ -2,24 +2,10 @@
 #include "platform.h"
 
 void App::setup(){
+    glOMP::platform_init();
+    glOMP::platform_builtin_file_path(internal_data_folder, "data");
 
-    ofBackground(54, 54, 54, 255);
-    ofTrueTypeFont::setGlobalDpi(72);
-
-    int test = OF_KEY_BACKSPACE;
-    platform_init();
-    
-    platform_builtin_file_path(internal_data_folder, "data");
     ofSetDataPathRoot(internal_data_folder + "/");
-
-    console_font.loadFont("assets/fonts/AnonymousPro-Bold.ttf", 18, true, true);
-	console_font.setLineHeight(18.0f);
-	console_font.setLetterSpacing(1.037);
-    log_line.set_font(&console_font);
-    log_line.position(10, 758);
-    root_graphic.add_child(&log_line);
-
-    ofAddListener(TextViewEvent::events, this, &App::textViewEvent);
 
     lua_app.init();
     lua_app.set_lua_path(ofToDataPath("lua/", true).c_str());
@@ -42,8 +28,8 @@ void App::update(){
     micros = ofGetSystemTimeMicros();
     elapsed = micros - start_time_micros;
 
-    if (elapsed < 1000) {
-//        ofSleepMillis(1);
+    if (elapsed < 10000) {
+        ofSleepMillis(10);
         micros = ofGetSystemTimeMicros();
         elapsed = micros - start_time_micros;
     }
@@ -55,7 +41,6 @@ void App::update(){
 
 void App::draw(){
     lua_app.draw();
-    root_graphic.Render();
 }
 
 void App::keyPressed(int key){
@@ -83,34 +68,15 @@ void App::mouseReleased(int x, int y, int button){
 }
 
 void App::windowResized(int w, int h){
-    log_line.position(10, ofGetHeight() - 10 - log_line.height());
-    root_graphic.size(ofGetWidth(), ofGetHeight());
     lua_app.windowResized(w, h);
 }
 
 void App::gotMessage(ofMessage msg){
-    std::cout << msg.message;
-//    lua_app.gotMessage(msg);
+    lua_app.gotMessage(msg);
 }
 
-void App::textViewEvent(TextViewEvent &args) {
-    glomp::Text *new_texts;
-    
-    if (!texts.count(args.name)) {
-        std::cout << args.name << std::endl;
-        texts[args.name] = new_texts = new glomp::Text();
-        new_texts->set_font(&console_font);
-        root_graphic.add_child(new_texts);
-    } else {
-        new_texts = texts[args.name];
-    }
-    
-    new_texts->position(args.x, args.y);
-    new_texts->set_text(args.text.c_str());
-}
-
-void App::dragEvent(ofDragInfo dragInfo){ 
-
+void App::dragEvent(ofDragInfo dragInfo){
+    lua_app.drag_event(dragInfo);
 }
 
 void App::windowEntry(int state) {
