@@ -1,7 +1,7 @@
 local snd = glOMP.sound.load("assets/know.mp3", true)
 local fnt = glOMP.font.load("assets/fonts/Cousine-Regular.ttf", 30, true, false, true, 0.9, 100)
 
-local playground = Description.load({
+local playground = glOMP.Description:load({
 		offset = 0,
 		speed = 1,
 		pan = 0
@@ -59,7 +59,7 @@ _keys:when_equals("F", function()
 end, 0)
 
 _keys:when_greater_than("Q", function()
-    __glomp_terminate()
+    glOMP.system.exit()
 end, 0)
 
 _keys:when_greater_than("I", function()

@@ -33,7 +33,7 @@ function _view_meta:remove_sub_child(view)
 end
 
 function _view_meta:push()
-	local attr = self.description:get()
+	local attr = self._description:all()
 	_g_graphics.translate(attr.x, attr.y)
 	_g_graphics.rotate(attr.rotation)
 	_g_graphics.translate(attr.scale_x, attr.scale_y)
@@ -50,9 +50,9 @@ end
 
 _view_meta.__index = _view_meta
 
-glOMP.View = {}
+glOMP.View = glOMP.View or {}
 
-function View:load(name, description)
+function glOMP.View:load(name, description)
 	if not name then
 		name = UUID()
 	elseif type(name) == "table" then
@@ -60,12 +60,22 @@ function View:load(name, description)
 		name = UUID()
 	end
 
+	description = description or glOMP.Description:load()
+
+	description:set_defaults({
+			x = 0,
+			y = 0,
+			rotation = 0,
+			scale_x = 0,
+			scale_y = 0
+		})
+
 	print("New view: "..name)
 	local new_view = _g_table_utils.extend(self, {
 				_name = name,
 				_sub_children = {},
 				_children = {},
-				_description = description
+				_description = description,
 				_event_pump = glOMP.EventPump.load(name)
 			})
 
@@ -76,6 +86,6 @@ function View:load(name, description)
 	return new_view
 end
 
-function View:extend()
-	
+function glOMP.View:extend(mixin)
+	return _g_table_utils.extend(self, mixin)
 end

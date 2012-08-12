@@ -22,6 +22,7 @@ function _description_meta:has(attr)
 end
 
 function _description_meta:set_defaults(defaults)
+	defaults = defaults or {}
 	for k, v in pairs (defaults) do
 		if type(v) == "table" then
 			error("Values set to a description must only be basic types")
@@ -172,10 +173,10 @@ end
 
 _description_meta.__index = _description_meta
 
-glOMP.Description = glOMP.Description || {}
-glOMP.EventPump = glOMP.EventPump || {}
+glOMP.Description = glOMP.Description or {}
+glOMP.EventPump = glOMP.EventPump or {}
 
-function Description:load(name, defaults)
+function glOMP.Description:load(name, defaults)
 	if not name then
 		name = UUID()
 	elseif type(name) == "table" then
@@ -195,4 +196,8 @@ function Description:load(name, defaults)
 	setmetatable(new_description, _description_meta)
 	new_description:set_defaults(defaults)
 	return new_description
+end
+
+function glOMP.Description:extend(mixin)
+	return _g_table_utils.extend(self, mixin)
 end

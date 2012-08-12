@@ -91,9 +91,9 @@ end
 
 _event_pump_meta.__index = _event_pump_meta
 
-glOMP.EventPump = glOMP.EventPump || {}
+glOMP.EventPump = glOMP.EventPump or {}
 
-function EventPump.load(name)
+function glOMP.EventPump.load(name)
 	local new_event_pump = {
 				_callbacks = {},
 			}

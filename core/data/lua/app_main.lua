@@ -1,14 +1,13 @@
-print ("hereiis")
-
 dofile(LUA_PATH.."util.lua")
 dofile("printing")
 dofile("json")
 dofile("UUID")
 
 function glomp_run_stuff()
-	dofile("underscore")
+	dofile("table_utils")
 	dofile("event")
 	dofile("description")
+	dofile("view")
 end
 
 function glomp_load_libs()

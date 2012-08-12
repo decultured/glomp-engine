@@ -1,9 +1,11 @@
 glomp = glomp or {}
+glOMP = glOMP or {}
+glOMP.Description = glOMP.Description or {}
 
-glomp.keyboard = Description.load("keyboard", )
+glomp.keyboard = glOMP.Description:load("glOMP_keyboard", {})
 
 
-glomp.mouse = Description.load("mouse", {
+glomp.mouse = glOMP.Description:load("glOMP_mouse", {
                     x = 0,
                     y = 0,
                 })
