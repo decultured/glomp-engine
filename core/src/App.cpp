@@ -32,12 +32,15 @@ void App::update(){
     micros = ofGetSystemTimeMicros();
     elapsed = micros - start_time_micros;
 
+/* 
+// This makes the engine play more nicely with the system, turned off for testing
     if (elapsed < 10000) {
+
         ofSleepMillis(10);
         micros = ofGetSystemTimeMicros();
         elapsed = micros - start_time_micros;
     }
-    
+*/
     start_time_micros = micros;
 
     glOMP::lua_core_callback_update(L, elapsed * 0.000001);

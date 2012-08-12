@@ -176,6 +176,10 @@ _description_meta.__index = _description_meta
 glOMP.Description = glOMP.Description or {}
 glOMP.EventPump = glOMP.EventPump or {}
 
+glOMP.store = glOMP.store or {}
+glOMP.store.descriptions = glOMP.store.descriptions or {}
+local _g_descs = glOMP.store.descriptions
+
 function glOMP.Description:load(name, defaults)
 	if not name then
 		name = UUID()
@@ -184,7 +188,12 @@ function glOMP.Description:load(name, defaults)
 		name = UUID()
 	end
 
-	print("New object: "..name)
+	if _g_descs[name] then
+		print ("Existing Description Found: " .. name)
+		return _g_descs[name]
+	end
+
+	print("New Description: "..name)
 	local new_description = _g_table_utils.extend(self, {
 				_name = name,
 				_previous = {},
@@ -195,6 +204,9 @@ function glOMP.Description:load(name, defaults)
 
 	setmetatable(new_description, _description_meta)
 	new_description:set_defaults(defaults)
+
+	_g_descs[name] = new_description
+
 	return new_description
 end
 

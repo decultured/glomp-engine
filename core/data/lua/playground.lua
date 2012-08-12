@@ -1,82 +1,9 @@
-local snd = glOMP.sound.load("assets/know.mp3", true)
-local fnt = glOMP.font.load("assets/fonts/Cousine-Regular.ttf", 30, true, false, true, 0.9, 100)
+local fnt = glOMP.font.load("assets/fonts/Cousine-Regular.ttf", 12, true, false, true, 0.9, 100)
 
-local playground = glOMP.Description:load({
-		offset = 0,
-		speed = 1,
-		pan = 0
-	})
+local _g_keys = glOMP.Description:load("glOMP_keyboard")
+local _g_time = glOMP.Description:load("glOMP_time")
 
-playground:on("speed", function(data)
-	snd:set_speed(data)
-end)
-
-playground:on("pan", function(data)
-	snd:set_pan(data)
-end)
-		
-local _keys = glomp.keyboard
-
-_keys:when_equals("A", function() 
-		snd:play()
-		snd:set_position(playground:get("offset"))
-end, 1)
-
-_keys:when_equals("S", function() 
-		playground:set("offset", snd:get_position())
-		snd:stop()
-end, 1)
-
-_keys:when_greater_than("UP", function() 
-	playground:add_to("speed", 0.02)
-end, 0)
-
-_keys:when_greater_than("DOWN", function() 
-	playground:add_to("speed", -0.02)
-end, 0)
-
-_keys:when_greater_than("LEFT", function()
-	playground:add_to("pan", -0.02)
-end, 0)
-
-_keys:when_greater_than("RIGHT", function()
-	playground:add_to("pan", 0.02)
-end, 0)
-
-_keys:when_greater_than("R", function()
-    glomp_run_tests()
-end, 0)
-
-_keys:when_greater_than("U", function()
-   	print("UUID: "..UUID())
-end, 0)
-
-local _is_fullscreen = false
-
-_keys:when_equals("F", function()
-   	_is_fullscreen = not _is_fullscreen
-   	glOMP.window.set_fullscreen(_is_fullscreen)
-end, 0)
-
-_keys:when_greater_than("Q", function()
-    glOMP.system.exit()
-end, 0)
-
-_keys:when_greater_than("I", function()
-    dofile("input")
-end, 0)
-
-_keys:when_greater_than("SPACE", function()
-    glomp_load_libs()
-    glomp_run_stuff()
-    glomp_run_tests()
-end, 0)
-
-_keys:when_greater_than("O", function()
-    glOMP.system.save_screen("/test.png")
-end, 0)
-
-glomp.time:on("frame_time", function (frames, g_time)
+_g_time:on("frame_time", function (frames, g_time)
 	-- TODO : this is *massively* inefficient
 	-- print_more("update.count", "Updates: " .. g_time:get("update_count"), 700, 40)
 	-- print_more("update.time", "Elapsed: " .. g_time:get("frame_time"), 700, 60)
@@ -85,8 +12,16 @@ glomp.time:on("frame_time", function (frames, g_time)
 	-- print_more("update.total", "Total: " .. g_time:get("total_time"), 700, 120)
 end)
 
-glomp.mouse:on("changed", function(g_mouse)
-	-- print_more("mouse.moved", "<=", g_mouse:get("x"), g_mouse:get("y"));	
-end)
+local _performance_display = glOMP.View:load("debug_performance_display")
 
-print(glOMP.directory.list("/"))
+function _performance_display:draw()
+	fnt:draw_string("Updates: " .. _g_time:get("update_count"), 700, 40)
+	fnt:draw_string("Elapsed: " .. _g_time:get("frame_time"), 700, 60)
+	fnt:draw_string("Average: " .. _g_time:get("total_time") / _g_time:get("update_count"), 700, 80)
+	fnt:draw_string("FPS: " .. _g_time:get("update_count") / _g_time:get("total_time"), 700, 100)
+	fnt:draw_string("Total: " .. _g_time:get("total_time"), 700, 120)
+end
+
+local _g_root = glOMP.View:load("root")
+
+_g_root:add_child(_performance_display)
