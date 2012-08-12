@@ -11,7 +11,7 @@ glomp.mouse = Description.new({
 local g_keyboard = glomp.keyboard
 local g_mouse = glomp.mouse
 
-for k, v in pairs(inv_glomp_keys) do
+for k, v in pairs(inv_glOMP_keys) do
     g_keyboard:set(v, 0)
 end
 
@@ -19,24 +19,24 @@ for k, v in pairs(inv_mouse_buttons) do
     g_mouse:set(v, 0)
 end
 
-function _glomp_key_pressed(key)
-    key = inv_glomp_keys[key] or key
+function _glOMP_key_pressed(key)
+    key = inv_glOMP_keys[key] or key
     g_keyboard:set(key, g_keyboard:get(key, 0) + 1)
 end
 
-function _glomp_key_released(key)
-    key = inv_glomp_keys[key]
+function _glOMP_key_released(key)
+    key = inv_glOMP_keys[key]
     g_keyboard:set(key, 0)
 end
 
-function _glomp_mouse_moved(x, y)
+function _glOMP_mouse_moved(x, y)
     g_mouse:set({
             x = x,
             y = y
         })
 end
 
-function _glomp_mouse_dragged(x, y, button)
+function _glOMP_mouse_dragged(x, y, button)
     button = inv_mouse_buttons[button]
     
     g_mouse:set({
@@ -46,7 +46,7 @@ function _glomp_mouse_dragged(x, y, button)
         })
 end
 
-function _glomp_mouse_pressed(x, y, button)
+function _glOMP_mouse_pressed(x, y, button)
     button = inv_mouse_buttons[button]
     
     g_mouse:set({
@@ -56,7 +56,7 @@ function _glomp_mouse_pressed(x, y, button)
         })
 end
 
-function _glomp_mouse_released(x, y, button)
+function _glOMP_mouse_released(x, y, button)
     button = inv_mouse_buttons[button]
     
     g_mouse:set({

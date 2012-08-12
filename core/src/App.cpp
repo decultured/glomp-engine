@@ -11,7 +11,7 @@ void App::setup(){
     glOMP::lua_set_path(L, ofToDataPath("lua/", true).c_str());
     glOMP::lua_load_file(L, ofToDataPath("lua/app_main.lua").c_str());
 
-    game_thread.startThread(true, true);
+//    game_thread.startThread(true, true);
     ofResetElapsedTimeCounter();
     start_time_micros = ofGetSystemTimeMicros();
 }
@@ -22,8 +22,8 @@ void App::exit() {
         L = NULL;
     }
     
-    game_thread.waitForThread(true);
-    game_thread.stopThread();
+//    game_thread.waitForThread(true);
+//    game_thread.stopThread();
 }
 
 void App::update(){

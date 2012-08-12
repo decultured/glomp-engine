@@ -1,21 +1,3 @@
--- Testing the app stuffs
-
-function process_event(event)
-	if event.type == "label" and event.action == "update" then
-		print_event(event.name, event.data)
-	end
-end
-
-function print_event(name, data)
-	print_more(name, data.text, data.x, data.y)
-end
-
--- local old_error = error
--- error = function(...)
--- 	print(...)
--- 	old_error()
--- end
-
 function glomp_printobj(obj, indent)
 	indent = indent or ""
 	print (indent .. "Object:")

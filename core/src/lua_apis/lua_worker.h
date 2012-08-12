@@ -21,34 +21,11 @@
 
 namespace glOMP {
     
-    lua_State *lua_worker_init() {
-        lua_State *L = lua_open();
-        
-        luaL_openlibs(L);
-        luaopen_marshal(L);
-        
-        return L;
-    }
+    lua_State *lua_worker_init();
     
-    void lua_worker_shutdown(lua_State *L) {
-        lua_close(L);
-    }
+    void lua_worker_shutdown(lua_State *L);
 
-    void lua_worker_callback_update(lua_State *L, double frame_time) {
-        lua_getglobal(L, "_glOMP_update");
-        if(!lua_isfunction(L,-1)) {
-            lua_pop(L,1);
-            return;
-        }
-        
-        lua_pushnumber(L, frame_time);
-        
-        if (lua_pcall(L, 1, 0, 0) != 0) {
-            lua_report_errors(L, "_glOMP_update");
-            return;
-        }
-    }
-
+    void lua_worker_callback_update(lua_State *L, double frame_time);
 }
 
 #endif

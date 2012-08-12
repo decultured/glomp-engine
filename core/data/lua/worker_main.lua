@@ -4,7 +4,6 @@ print ("investigate thread safety -- we be crashing ")
 
 glomp_update_count = 0
 function _glomp_update()
-	-- print_more("worker_update.count", "Updates: " .. glomp_update_count, 50, 70)
 	glomp_update_count = glomp_update_count + 1
 end
 

@@ -45,17 +45,7 @@ end
 
 glomp_print_queue = glomp_print_queue or {}
 
-print_message_test = print_message_test or {
-	action = "update",
-	name = "game.print",
-	type = "label",
-	data = {
-		text = "",
-		x = 10,
-		y = 580
-	}
-}
-
+local old_print = print
 function print(...)
 	local out = "\n"
 	local args = {}
@@ -76,11 +66,8 @@ function print(...)
 	end
 
 	glomp_print_queue[#glomp_print_queue + 1] = out
-	print_message_test.data.text = print_message_test.data.text .. out
 	
-	if process_event then
-		process_event(print_message_test)
-	end
+	old_print(...)
 end
 
 function split(inputstr, sep)
