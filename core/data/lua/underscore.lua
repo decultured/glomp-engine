@@ -1,6 +1,8 @@
-_ = _ or {}
+glOMP = glOMP or {}
+glOMP.table_utils = glOMP.table_utils or {}
+local _g_table_utils = glOMP.table_utils
 
-_.deep_copy = function(table)
+_g_table_utils.deep_copy = function(table)
     local lookup_table = {}
     local function _copy(table)
         if type(table) ~= "table" then
@@ -18,7 +20,7 @@ _.deep_copy = function(table)
     return _copy(table)
 end
 
-_.shallow_copy = function(table)
+_g_table_utils.shallow_copy = function(table)
 	local new_table = {}
 	for k,v in pairs(table) do
 		new_table[k] = v
@@ -26,10 +28,10 @@ _.shallow_copy = function(table)
 	return setmetatable(new_table, getmetatable(table))
 end
 
-_.clone = _.shallow_copy
+_g_table_utils.clone = _g_table_utils.shallow_copy
 
-_.extend = function(first, second)
-	local new_table = _.shallow_copy(first)
+_g_table_utils.extend = function(first, second)
+	local new_table = _g_table_utils.shallow_copy(first)
 
 	for k,v in pairs(second) do 
 		new_table[k] = v
@@ -38,30 +40,36 @@ _.extend = function(first, second)
 	return new_table
 end
 
-_.merge = _.extend
+_g_table_utils.merge = _g_table_utils.extend
 
-_.each = function(table, iter)
+_g_table_utils.each = function(table, iter)
 	for k,v in pairs(table) do 
 		iter(v, k)
 	end
 end
 
-_.map = function(table, iter)
+_g_table_utils.call_each = function(table, method_name, ...)
+	for k,v in pairs(table) do 
+		v["method_name"](v, ...)
+	end
+end
+
+_g_table_utils.map = function(table, iter)
 	local results = {}
-	_.each(table, function(val, key)
+	_g_table_utils.each(table, function(val, key)
 			results[#results + 1] = iter(val, key)
 		end)
 	return results
 end
 
-_.reduce = function (table, iter, memo)
-	_.each(table, function (val, key)
+_g_table_utils.reduce = function (table, iter, memo)
+	_g_table_utils.each(table, function (val, key)
 		memo = iter(val, key, memo)
 	end)
 	return memo
 end
 
-_.find = function (table, iter)
+_g_table_utils.find = function (table, iter)
 	for k,v in pairs(table) do 
 		if iter(v, k) then
 			return v
@@ -71,9 +79,9 @@ _.find = function (table, iter)
 end
 
 
-_.filter = function (table, iter)
+_g_table_utils.filter = function (table, iter)
 	local results = {}
-	_.each(table, function(val, key)
+	_g_table_utils.each(table, function(val, key)
 		if iter(val, key) then 
 			results[#results + 1] = val
 		end
@@ -81,10 +89,10 @@ _.filter = function (table, iter)
 	return results
 end
 
-_.select = _.filter
+_g_table_utils.select = _g_table_utils.filter
 
-_.every = function (table, iter)
-	_.each(table, function(val, key)
+_g_table_utils.every = function (table, iter)
+	_g_table_utils.each(table, function(val, key)
 		if not iter(val, key) then 
 			return false
 		end
@@ -92,7 +100,7 @@ _.every = function (table, iter)
 	return true
 end
 
-_.any = function (table, iter)
+_g_table_utils.any = function (table, iter)
 	for k, v in pairs(table) do
 		if iter(v, k) then
 			return true
@@ -101,7 +109,7 @@ _.any = function (table, iter)
 	return false
 end
 
-_.raw_contains = function (table, target)
+_g_table_utils.raw_contains = function (table, target)
 	for k,v in pairs(table) do
 		if rawcompare(v, target) then
 			return true
@@ -110,7 +118,7 @@ _.raw_contains = function (table, target)
 	return false
 end
 
-_.max = function (table, iter)
+_g_table_utils.max = function (table, iter)
 	local val = nil
 	iter = iter or math.max
 	for k, v in pairs(table) do
@@ -123,7 +131,7 @@ _.max = function (table, iter)
 	return val
 end
 
-_.min = function (table, iter)
+_g_table_utils.min = function (table, iter)
 	local val = nil
 	iter = iter or math.min
 	for k, v in pairs(table) do
@@ -136,7 +144,7 @@ _.min = function (table, iter)
 	return val
 end
 
-_.group_by = function (table, iter)
+_g_table_utils.group_by = function (table, iter)
 	local results = {}
 	for k, v in pairs(table) do
 		results[iter(v, k)] = v

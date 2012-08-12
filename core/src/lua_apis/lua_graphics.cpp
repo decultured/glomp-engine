@@ -135,8 +135,8 @@ namespace glOMP {
     
     static int lua_graphics_print(lua_State *L) {
         const char *text = luaL_checkstring(L, 1);
-        float x = luaL_checknumber(L, 2);
-        float y = luaL_checknumber(L, 3);
+        float x = lua_isnumber(L, 2) ? lua_tonumber(L, 2) : 0;
+        float y = lua_isnumber(L, 3) ? lua_tonumber(L, 3) : 0;
         
         ofDrawBitmapString(text, x, y);
         
@@ -145,8 +145,8 @@ namespace glOMP {
     
     static int lua_graphics_print_highlight(lua_State *L) {
         const char *text = luaL_checkstring(L, 1);
-        float x = luaL_checknumber(L, 2);
-        float y = luaL_checknumber(L, 3);
+        float x = lua_isnumber(L, 2) ? lua_tonumber(L, 2) : 0;
+        float y = lua_isnumber(L, 3) ? lua_tonumber(L, 3) : 0;
         
         ofDrawBitmapStringHighlight(text, x, y);
         

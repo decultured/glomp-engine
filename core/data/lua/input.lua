@@ -1,9 +1,9 @@
 glomp = glomp or {}
 
-glomp.keyboard = Description.new()
+glomp.keyboard = Description.load("keyboard", )
 
 
-glomp.mouse = Description.new({
+glomp.mouse = Description.load("mouse", {
                     x = 0,
                     y = 0,
                 })

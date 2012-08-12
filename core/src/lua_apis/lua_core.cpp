@@ -192,6 +192,4 @@ namespace glOMP {
     void lua_core_callback_drag_event(lua_State *L, ofDragInfo dragInfo) {
 
     }
-
-    
 }

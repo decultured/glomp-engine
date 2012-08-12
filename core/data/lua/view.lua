@@ -1,33 +1,81 @@
-local _view_proto = {}
+glOMP = glOMP or {}
+local _g_table_utils = glOMP.table_utils
+local _g_graphics = glOMP.graphics
 
-function _view_proto:render( )
+local _view_meta = {}
+
+function _view_meta:render( )
+	self:push()
+
+	_g_table_utils.call_each(_sub_children, "render")
+
+	self:draw()
+
+	_g_table_utils.call_each(_children, "render")
+
+	self:pop()	
+end
+
+function _view_meta:add_child(view)
+	table.insert(self._children, view)
+end
+
+function _view_meta:add_sub_child(view)
+	table.insert(self._children, view)
+end
+
+function _view_meta:remove_child(view)
+	_g_table_utils.remove_one(self._children, view)
+end
+
+function _view_meta:remove_sub_child(view)
+	_g_table_utils.remove_one(self._sub_children, view)
+end
+
+function _view_meta:push()
+	local attr = self.description:get()
+	_g_graphics.translate(attr.x, attr.y)
+	_g_graphics.rotate(attr.rotation)
+	_g_graphics.translate(attr.scale_x, attr.scale_y)
+	_g_graphics.push_matrix()
+end
+
+function _view_meta:pop()
+	_g_graphics.pop_matrix()
+end
+
+function _view_meta:draw()
+
+end
+
+_view_meta.__index = _view_meta
+
+glOMP.View = {}
+
+function View:load(name, description)
+	if not name then
+		name = UUID()
+	elseif type(name) == "table" then
+		initial = name
+		name = UUID()
+	end
+
+	print("New view: "..name)
+	local new_view = _g_table_utils.extend(self, {
+				_name = name,
+				_sub_children = {},
+				_children = {},
+				_description = description
+				_event_pump = glOMP.EventPump.load(name)
+			})
+
+	setmetatable(new_view, _view_meta)
+	if initial then
+		new_view:set_many(initial, {silent = true})
+	end
+	return new_view
+end
+
+function View:extend()
 	
 end
-
-function _view_proto:add_right_child(view)
-	
-end
-
-function _view_proto:add_left_child(view)
-	
-end
-
-function _view_proto:remove_right_child(view)
-
-end
-
-function _view_proto:remove_left_child(view)
-
-end
-
-_view_proto.__index = _view_proto
-
-View = {}
-
-function View.new(options)
-	local new_view = {
-			_left_children = {},
-			_right_children = {},
-		}
-end
-
