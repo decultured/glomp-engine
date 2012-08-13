@@ -41,6 +41,17 @@ _g_table_utils.extend = function(first, second)
 	return new_table
 end
 
+_g_table_utils.set_defaults = function (table, defaults)
+	defaults = defaults or {}
+	table = table or {}
+	for k, v in pairs (defaults) do
+		if not table[k] then
+			table[k] = v
+		end
+	end
+	return table
+end
+
 _g_table_utils.merge = _g_table_utils.extend
 
 _g_table_utils.add = function(table, val)

@@ -70,6 +70,16 @@ function print(...)
 	old_print(...)
 end
 
+local old_error = error
+function error(...)
+	print(...)
+	old_error(...)
+end
+
+function warning(...)
+	print(...)
+end
+
 function split(inputstr, sep)
     if sep == nil then
         sep = "%s"

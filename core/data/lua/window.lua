@@ -1,10 +1,9 @@
 local graphics = graphics
 local glomp = glomp or {}
-glOMP = glOMP or {}
 glOMP.Description = glOMP.Description or {}
 
 local _g_time = glOMP.Description:load("glOMP_time", {
-								last_frame_time = 0,
+								frame_time = 0,
 								update_count = 0,
 								total_time = 0,
 							})
@@ -32,7 +31,7 @@ function _glOMP_update(frame_time)
 		})
 end
 
-local g_root = glOMP.View:load("root")
+local g_root = glOMP.View:get_or_create("root")
 
 function _glOMP_draw()
 	glOMP.graphics.clear(hex_to_rgb(_g_window:get("clear_color")))

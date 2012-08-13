@@ -16,22 +16,13 @@ function glOMP.View:render( )
 
 	_g_graphics.push_2d_transform(self.x, self.y, self.rotation, self.scale_x, self.scale_y)
 
-	if #self.sub_children > 0 then
-		_g_table_utils.call_each(self.sub_children, "render")
-	end
+	_g_table_utils.call_each(self.sub_children, "render")
 
 	if self.visible then
 		self:draw()
 	end
 
-	-- local children = self.children
-	for i = 1, #self.children do
-		self.children[i]:render()
-	end
-
-	-- if #self.children > 0 then
-	-- 	_g_table_utils.call_each(self.children, "render")
-	-- end
+	_g_table_utils.call_each(self.children, "render")
 
 	_g_graphics.pop_matrix()
 end
@@ -68,20 +59,46 @@ glOMP.View.scale_y = 1.0
 glOMP.View.enabled = true
 glOMP.View.visible = true
 
-function glOMP.View:load(name, defaults)
+function glOMP.View:get_or_create(name, defaults)
+	local result = self:get(name, defaults)
+	if not result then
+		result = self:create(name, defaults)
+	end
+	return result
+end
+
+function glOMP.View:get(name, defaults)
+	if not name then
+		error ("View name must not be nil")
+		return false
+	end
+
+	local found_view = _g_views[name]
+
+	if found_view then
+		_g_table_utils.set_defaults(found_view, defaults)
+		return found_view
+	end
+
+	warning ("View not found: ".. name)
+
+	return false
+end
+
+function glOMP.View:create(name, defaults)
 	if not name then
 		name = UUID()
 	elseif type(name) == "table" then
-		initial = name
+		defaults = name
 		name = UUID()
 	end
 
 	if _g_views[name] then
-		print ("Existing View Found: " .. name)
-		return _g_views[name]
+		error ("Existing view found (Perhaps you want 'get_or_create'?): " .. name)
+		return false
 	end
 
-	local new_view = _g_table_utils.extend(self, {
+	local new_view = self:extend({
 				name = name,
 				sub_children = {},
 				children = {},
@@ -90,7 +107,13 @@ function glOMP.View:load(name, defaults)
 
 	_g_views[name] = new_view
 
+	_g_table_utils.set_defaults(new_view, defaults)
+
 	return new_view
+end
+
+function glOMP.View.clone(name)
+	
 end
 
 function glOMP.View:extend(mixin)
