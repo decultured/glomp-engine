@@ -1,27 +1,50 @@
 local fnt = glOMP.font.load("assets/fonts/Cousine-Regular.ttf", 12, true, false, true, 0.9, 100)
 
-local _g_keys = glOMP.Description:load("glOMP_keyboard")
-local _g_time = glOMP.Description:load("glOMP_time")
+local keyboard = glOMP.Description:load("glOMP_keyboard")
+local time = glOMP.Description:load("glOMP_time")
+local root = glOMP.View:load("root")
 
-_g_time:on("frame_time", function (frames, g_time)
-	-- TODO : this is *massively* inefficient
-	-- print_more("update.count", "Updates: " .. g_time:get("update_count"), 700, 40)
-	-- print_more("update.time", "Elapsed: " .. g_time:get("frame_time"), 700, 60)
-	-- print_more("update.time_avg", "Average: " .. g_time:get("total_time") / g_time:get("update_count"), 700, 80)
-	-- print_more("update.fps", "FPS: " .. g_time:get("update_count") / g_time:get("total_time"), 700, 100)
-	-- print_more("update.total", "Total: " .. g_time:get("total_time"), 700, 120)
-end)
 
-local _performance_display = glOMP.View:load("debug_performance_display")
+local new_img = glOMP.image.load("assets/images/openFrameworks.png")
 
-function _performance_display:draw()
-	fnt:draw_string("Updates: " .. _g_time:get("update_count"), 700, 40)
-	fnt:draw_string("Elapsed: " .. _g_time:get("frame_time"), 700, 60)
-	fnt:draw_string("Average: " .. _g_time:get("total_time") / _g_time:get("update_count"), 700, 80)
-	fnt:draw_string("FPS: " .. _g_time:get("update_count") / _g_time:get("total_time"), 700, 100)
-	fnt:draw_string("Total: " .. _g_time:get("total_time"), 700, 120)
+images = {}
+
+for counter = 1,100 do
+	local new_image = glOMP.gui.Image:load("image_test_" .. tostring(counter))
+
+	new_image.x = math.random(100, 800)
+	new_image.y = math.random(100, 600)
+	new_image.image = new_img
+
+	root:add_child(new_image)
 end
 
-local _g_root = glOMP.View:load("root")
 
-_g_root:add_child(_performance_display)
+
+local performance = glOMP.gui.Label:load("debug_performance_display")
+
+performance.text = "testing"
+performance.font = fnt
+performance.color = "#ff0000"
+performance.x = 700
+performance.y = 40
+performance.visible = false;
+
+root:add_child(performance)
+
+keyboard:when_equals("T", function()
+		performance.visible = not performance.visible
+	end, 0)
+
+time:on("update_count", function()
+		local time_data = time:all()
+
+		local text = string.format("Updates: %d\nElapsed: %f\nAverage: %f\nRunning: %f\nFPS: %d",
+					time_data["update_count"],
+					time_data["frame_time"],
+					time_data["total_time"] / time_data["update_count"],
+					time_data["total_time"],
+					time_data["update_count"] / time_data["total_time"])
+
+		performance.text = text
+	end, 0)

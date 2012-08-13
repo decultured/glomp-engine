@@ -2,81 +2,73 @@ glOMP = glOMP or {}
 local _g_table_utils = glOMP.table_utils
 local _g_graphics = glOMP.graphics
 
-local _view_meta = {}
+glOMP.View = glOMP.View or {}
+glOMP.store = glOMP.store or {}
+glOMP.store.views = glOMP.store.views or {}
 
-function _view_meta:render( )
-	if not self._description:get("enabled") then
+local _g_views = glOMP.store.views
+local _g_view = glOMP.View
+
+function glOMP.View:render( )
+	if not self.enabled then
 		return
 	end
 
-	self:push()
+	_g_graphics.push_2d_transform(self.x, self.y, self.rotation, self.scale_x, self.scale_y)
 
-	_g_table_utils.call_each(self._sub_children, "render")
+	if #self.sub_children > 0 then
+		_g_table_utils.call_each(self.sub_children, "render")
+	end
 
-	if self._description:get("visible") then
+	if self.visible then
 		self:draw()
 	end
 
-	_g_table_utils.call_each(self._children, "render")
+	-- local children = self.children
+	for i = 1, #self.children do
+		self.children[i]:render()
+	end
 
-	self:pop()	
-end
+	-- if #self.children > 0 then
+	-- 	_g_table_utils.call_each(self.children, "render")
+	-- end
 
-function _view_meta:add_child(view)
-	table.insert(self._children, view)
-end
-
-function _view_meta:add_sub_child(view)
-	table.insert(self._sub_children, view)
-end
-
-function _view_meta:remove_child(view)
-	_g_table_utils.remove_one(self._children, view)
-end
-
-function _view_meta:remove_sub_child(view)
-	_g_table_utils.remove_one(self._sub_children, view)
-end
-
-function _view_meta:push()
-	_g_graphics.push_matrix()
-
-	local attr = self._description:all()
-
-	_g_graphics.translate(attr.x, attr.y)
-	_g_graphics.rotate(attr.rotation)
-	_g_graphics.translate(attr.scale_x, attr.scale_y)
-end
-
-function _view_meta:pop()
 	_g_graphics.pop_matrix()
 end
 
-function _view_meta:initialize()
+function glOMP.View:add_child(view)
+	table.insert(self.children, view)
+end
+
+function glOMP.View:add_sub_child(view)
+	table.insert(self.sub_children, view)
+end
+
+function glOMP.View:remove_child(view)
+	_g_table_utils.remove_one(self.children, view)
+end
+
+function glOMP.View:remove_sub_child(view)
+	_g_table_utils.remove_one(self.sub_children, view)
+end
+
+function glOMP.View:initialize()
 
 end
 
-function _view_meta:draw()
-	glOMP.graphics.set_color(hex_to_rgb("#ede9d6"))
-	glOMP.graphics.draw_fills(true)
-	glOMP.graphics.enable_smoothing()
-	glOMP.graphics.rectangle(10, 10, 500, 200)
-	glOMP.graphics.draw_fills(false)
-	glOMP.graphics.set_circle_resolution(100)
-	glOMP.graphics.set_line_width(3)
-	glOMP.graphics.set_color(hex_to_rgb("#5a6e75"))
-	glOMP.graphics.rectangle(10, 10, 500, 200)
+function glOMP.View:draw()
+
 end
 
-_view_meta.__index = _view_meta
+glOMP.View.x = 0
+glOMP.View.y = 0
+glOMP.View.rotation = 0
+glOMP.View.scale_x = 1.0
+glOMP.View.scale_y = 1.0
+glOMP.View.enabled = true
+glOMP.View.visible = true
 
-glOMP.View = glOMP.View or {}
-
-glOMP.store = glOMP.store or {}
-glOMP.store.views = glOMP.store.views or {}
-local _g_views = glOMP.store.views
-
-function glOMP.View:load(name, description)
+function glOMP.View:load(name, defaults)
 	if not name then
 		name = UUID()
 	elseif type(name) == "table" then
@@ -89,34 +81,15 @@ function glOMP.View:load(name, description)
 		return _g_views[name]
 	end
 
-	description = description or glOMP.Description:load()
-
-	description:set_defaults({
-			x = 0,
-			y = 0,
-			rotation = 0,
-			scale_x = 0,
-			scale_y = 0,
-			enabled = true,
-			visible = true
-		})
-
-	print("New view: "..name)
 	local new_view = _g_table_utils.extend(self, {
-				_name = name,
-				_sub_children = {},
-				_children = {},
-				_description = description,
-				_event_pump = glOMP.EventPump.load(name)
+				name = name,
+				sub_children = {},
+				children = {},
+				event_pump = glOMP.EventPump.load(name)
 			})
 
-	setmetatable(new_view, _view_meta)
-	if initial then
-		new_view:set_many(initial, {silent = true})
-	end
-
 	_g_views[name] = new_view
-	
+
 	return new_view
 end
 

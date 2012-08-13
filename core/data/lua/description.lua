@@ -24,9 +24,6 @@ end
 function _description_meta:set_defaults(defaults)
 	defaults = defaults or {}
 	for k, v in pairs (defaults) do
-		if type(v) == "table" then
-			error("Values set to a description must only be basic types")
-		end
 		if not self._attributes[tostring(k)] then
 			self._attributes[tostring(k)] = v
 		end
@@ -34,15 +31,9 @@ function _description_meta:set_defaults(defaults)
 end
 
 function _description_meta:set_many(table, options)
-	if type(table) == "table" then
-		for k, v in pairs (table) do
-			if type(v) == "table" then
-				error("Values set to a description must only be basic types")
-			end
-
-			self:set(tostring(k), v, {silent = true})
-			self._event_pump:trigger(tostring(k), v, self)
-		end
+	for k, v in pairs (table) do
+		self:set(tostring(k), v, {silent = true})
+		self._event_pump:trigger(tostring(k), v, self)
 	end
 	self._event_pump:trigger("changed", self)
 end
@@ -53,26 +44,18 @@ function _description_meta:set(attr, val, options)
 		return
 	end
 
-	local val_type = type(val)
-
-	if val_type == "number" or val_type == "string" or val_type == "boolean" then
-		if self._attributes[attr] == val or not attr then
-			return
-		end
-		self._previous[attr] = self._attributes[attr]
-		self._attributes[attr] = val
-		self._changed[attr] = 1
-
-		if options and options.silent then
-			return
-		end
-	elseif val_type == "table" then
-		self:set_many(val)
-		return
-	else
-		error("Descriptions can only store numbers, strings or booleans, " .. val_type .. " was provided.")
+	if self._attributes[attr] == val or not attr then
 		return
 	end
+
+	self._previous[attr] = self._attributes[attr]
+	self._attributes[attr] = val
+	self._changed[attr] = 1
+
+	if options and options.silent then
+		return
+	end
+
 	self._event_pump:trigger(attr, val, self)
 	self._event_pump:trigger("changed", self)
 end
@@ -91,6 +74,10 @@ function _description_meta:multiply(attr, val, options)
 	if self._attributes[attr] then
 		self:set(attr, self._attributes[attr] * val, options)
 	end
+end
+
+function _description_meta:toggle(attr, options)
+	self:set(attr, not self._attributes[attr], options)
 end
 
 function _description_meta:concat(attr, val, options)

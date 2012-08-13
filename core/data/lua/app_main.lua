@@ -1,3 +1,5 @@
+glOMP.graphics.enable_alpha_blending()
+
 function glomp_libs()
 	dofile(LUA_PATH.."util.lua")
 	dofile("printing")
@@ -16,6 +18,7 @@ function glomp_app()
 	dofile("input_defines")
 	dofile("input")
 	dofile("window")
+	dofile("gui/load_gui")
 end
 
 function glomp_run_tests()

@@ -52,8 +52,8 @@ namespace glOMP {
     static int lua_image_draw(lua_State *L) {
         ofImage *image= glomp_checkimage(L, 1);
         
-        float x = luaL_checknumber(L, 2);
-        float y = luaL_checknumber(L, 3);
+        float x = lua_isnumber(L, 2) ? lua_tonumber(L, 2) : 0;
+        float y = lua_isnumber(L, 3) ? lua_tonumber(L, 3) : 0;
         
         if (lua_isnumber(L, 4) && lua_isnumber(L, 5)) {
             float w = lua_tonumber(L, 4);

@@ -32,8 +32,9 @@ void App::update(){
     micros = ofGetSystemTimeMicros();
     elapsed = micros - start_time_micros;
 
-/* 
-// This makes the engine play more nicely with the system, turned off for testing
+/*
+// This makes the engine play more nicely with the system,
+// turn off for testing full speed
     if (elapsed < 10000) {
 
         ofSleepMillis(10);

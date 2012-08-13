@@ -21,6 +21,8 @@ namespace glOMP {
     static int lua_graphics_push_matrix(lua_State *L);
     static int lua_graphics_pop_matrix(lua_State *L);
 
+    static int lua_graphics_push_2d_transform(lua_State *L);
+
     static int lua_graphics_rotate(lua_State *L);
     static int lua_graphics_translate(lua_State *L);
     static int lua_graphics_scale(lua_State *L);

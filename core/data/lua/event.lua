@@ -62,11 +62,11 @@ function _event_pump_meta:when_less_than(event, callback, val)
 end
 
 function _event_pump_meta:when_between(event, callback, min, max)
-	self:when(event, callback, _between, val)
+	self:when(event, callback, _between, min, max)
 end
 
 function _event_pump_meta:when_not_between(event, callback, min, max)
-	self:when(event, callback, _not_between, val)
+	self:when(event, callback, _not_between, min, max)
 end
 
 function _event_pump_meta:off(event, callback)

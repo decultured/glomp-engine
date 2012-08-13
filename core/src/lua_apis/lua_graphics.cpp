@@ -41,6 +41,21 @@ namespace glOMP {
         return 0;
     }
     
+    static int lua_graphics_push_2d_transform(lua_State *L) {
+        float x = luaL_checknumber(L, 1);
+        float y = luaL_checknumber(L, 2);
+        float rot = luaL_checknumber(L, 3);
+        float sx = luaL_checknumber(L, 4);
+        float sy = luaL_checknumber(L, 5);
+        
+        ofPushMatrix();
+        ofTranslate(x, y, 0);
+        ofRotate(rot);
+        ofScale(sx, sy, 1.0f);
+        
+        return 0;
+    }
+    
     static int lua_graphics_rotate(lua_State *L) {
         float amount = luaL_checknumber(L, 1);
         ofRotate(amount);
@@ -123,10 +138,10 @@ namespace glOMP {
         float x2 = luaL_checknumber(L, 3);
         float y2 = luaL_checknumber(L, 4);
         
-        float cx1 = luaL_checknumber(L, 1);
-        float cy1 = luaL_checknumber(L, 2);
-        float cx2 = luaL_checknumber(L, 3);
-        float cy2 = luaL_checknumber(L, 4);
+        float cx1 = luaL_checknumber(L, 5);
+        float cy1 = luaL_checknumber(L, 6);
+        float cx2 = luaL_checknumber(L, 7);
+        float cy2 = luaL_checknumber(L, 8);
         
         ofCurve(cx1, cy1, x1, y1, x2, y2, cx2, cy2);
         
@@ -250,6 +265,7 @@ namespace glOMP {
         {"set_color", lua_graphics_set_color},
         {"push_matrix", lua_graphics_push_matrix},
         {"pop_matrix", lua_graphics_pop_matrix},
+        {"push_2d_transform", lua_graphics_push_2d_transform},
         {"rotate", lua_graphics_rotate},
         {"translate", lua_graphics_translate},
         {"scale", lua_graphics_scale},

@@ -24,8 +24,6 @@ function _glOMP_window_entry(state)
    _g_window:set({entered = state})
 end
 
-local new_img = glOMP.image.load("assets/images/openFrameworks.png")
-
 function _glOMP_update(frame_time)
 	_g_time:set({
 			frame_time = frame_time,
@@ -38,14 +36,5 @@ local g_root = glOMP.View:load("root")
 
 function _glOMP_draw()
 	glOMP.graphics.clear(hex_to_rgb(_g_window:get("clear_color")))
-
 	g_root:render()
-
-
-	glOMP.graphics.enable_alpha_blending()
-		glOMP.graphics.set_color(hex_to_rgb("#FFFFFF"))
-		new_img:draw(30, 30)
-	glOMP.graphics.disable_alpha_blending()
-
-	glOMP.graphics.set_color(hex_to_rgb("#5a6e75"))
 end

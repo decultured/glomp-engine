@@ -115,8 +115,8 @@ namespace glOMP {
         ofTrueTypeFont *font= glomp_checkfont(L, 1);
         
         const char * out = luaL_checkstring(L, 2);
-        float x = luaL_checknumber(L, 3);
-        float y = luaL_checknumber(L, 4);
+        float x = lua_isnumber(L, 3) ? lua_tonumber(L, 3) : 0;
+        float y = lua_isnumber(L, 4) ? lua_tonumber(L, 4) : 0;
         
         font->drawString(out, x, y);
         float height = font->stringHeight(out);
@@ -131,8 +131,8 @@ namespace glOMP {
         ofTrueTypeFont *font= glomp_checkfont(L, 1);
         
         const char * out = luaL_checkstring(L, 2);
-        float x = luaL_checknumber(L, 3);
-        float y = luaL_checknumber(L, 4);
+        float x = lua_isnumber(L, 3) ? lua_tonumber(L, 3) : 0;
+        float y = lua_isnumber(L, 4) ? lua_tonumber(L, 4) : 0;
         
         font->drawStringAsShapes(out, x, y);
         float height = font->stringHeight(out);
