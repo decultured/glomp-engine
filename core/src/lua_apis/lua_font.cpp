@@ -1,6 +1,6 @@
 //
 //  lua_font.cpp
-//  glOMP
+//  glomp
 //
 //  Created by Jeffrey Graves on 8/4/12.
 //  Copyright (c) 2012 Decultured. All rights reserved.
@@ -8,7 +8,7 @@
 
 #include "lua_font.h"
 
-namespace glOMP {
+namespace glomp {
     
     static int lua_font_load(lua_State *L) {
         std::string filename = luaL_checkstring(L, 1);
@@ -20,7 +20,7 @@ namespace glOMP {
         int dpi = lua_isnumber(L, 7) ? luaL_checkint(L, 7) : 0;
         
         ofTrueTypeFont **font= (ofTrueTypeFont **)lua_newuserdata(L, sizeof(ofTrueTypeFont *));
-        luaL_getmetatable(L, "glOMP.font");
+        luaL_getmetatable(L, "glomp.font");
         lua_setmetatable(L, -2);
         
         *font= new ofTrueTypeFont();
@@ -164,7 +164,7 @@ namespace glOMP {
     };
     
     void luaopen_font(lua_State *L) {
-        register_metatable(L, "glOMP.font", lua_font_metamethods);
+        register_metatable(L, "glomp.font", lua_font_metamethods);
         register_module(L, "font", lua_font_methods);
     }
 }

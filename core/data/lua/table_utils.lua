@@ -1,6 +1,6 @@
-glOMP = glOMP or {}
-glOMP.table_utils = glOMP.table_utils or {}
-local _g_table_utils = glOMP.table_utils
+glomp = glomp or {}
+glomp.table_utils = glomp.table_utils or {}
+local _g_table_utils = glomp.table_utils
 
 _g_table_utils.deep_copy = function(table)
     local lookup_table = {}
@@ -48,6 +48,15 @@ _g_table_utils.set_defaults = function (table, defaults)
 		if not table[k] then
 			table[k] = v
 		end
+	end
+	return table
+end
+
+_g_table_utils.extend_original = function (table, second)
+	second = second or {}
+	table = table or {}
+	for k, v in pairs (second) do
+		table[k] = v
 	end
 	return table
 end

@@ -1,18 +1,18 @@
 //
 //  lua_graphics.h
-//  glOMP
+//  glomp
 //
 //  Created by Jeffrey Graves on 8/4/12.
 //  Copyright (c) 2012 Decultured. All rights reserved.
 //
 
-#ifndef glOMP_lua_gl_h
-#define glOMP_lua_gl_h
+#ifndef glomp_lua_gl_h
+#define glomp_lua_gl_h
 
 #include "lua_util.h"
 #include "ofMain.h"
 
-namespace glOMP {
+namespace glomp {
     
     static int lua_graphics_clear(lua_State *L);
 

@@ -1,6 +1,6 @@
 //
 //  lua_window.cpp
-//  glOMP
+//  glomp
 //
 //  Created by Jeffrey Graves on 8/8/12.
 //
@@ -8,7 +8,7 @@
 
 #include "lua_window.h"
 
-namespace glOMP {
+namespace glomp {
     
     static int lua_window_set_fullscreen(lua_State *L) {
         bool fullscreen = lua_toboolean(L, 1);

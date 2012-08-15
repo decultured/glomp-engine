@@ -29,8 +29,8 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
  
-#ifndef glOMP_lua_marshal_h
-#define glOMP_lua_marshal_h
+#ifndef glomp_lua_marshal_h
+#define glomp_lua_marshal_h
 
 #include <stdlib.h>
 #include <string.h>

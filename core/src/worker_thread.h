@@ -1,13 +1,13 @@
 //
 //  game_thread.h
-//  glOMP
+//  glomp
 //
 //  Created by Jeffrey Graves on 7/8/12.
 //  Copyright (c) 2012 Decultured. All rights reserved.
 //
 
-#ifndef glOMP_game_thread_h
-#define glOMP_game_thread_h
+#ifndef glomp_game_thread_h
+#define glomp_game_thread_h
 
 #include "ofMain.h"
 #include "Poco/TimedNotificationQueue.h"

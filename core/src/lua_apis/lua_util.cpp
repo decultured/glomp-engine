@@ -1,6 +1,6 @@
 //
 //  lua_util.cpp
-//  glOMP
+//  glomp
 //
 //  Created by Jeffrey Graves on 8/11/12.
 //
@@ -8,7 +8,7 @@
 
 #include "lua_util.h"
 
-namespace glOMP {
+namespace glomp {
 
     void register_metatable(lua_State *L, const char *metatable_name, const luaL_Reg *l) {
         luaL_newmetatable(L, metatable_name);
@@ -18,7 +18,7 @@ namespace glOMP {
     }
 
     void register_module(lua_State *L, const char *module_name, const luaL_Reg *l) {
-        lua_getglobal(L, "glOMP");
+        lua_getglobal(L, "glomp");
         if (!lua_istable(L, -1)) {
             lua_pop(L, 1);
             lua_newtable(L);
@@ -32,7 +32,7 @@ namespace glOMP {
         }
         
         lua_setfield(L, -2, module_name);
-        lua_setglobal(L, "glOMP");
+        lua_setglobal(L, "glomp");
         
         return 0;
     }

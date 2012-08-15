@@ -56,11 +56,12 @@ function print(...)
 		if not arg then 
 			arg = "nil"
 		elseif type (arg) == "table" then
-			if arg.tostring then
-				arg = arg.tostring()
-			else
-				arg = json.encode(arg)
-			end
+			glomp_printobj(arg)
+			-- if arg.tostring then
+			-- 	arg = arg.tostring()
+			-- else
+				-- arg = json.encode(arg)
+			-- end
 		end
 		out = string.format("%s %s", out, tostring(arg))
 	end

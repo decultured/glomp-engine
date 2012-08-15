@@ -1,7 +1,7 @@
 //  Mac OS X Platform specific code
 //
 //  platform.cpp
-//  glOMP
+//  glomp
 //
 //  Created by Jeffrey Graves on 6/26/12.
 //  Copyright (c) 2012 Decultured. All rights reserved.
@@ -13,7 +13,7 @@
 
 #include "CoreFoundation/CFBundle.h"
 
-namespace glOMP {
+namespace glomp {
 
     CFBundleRef mainBundle;
     char file_name_buffer[1024];

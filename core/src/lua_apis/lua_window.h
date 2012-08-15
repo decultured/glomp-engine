@@ -1,18 +1,18 @@
 //
 //  lua_window.h
-//  glOMP
+//  glomp
 //
 //  Created by Jeffrey Graves on 8/8/12.
 //
 //
 
-#ifndef __glOMP__lua_window__
-#define __glOMP__lua_window__
+#ifndef __glomp__lua_window__
+#define __glomp__lua_window__
 
 #include "lua_util.h"
 #include "ofMain.h"
 
-namespace glOMP {
+namespace glomp {
     
     static int lua_window_set_fullscreen(lua_State *L);
     

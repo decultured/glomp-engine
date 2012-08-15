@@ -1,20 +1,20 @@
 //
 //  lua_image.h
-//  glOMP
+//  glomp
 //
 //  Created by Jeffrey Graves on 8/7/12.
 //
 //
 
-#ifndef glOMP_lua_image_h
-#define glOMP_lua_image_h
+#ifndef glomp_lua_image_h
+#define glomp_lua_image_h
 
 #include "lua_util.h"
 #include "ofMain.h"
 
-namespace glOMP {
+namespace glomp {
     
-    #define glomp_checkimage(L, N) *(ofImage **)luaL_checkudata(L, N, "glOMP.image")
+    #define glomp_checkimage(L, N) *(ofImage **)luaL_checkudata(L, N, "glomp.image")
     
     static int lua_image_load(lua_State *L);
     static int lua_image_load_from_screen(lua_State *L);

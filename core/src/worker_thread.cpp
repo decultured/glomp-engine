@@ -1,6 +1,6 @@
 //
 //  game_thread.cpp
-//  glOMP
+//  glomp
 //
 //  Created by Jeffrey Graves on 7/8/12.
 //  Copyright (c) 2012 Decultured. All rights reserved.
@@ -24,7 +24,7 @@ void WorkerThread::threadedFunction() {
     init();
         
     while(isThreadRunning()) {
-        glOMP::lua_worker_callback_update(L, 10);
+        glomp::lua_worker_callback_update(L, 10);
         this->sleep(10);
     }
 
@@ -33,16 +33,16 @@ void WorkerThread::threadedFunction() {
 
 void WorkerThread::init() {
     if (L) {
-        glOMP::lua_worker_shutdown(L);
+        glomp::lua_worker_shutdown(L);
     }
-    L = glOMP::lua_worker_init();
-    glOMP::lua_set_path(L, ofToDataPath("lua/", true).c_str());
-    glOMP::lua_load_file(L, ofToDataPath("lua/worker_main.lua").c_str());
+    L = glomp::lua_worker_init();
+    glomp::lua_set_path(L, ofToDataPath("lua/", true).c_str());
+    glomp::lua_load_file(L, ofToDataPath("lua/worker_main.lua").c_str());
 }
 
 void WorkerThread::shutdown() {
     if (L) {
-        glOMP::lua_worker_shutdown(L);
+        glomp::lua_worker_shutdown(L);
         L = NULL;
     }
 }

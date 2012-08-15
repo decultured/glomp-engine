@@ -1,6 +1,6 @@
 //
 //  lua_directory.cpp
-//  glOMP
+//  glomp
 //
 //  Created by Jeffrey Graves on 8/10/12.
 //
@@ -8,7 +8,7 @@
 
 #include "lua_directory.h"
 
-namespace glOMP {
+namespace glomp {
     
     static int lua_directory_is_directory(lua_State *L) {
         const char *path = luaL_checkstring(L, 1);

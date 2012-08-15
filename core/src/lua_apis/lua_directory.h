@@ -1,18 +1,18 @@
 //
 //  lua_directory.h
-//  glOMP
+//  glomp
 //
 //  Created by Jeffrey Graves on 8/10/12.
 //
 //
 
-#ifndef __glOMP__lua_directory__
-#define __glOMP__lua_directory__
+#ifndef __glomp__lua_directory__
+#define __glomp__lua_directory__
 
 #include "lua_util.h"
 #include "ofMain.h"
 
-namespace glOMP {
+namespace glomp {
     
     static int lua_directory_is_directory(lua_State *L);
     static int lua_directory_list(lua_State *L);

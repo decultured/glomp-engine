@@ -1,6 +1,6 @@
 //
 //  lua_image.cpp
-//  glOMP
+//  glomp
 //
 //  Created by Jeffrey Graves on 8/7/12.
 //
@@ -8,13 +8,13 @@
 
 #include "lua_image.h"
 
-namespace glOMP {
+namespace glomp {
     
     static int lua_image_load(lua_State *L) {
         const char * filename = luaL_checkstring(L, 1);
         
         ofImage **image= (ofImage **)lua_newuserdata(L, sizeof(ofImage *));
-        luaL_getmetatable(L, "glOMP.image");
+        luaL_getmetatable(L, "glomp.image");
         lua_setmetatable(L, -2);
         
         *image= new ofImage();
@@ -31,7 +31,7 @@ namespace glOMP {
         int h = luaL_checkinteger(L, 4);
         
         ofImage **image= (ofImage **)lua_newuserdata(L, sizeof(ofImage *));
-        luaL_getmetatable(L, "glOMP.image");
+        luaL_getmetatable(L, "glomp.image");
         lua_setmetatable(L, -2);
         
         *image= new ofImage();
@@ -170,7 +170,7 @@ namespace glOMP {
     };
     
     void luaopen_image(lua_State *L) {
-        register_metatable(L, "glOMP.image", lua_image_metamethods);
+        register_metatable(L, "glomp.image", lua_image_metamethods);
         register_module(L, "image", lua_image_methods);
     }
     

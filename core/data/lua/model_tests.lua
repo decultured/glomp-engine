@@ -2,8 +2,8 @@ dofile("lunatest")
 
 local testbed = {1,2,3,4,5,6,7,8,9,10}
 
-local test_model = glOMP.Description:load(testbed)
-local _g_table_utils = glOMP.table_utils or {}
+local test_model = glomp.description:fetch_or_create(testbed)
+local _g_table_utils = glomp.table_utils or {}
 
 local model_tests = {}
 

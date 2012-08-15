@@ -1,4 +1,4 @@
--- Descriptions store state and trigger events based on state change
+-- descriptions store state and trigger events based on state change
 --
 -- Fields:
 --     Can store:
@@ -12,8 +12,8 @@
 --     Must be unique
 --     Can be generated automatically using a pseudo-UUID algorithm
 
-glOMP = glOMP or {}
-local _g_table_utils = glOMP.table_utils
+glomp = glomp or {}
+local _g_table_utils = glomp.table_utils
 
 local _description_meta = {}
 
@@ -160,14 +160,38 @@ end
 
 _description_meta.__index = _description_meta
 
-glOMP.Description = glOMP.Description or {}
-glOMP.EventPump = glOMP.EventPump or {}
+glomp.description = glomp.description or {}
+glomp.event_pump = glomp.event_pump or {}
 
-glOMP.store = glOMP.store or {}
-glOMP.store.descriptions = glOMP.store.descriptions or {}
-local _g_descs = glOMP.store.descriptions
+glomp.store = glomp.store or {}
+glomp.store.descriptions = glomp.store.descriptions or {}
+local _g_descs = glomp.store.descriptions
 
-function glOMP.Description:load(name, defaults)
+function glomp.description:fetch_or_create(name, defaults)
+	local result = self:fetch(name, defaults)
+	if not result then
+		result = self:create(name, defaults)
+	end
+	return result
+end
+
+function glomp.description:fetch(name, defaults)
+	if not name then
+		error ("Description name must not be nil")
+		return false
+	end
+
+	local found_desc = _g_descs[name]
+
+	if found_desc then
+		_g_table_utils:set_defaults(defaults)
+		return found_desc
+	end
+
+	return false	
+end
+
+function glomp.description:create(name, defaults)
 	if not name then
 		name = UUID()
 	elseif type(name) == "table" then
@@ -176,17 +200,16 @@ function glOMP.Description:load(name, defaults)
 	end
 
 	if _g_descs[name] then
-		print ("Existing Description Found: " .. name)
-		return _g_descs[name]
+		error ("Existing description Found: " .. name)
+		return false
 	end
 
-	print("New Description: "..name)
 	local new_description = _g_table_utils.extend(self, {
 				_name = name,
 				_previous = {},
 				_attributes = {},
 				_changed = {},
-				_event_pump = glOMP.EventPump.load(name)
+				_event_pump = glomp.event_pump.load(name)
 			})
 
 	setmetatable(new_description, _description_meta)
@@ -197,6 +220,6 @@ function glOMP.Description:load(name, defaults)
 	return new_description
 end
 
-function glOMP.Description:extend(mixin)
+function glomp.description:extend(mixin)
 	return _g_table_utils.extend(self, mixin)
 end

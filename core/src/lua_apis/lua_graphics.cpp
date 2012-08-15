@@ -1,6 +1,6 @@
 //
 //  lua_graphics.cpp
-//  glOMP
+//  glomp
 //
 //  Created by Jeffrey Graves on 8/4/12.
 //  Copyright (c) 2012 Decultured. All rights reserved.
@@ -8,7 +8,7 @@
 
 #include "lua_graphics.h"
 
-namespace glOMP {
+namespace glomp {
     
     static int lua_graphics_clear(lua_State *L) {
         float r = luaL_checknumber(L, 1);

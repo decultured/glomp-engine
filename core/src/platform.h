@@ -1,15 +1,15 @@
 //
 //  platform.h
-//  glOMP
+//  glomp
 //
 //  Created by Jeffrey Graves on 6/26/12.
 //  Copyright (c) 2012 Decultured. All rights reserved.
 //
 
-#ifndef glOMP_platform_h
-#define glOMP_platform_h
+#ifndef glomp_platform_h
+#define glomp_platform_h
 
-namespace glOMP {
+namespace glomp {
 
     bool platform_init();
     bool platform_builtin_file_path(std::string &output, const char *name_of_file_in_bundle);

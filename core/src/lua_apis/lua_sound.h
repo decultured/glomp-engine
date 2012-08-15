@@ -1,20 +1,20 @@
 //
 //  lua_sound.h
-//  glOMP
+//  glomp
 //
 //  Created by Jeffrey Graves on 8/5/12.
 //  Copyright (c) 2012 Decultured. All rights reserved.
 //
 
-#ifndef glOMP_lua_sound_h
-#define glOMP_lua_sound_h
+#ifndef glomp_lua_sound_h
+#define glomp_lua_sound_h
 
 #include "lua_util.h"
 #include "ofMain.h"
 
-namespace glOMP {
+namespace glomp {
     
-    #define glomp_checksound(L, N) *(ofSoundPlayer **)luaL_checkudata(L, N, "glOMP.sound")
+    #define glomp_checksound(L, N) *(ofSoundPlayer **)luaL_checkudata(L, N, "glomp.sound")
     
     static int lua_sound_load(lua_State *L);
     static int lua_sound_gc(lua_State *L);

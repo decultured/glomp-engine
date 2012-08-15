@@ -1,13 +1,13 @@
 //
 //  lua_worker.h
-//  glOMP
+//  glomp
 //
 //  Created by Jeffrey Graves on 7/1/12.
 //  Copyright (c) 2012 Decultured. All rights reserved.
 //
 
-#ifndef glOMP_lua_worker_h
-#define glOMP_lua_worker_h
+#ifndef glomp_lua_worker_h
+#define glomp_lua_worker_h
 
 #include "lua_util.h"
 #include "lua_marshal.h"
@@ -19,7 +19,7 @@
 #include "lua_window.h"
 #include "lua_directory.h"
 
-namespace glOMP {
+namespace glomp {
     
     lua_State *lua_worker_init();
     

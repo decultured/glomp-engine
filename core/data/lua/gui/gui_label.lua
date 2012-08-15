@@ -1,25 +1,25 @@
-glOMP = glOMP or {}
-glOMP.gui = glOMP.gui or {}
+glomp = glomp or {}
+glomp.gui = glomp.gui or {}
  
-local _g_graphics_print = glOMP.graphics.print
-local _g_graphics_set_color = glOMP.graphics.set_color
+local _g_graphics_print = glomp.graphics.print
+local _g_graphics_set_color = glomp.graphics.set_color
 
-local _label_base = {}
-
-function _label_base:draw()
-	if not self.text then
+local function draw_label(props)
+	if not props.text then
 		return
 	end
 
-	if self.color then
-		_g_graphics_set_color(hex_to_rgb(self.color))
+	if props.color then
+		_g_graphics_set_color(hex_to_rgb(props.color))
 	end
  
-	if self.font then
-		self.font:draw_string(self.text)
+	if props.font then
+		props.font:draw_string(props.text)
 	else
-		_g_graphics_print(self.text)
+		_g_graphics_print(props.text)
 	end
 end
 
-glOMP.gui.Label = glOMP.View:extend(_label_base)
+glomp.gui.label = glomp.view:clone("gui_label")
+glomp.gui.label.draw = draw_label
+glomp.gui.label:on("draw", draw_label)

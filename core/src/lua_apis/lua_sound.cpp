@@ -1,6 +1,6 @@
 //
 //  lua_sound.cpp
-//  glOMP
+//  glomp
 //
 //  Created by Jeffrey Graves on 8/5/12.
 //  Copyright (c) 2012 Decultured. All rights reserved.
@@ -8,7 +8,7 @@
 
 #include "lua_sound.h"
 
-namespace glOMP {
+namespace glomp {
     
     static int lua_sound_load(lua_State *L) {
         const char *filename = luaL_checkstring(L, 1);
@@ -16,7 +16,7 @@ namespace glOMP {
         bool multiplay = lua_toboolean(L, 3);
         
         ofSoundPlayer **sound= (ofSoundPlayer **)lua_newuserdata(L, sizeof(ofSoundPlayer *));
-        luaL_getmetatable(L, "glOMP.sound");
+        luaL_getmetatable(L, "glomp.sound");
         lua_setmetatable(L, -2);
         
         *sound = new ofSoundPlayer();
@@ -152,7 +152,7 @@ namespace glOMP {
     };
     
     void luaopen_sound(lua_State *L) {
-        register_metatable(L, "glOMP.sound", lua_sound_metamethods);
+        register_metatable(L, "glomp.sound", lua_sound_metamethods);
         register_module(L, "sound", lua_sound_methods);
     }
     

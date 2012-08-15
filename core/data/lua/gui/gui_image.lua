@@ -1,14 +1,13 @@
-glOMP = glOMP or {}
-glOMP.gui = glOMP.gui or {}
+glomp = glomp or {}
+glomp.gui = glomp.gui or {}
  
-local _image_base = {}
-
-function _image_base:draw()
-	if self.image then
-		self.image:draw()
+local function draw_image(props)
+	glomp.graphics.set_color(255, 255, 255)
+	if props.image then
+		props.image:draw()
 	end
-
-	self.rotation = self.rotation + 0.9
 end
 
-glOMP.gui.Image = glOMP.View:extend(_image_base)
+glomp.gui.image = glomp.view:clone("gui_image")
+glomp.gui.image.draw = draw_image
+glomp.gui.image:on("draw", draw_image)

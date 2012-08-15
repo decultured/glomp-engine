@@ -1,4 +1,4 @@
-glOMP_keys = {
+glomp_keys = {
 	SPACE = 32,
 	NUM_0 = 48,
 	NUM_1 = 49,
@@ -97,7 +97,7 @@ glOMP_keys = {
 	BACKSPACE = 127,
 }
 
-inv_glOMP_keys = {
+inv_glomp_keys = {
 	[32] = "SPACE",
 	[48] = "NUM_0",
 	[49] = "NUM_1",

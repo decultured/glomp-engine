@@ -1,20 +1,20 @@
 //
 //  lua_font.h
-//  glOMP
+//  glomp
 //
 //  Created by Jeffrey Graves on 8/4/12.
 //  Copyright (c) 2012 Decultured. All rights reserved.
 //
 
-#ifndef glOMP_lua_font_h
-#define glOMP_lua_font_h
+#ifndef glomp_lua_font_h
+#define glomp_lua_font_h
 
 #include "lua_util.h"
 #include "ofMain.h"
 
-namespace glOMP {
+namespace glomp {
     
-    #define glomp_checkfont(L, N) *(ofTrueTypeFont **)luaL_checkudata(L, N, "glOMP.font")
+    #define glomp_checkfont(L, N) *(ofTrueTypeFont **)luaL_checkudata(L, N, "glomp.font")
     
     static int lua_font_load(lua_State *L);
     static int lua_font_gc(lua_State *L);

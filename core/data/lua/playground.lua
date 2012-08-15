@@ -1,15 +1,15 @@
-local fnt = glOMP.font.load("assets/fonts/Cousine-Regular.ttf", 12, true, false, true, 0.9, 100)
+local fnt = glomp.font.load("assets/fonts/Cousine-Regular.ttf", 12, true, false, true, 0.9, 100)
 
-local keyboard = glOMP.Description:load("glOMP_keyboard")
-local time = glOMP.Description:load("glOMP_time")
-local root = glOMP.View:get_or_create("root")
+local keyboard = glomp.description:fetch_or_create("glomp_keyboard")
+local time = glomp.description:fetch_or_create("glomp_time")
+local root = glomp.view:fetch_or_create("root")
 
-local new_img = glOMP.image.load("assets/images/openFrameworks.png")
+local new_img = glomp.image.load("assets/images/openFrameworks.png")
 
 images = {}
 
-for counter = 1,10000 do
-	local new_image = glOMP.gui.Image:get_or_create("image_test_" .. tostring(counter))
+for counter = 1,3000 do
+	local new_image = glomp.gui.image:fetch_or_create("image_test_" .. tostring(counter))
 
 	new_image.x = math.random(100, 800)
 	new_image.y = math.random(100, 600)
@@ -18,14 +18,13 @@ for counter = 1,10000 do
 	root:add_child(new_image)
 end
 
-local performance = glOMP.gui.Label:get_or_create("debug_performance_display", {
-																			text = "testing",
-																			font = fnt,
-																			color = "#ff0000",
-																			x = 700,
-																			y = 40,
-																			visible = false
-																		})
+local performance = glomp.gui.label:fetch_or_create("debug_performance_display")
+
+performance.font = fnt
+performance.color = "#ff0000"
+performance.x = 700
+performance.y = 40
+performance.visible = false
 
 root:add_child(performance)
 

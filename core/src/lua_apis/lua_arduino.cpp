@@ -1,6 +1,6 @@
 //
 //  lua_arduino.cpp
-//  glOMP
+//  glomp
 //
 //  Created by Jeffrey Graves on 8/8/12.
 //
@@ -8,12 +8,12 @@
 
 #include "lua_arduino.h"
 
-namespace glOMP {
+namespace glomp {
         
     static int lua_arduino_load(lua_State *L) {
         
         ofArduino **arduino= (ofArduino **)lua_newuserdata(L, sizeof(ofArduino *));
-        luaL_getmetatable(L, "glOMP.arduino");
+        luaL_getmetatable(L, "glomp.arduino");
         lua_setmetatable(L, -2);
         
         *arduino = new ofArduino();
@@ -43,7 +43,7 @@ namespace glOMP {
     };
     
     void luaopen_arduino(lua_State *L) {
-        register_metatable(L, "glOMP.arduino", lua_arduino_metamethods);
+        register_metatable(L, "glomp.arduino", lua_arduino_metamethods);
         register_module(L, "arduino", lua_arduino_methods);
     }
 }

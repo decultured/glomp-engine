@@ -1,7 +1,7 @@
-local _g_keys = glOMP.Description:load("glOMP_keyboard")
-local _snd = glOMP.sound.load("assets/know.mp3", true)
+local _g_keys = glomp.description:load("glomp_keyboard")
+local _snd = glomp.sound.load("assets/know.mp3", true)
 
-local playground = glOMP.Description:load({
+local playground = glomp.Description:load({
 		offset = 0,
 		speed = 1,
 		pan = 0

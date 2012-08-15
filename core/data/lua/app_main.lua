@@ -1,4 +1,4 @@
-glOMP.graphics.enable_alpha_blending()
+glomp.graphics.enable_alpha_blending()
 
 function glomp_libs()
 	dofile(LUA_PATH.."util.lua")

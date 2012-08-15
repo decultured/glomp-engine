@@ -1,13 +1,13 @@
 //
 //  lua_core.h
-//  glOMP
+//  glomp
 //
 //  Created by Jeffrey Graves on 7/1/12.
 //  Copyright (c) 2012 Decultured. All rights reserved.
 //
 
-#ifndef glOMP_lua_core_h
-#define glOMP_lua_core_h
+#ifndef glomp_lua_core_h
+#define glomp_lua_core_h
 
 #include "lua_util.h"
 #include "lua_marshal.h"
@@ -18,8 +18,9 @@
 #include "lua_image.h"
 #include "lua_window.h"
 #include "lua_directory.h"
+#include "lua_matrix4x4.h"
 
-namespace glOMP {
+namespace glomp {
     
     lua_State *lua_core_init();
     void lua_core_shutdown(lua_State *L);
