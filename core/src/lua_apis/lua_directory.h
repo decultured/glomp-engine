@@ -23,7 +23,6 @@ namespace glomp {
     static int lua_directory_create(lua_State *L);
     
     void luaopen_directory(lua_State *L);
-    
 }
 
 #endif

@@ -36,5 +36,6 @@ local g_root = glomp.view:fetch_or_create("root")
 function _glomp_draw()
 	glomp.graphics.clear(hex_to_rgb(_g_window:get("clear_color")))
 
-	g_root:render()
+	g_root:build_transforms()
+	g_root:trigger_bottom_up("draw")
 end

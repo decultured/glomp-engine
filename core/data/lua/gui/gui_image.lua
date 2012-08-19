@@ -1,11 +1,15 @@
 glomp = glomp or {}
 glomp.gui = glomp.gui or {}
  
-local function draw_image(props)
+local function draw_image(view)
+	view.matrix:push()
+
 	glomp.graphics.set_color(255, 255, 255)
-	if props.image then
-		props.image:draw()
+	if view.image then
+		view.image:draw()
 	end
+
+	view.matrix:pop()
 end
 
 glomp.gui.image = glomp.view:clone("gui_image")

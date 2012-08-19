@@ -9,56 +9,88 @@ glomp.store.views = glomp.store.views or {}
 local _g_views = glomp.store.views
 local _g_view = glomp.view
 
-function glomp.view:render( )
-	_g_graphics.push_2d_transform(self.x, self.y, self.rotation, self.scale_x, self.scale_y)
-
-
-	if self.visible then
-		--self:draw()
+function glomp.view:build_transforms()
+	if self.parent and self.parent.matrix then
+		self.matrix:copy_of(self.parent.matrix)
+	else
+		self.matrix:identity()
 	end
 
+	self.matrix:transform(self.x, self.y)
+	self.matrix:rotate(self.rotation)
+	self.matrix:scale(self.scale_x, self.scale_y)
 
-	_g_graphics.pop_matrix()
+	_g_table_utils.each(self.sub_children, function(v)
+		v:build_transforms()
+	end)
+
+	_g_table_utils.each(self.children, function(v)
+		v:build_transforms()
+	end)
 end
 
-function glomp.view.trigger_bottom_up(event, ...)
+function glomp.view:trigger_bottom_up(event, ...)
 	if not self.enabled then
 		return
 	end
 
-	_g_table_utils.call_each(self.sub_children, event)
+	_g_table_utils.each(self.sub_children, function(v, k, ...)
+		v:trigger_bottom_up(event, ...)
+	end)
 
-	self.event_pump:trigger(event, self)
+	self.event_pump:trigger(event, self, ...)
 
-	_g_table_utils.call_each(self.children, event)
+	_g_table_utils.each(self.children, function(v, k, ...)
+		v:trigger_bottom_up(event, ...)
+	end)
 end
 
-function glomp.view.trigger_top_down(...)
+function glomp.view:trigger_top_down(event, ...)
 	if not self.enabled then
 		return
 	end
 
-	_g_table_utils.call_each(self.children, event)
+	_g_table_utils.each(self.sub_children, function(v, k, ...)
+		v:trigger_top_down(event, ...)
+	end)
 
-	self.event_pump:trigger(event, self)
+	self.event_pump:trigger(event, self, ...)
 
-	_g_table_utils.call_each(self.sub_children, event)
+	_g_table_utils.each(self.children, function(v, k, ...)
+		v:trigger_top_down(event, ...)
+	end)
 end
 
-function glomp.view:add_child(view)
-	table.insert(self.children, view)
+function glomp.view:add_child(child)
+	if child.parent then
+		child.parent:remove_sub_child(child)
+		child.parent:remove_child(child)
+	end
+
+	child.parent = self
+	table.insert(self.children, child)
+	child:build_transforms()
 end
 
-function glomp.view:add_sub_child(view)
-	table.insert(self.sub_children, view)
+function glomp.view:add_sub_child(child)
+	if child.parent then
+		child.parent:remove_sub_child(child)
+		child.parent:remove_child(child)
+	end
+
+	child.parent = self
+	table.insert(self.sub_children, child)
+	child:build_transforms()
 end
 
-function glomp.view:remove_child(view)
-	_g_table_utils.remove_one(self.children, view)
+function glomp.view:remove_child(child)
+	child.parent = nil
+	_g_table_utils.remove_one(self.children, child)
 end
 
-function glomp.view:remove_sub_child(view)
-	_g_table_utils.remove_one(self.sub_children, view)
+function glomp.view:remove_sub_child(child)
+	child.parent = nil
+	_g_table_utils.remove_one(self.sub_children, child)
 end
 
 function glomp.view:initialize()
@@ -67,6 +99,26 @@ end
 
 function glomp.view:draw()
 
+end
+
+function glomp.view:move(x, y)
+	self.x = self.x + x
+	self.y = self.y + y
+
+	self:build_transforms(self.parent)
+end
+
+function glomp.view:rotate(angle)
+	self.angle = self.angle + angle
+
+	self:build_transforms(self.parent)
+end
+
+function glomp.view:scale(scale_x, scale_y)
+	self.scale_x = self.scale_x + x
+	self.scale_y = self.scale_y + y
+
+	self:build_transforms(self.parent)
 end
 
 function glomp.view:on(...)
@@ -84,6 +136,7 @@ glomp.view.scale_x = 1.0
 glomp.view.scale_y = 1.0
 glomp.view.enabled = true
 glomp.view.visible = true
+glomp.view.parent = nil
 glomp.view.event_pump = glomp.event_pump.load(name)
 
 function glomp.view:fetch_or_create(name, attributes)

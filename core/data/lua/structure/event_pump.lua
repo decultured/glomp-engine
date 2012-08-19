@@ -1,5 +1,12 @@
 glomp = glomp or {}
-local _g_table_utils = glomp.table_utils
+glomp = glomp.event_pump or {}
+
+local data_store = glomp.data_store
+local table_utils = glomp.table_utils
+
+local M = glomp.event_pump
+
+local event_pump_proto = {}
 
 local function _equals(data, param)
 	return data == param
@@ -25,9 +32,7 @@ local function _not_between(data, min, max)
 	return not (min < param < max)
 end
 
-local _event_pump_meta = {}
-
-function _event_pump_meta:on(event, callback)
+function event_pump_proto:on(event, callback)
 	local list = self.callbacks[event] or {}
 	table.insert(list, { 
 			callback = callback
@@ -35,7 +40,7 @@ function _event_pump_meta:on(event, callback)
 	self.callbacks[event] = list
 end
 
-function _event_pump_meta:when(event, callback, truth_check, ...)
+function event_pump_proto:when(event, callback, truth_check, ...)
 	local list = self.callbacks[event] or {}
 	table.insert(list, { 
 			callback = callback,
@@ -45,31 +50,31 @@ function _event_pump_meta:when(event, callback, truth_check, ...)
 	self.callbacks[event] = list
 end
 
-function _event_pump_meta:when_not_equals(event, callback, val)
+function event_pump_proto:when_not_equals(event, callback, val)
 	self:when(event, callback, _not_equals, val)
 end
 
-function _event_pump_meta:when_equals(event, callback, val)
+function event_pump_proto:when_equals(event, callback, val)
 	self:when(event, callback, _equals, val)
 end
 
-function _event_pump_meta:when_greater_than(event, callback, val)
+function event_pump_proto:when_greater_than(event, callback, val)
 	self:when(event, callback, _greater_than, val)
 end
 
-function _event_pump_meta:when_less_than(event, callback, val)
+function event_pump_proto:when_less_than(event, callback, val)
 	self:when(event, callback, _less_than, val)
 end
 
-function _event_pump_meta:when_between(event, callback, min, max)
+function event_pump_proto:when_between(event, callback, min, max)
 	self:when(event, callback, _between, min, max)
 end
 
-function _event_pump_meta:when_not_between(event, callback, min, max)
+function event_pump_proto:when_not_between(event, callback, min, max)
 	self:when(event, callback, _not_between, min, max)
 end
 
-function _event_pump_meta:off(event, callback)
+function event_pump_proto:off(event, callback)
 	local list = self.callbacks[event] or {}
 	for k, v in pairs(list) do
 		if v.callback == callback then
@@ -78,7 +83,7 @@ function _event_pump_meta:off(event, callback)
 	end
 end
 
-function _event_pump_meta:trigger(event, data, caller)
+function event_pump_proto:trigger(event, data, caller)
 	local list = self.callbacks[event] or {}
 	for k, v in pairs(list) do
 		if v.callback and type(v.callback) == "function" then
@@ -89,25 +94,8 @@ function _event_pump_meta:trigger(event, data, caller)
 	end
 end
 
-_event_pump_meta.__index = _event_pump_meta
-
-glomp.event_pump = glomp.event_pump or {}
-
-glomp.event_pump.callbacks = {}
-
-function glomp.event_pump.load(name)
-	local new_event_pump = _g_table_utils.extend(glomp.event_pump, {
-														callbacks = {}, 
-													})
-
-	setmetatable(new_event_pump, _event_pump_meta)
-	return new_event_pump
-end
-
-function glomp.event_pump:clone(name)
-	local new_event_pump = _g_table_utils.extend(glomp.event_pump, {
-														callbacks = {}, 
-													})
+function event_pump_proto:clone(id)
+	local new_event_pump = { callbacks = {} }
 
 	for k, v in pairs(self.callbacks) do
 		new_event_pump.callbacks[k] = {}
@@ -117,6 +105,45 @@ function glomp.event_pump:clone(name)
 		end
 	end
 
-	setmetatable(new_event_pump, _event_pump_meta)
+	setmetatable(new_event_pump, event_pump_proto)
 	return new_event_pump
 end
+
+event_pump_proto.__index  = event_pump_proto
+
+function M.fetch_or_create(id)
+	local event_pump = M.fetch(id);
+	if not event_pump then
+		return M.create(id)
+	end
+	return event_pump
+end
+
+function M.fetch(id)
+	if not id then
+		error ("Event Pump id must not be nil")
+		return false
+	end
+
+	return data_store.get(id)
+end
+
+function M.create(id)
+	if not id then
+		id = UUID()
+	end
+
+	if data_store.has(id) then
+		error ("Existing Item Found in data_store: ", id)
+		return false
+	end
+
+	local new_event_pump = { callbacks = {} }
+	setmetatable(new_event_pump, event_pump_proto)
+
+	data_store.set(id, new_event_pump)
+
+	return new_event_pump
+end
+
+return M

@@ -28,19 +28,21 @@ function print_error(err)
 end
 
 local builtin_dofile = dofile
-dofile = function(filename)
+function load_module(filename)
 	filename = LUA_PATH .. filename .. ".lua"
 	-- local printname = string.gsub(filename, "(.-/)", "")
 	-- print(printname)
 	local f, err = loadfile(filename)
 	if not f then
 		print_error(err)
-		return
+		return false
 	end
-	local status, err = pcall(f)
+	local status, result = pcall(f)
 	if not status then
 		print_error(err)
+		return false
 	end
+	return result
 end
 
 glomp_print_queue = glomp_print_queue or {}
