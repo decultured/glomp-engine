@@ -1,5 +1,5 @@
 glomp = glomp or {}
-glomp = glomp.event_pump or {}
+glomp.event_pump = glomp.event_pump or {}
 
 local data_store = glomp.data_store
 local table_utils = glomp.table_utils
@@ -94,14 +94,14 @@ function event_pump_proto:trigger(event, data, caller)
 	end
 end
 
-function event_pump_proto:clone(id)
+function event_pump_proto:clone(name)
 	local new_event_pump = { callbacks = {} }
 
 	for k, v in pairs(self.callbacks) do
 		new_event_pump.callbacks[k] = {}
-		local inside = new_event_pump.callbacks[k]
+		local insnamee = new_event_pump.callbacks[k]
 		for k, v in pairs(v) do
-			table.insert(inside, v)
+			table.insert(insnamee, v)
 		end
 	end
 
@@ -111,39 +111,42 @@ end
 
 event_pump_proto.__index  = event_pump_proto
 
-function M.fetch_or_create(id)
-	local event_pump = M.fetch(id);
+function M.fetch_or_create(name)
+	local event_pump = M.fetch(name);
 	if not event_pump then
-		return M.create(id)
+		return M.create(name)
 	end
 	return event_pump
 end
 
-function M.fetch(id)
-	if not id then
-		error ("Event Pump id must not be nil")
+function M.fetch(name)
+	if not name then
+		error ("Event Pump name must not be nil")
 		return false
 	end
 
-	return data_store.get(id)
+	return data_store:get("event", name)
 end
 
-function M.create(id)
-	if not id then
-		id = UUID()
+local function build_event(name)
+	if not name then
+		name = UUID()
 	end
 
-	if data_store.has(id) then
-		error ("Existing Item Found in data_store: ", id)
-		return false
-	end
-
-	local new_event_pump = { callbacks = {} }
+	local new_event_pump =  { 
+								name = name,
+								callbacks = {} 
+							}
 	setmetatable(new_event_pump, event_pump_proto)
-
-	data_store.set(id, new_event_pump)
 
 	return new_event_pump
 end
+
+function M.create(name)
+	local new_event_pump = build_event(name)
+	return data_store:create("event", name, new_event_pump)
+end
+
+data_store:add_builder("event", build_event)
 
 return M

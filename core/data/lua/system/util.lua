@@ -12,19 +12,22 @@ function run(scriptfile)
     return env
 end
 
-function print_error(err)
+function load_module_error(err)
+	if not err then
+		print("Unknown Error")
+		return
+	end
+
 	local err = string.gsub(err, "(.-/)", "")
 	local pos = string.find(err, ":%s")
 
 	if not pos then
-		print (err)
+		warning(err)
 		return
 	end
 
-	local err_one = string.sub(err, 1, pos+1)
-	local err_two = "    "..string.sub(err, pos+2, -1)
-	print(err_one)
-	print(err_two)
+	local err_text = string.sub(err, 1, pos+1).."\n    "..string.sub(err, pos+2, -1)
+	warning(err_text)
 end
 
 local builtin_dofile = dofile
@@ -34,12 +37,12 @@ function load_module(filename)
 	-- print(printname)
 	local f, err = loadfile(filename)
 	if not f then
-		print_error(err)
+		load_module_error(err)
 		return false
 	end
 	local status, result = pcall(f)
 	if not status then
-		print_error(err)
+		load_module_error(result)
 		return false
 	end
 	return result
@@ -74,13 +77,15 @@ function print(...)
 end
 
 local old_error = error
-function error(...)
-	print(...)
-	old_error(...)
+function error(text, level)
+	print(text)
+    print(debug.traceback())
+	old_error(text, level + 1)
 end
 
 function warning(...)
 	print(...)
+    print(debug.traceback())
 end
 
 function split(inputstr, sep)

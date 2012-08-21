@@ -1,30 +1,31 @@
-glomp.graphics.enable_alpha_blending()
+dofile(LUA_PATH.."system/util.lua")
 
 function glomp_libs()
-	dofile(LUA_PATH.."util.lua")
-	dofile("printing")
-	dofile("json")
-	dofile("UUID")
+	load_module("system/printing")
+	load_module("lib/json")
+	load_module("lib/UUID")
+	load_module("lib/table_utils")
 end
 
 function glomp_structure()
-	dofile("table_utils")
-	dofile("event")
-	dofile("description")
-	dofile("view")
+	load_module("structure/data_store")
+	load_module("structure/event_pump")
+	load_module("structure/definition")
+	load_module("structure/description")
+	load_module("structure/collection")
+	load_module("structure/resource")
 end
 
 function glomp_app()
-	dofile("input_defines")
-	dofile("input")
-	dofile("window")
-	dofile("gui/load_gui")
+	load_module("system/input_defines")
+	load_module("input")
+	load_module("window")
 end
 
 function glomp_run_tests()
-	dofile("basic_input")
-	dofile("model_tests")
-	dofile("playground")
+	load_module("basic_input")
+	load_module("model_tests")
+	load_module("playground")
 end
 
 glomp_libs()

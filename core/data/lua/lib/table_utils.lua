@@ -3,6 +3,9 @@ glomp.table_utils = glomp.table_utils or {}
 local M = glomp.table_utils
 
 M.deep_copy = function(table)
+    if not table then
+    	return {}
+    end
     local lookup_table = {}
     local function _copy(table)
         if type(table) ~= "table" then
@@ -21,8 +24,10 @@ M.deep_copy = function(table)
 end
 
 M.shallow_copy = function(table)
+	if not table then
+		return {}
+	end
 	local new_table = {}
-	table = table or {}
 	for k,v in pairs(table) do
 		new_table[k] = v
 	end
@@ -32,8 +37,10 @@ end
 M.clone = M.shallow_copy
 
 M.extend = function(first, second)
-	local new_table = M.shallow_copy(first) or {}
-	second = second or {}
+	local new_table = M.shallow_copy(first)
+	if not second then
+		return new_table
+	end
 	for k,v in pairs(second) do 
 		new_table[k] = v
 	end
@@ -42,8 +49,10 @@ M.extend = function(first, second)
 end
 
 M.set_defaults = function (table, defaults)
-	defaults = defaults or {}
 	table = table or {}
+	if not defaults then 
+		return table
+	end
 	for k, v in pairs (defaults) do
 		if not table[k] then
 			table[k] = v
@@ -53,8 +62,10 @@ M.set_defaults = function (table, defaults)
 end
 
 M.extend_original = function (table, second)
-	second = second or {}
 	table = table or {}
+	if not second then
+		return table
+	end
 	for k, v in pairs (second) do
 		table[k] = v
 	end
@@ -68,7 +79,12 @@ M.add = function(table, val)
 end
 
 M.remove_one = function(table, target)
-	table = table or {}
+	if not table then
+		return false
+	end
+	if not target then
+		return false
+	end
 	for k,v in pairs(table) do
 		if v == target then
 			table[k] = nil
@@ -80,8 +96,10 @@ M.remove_one = function(table, target)
 end
 
 M.remove_all = function(table, target)
+	if not table then
+		return false 
+	end
 	local found = false
-	table = table or {}
 	for k,v in pairs(table) do
 		if v == target and type(k) == number then
 			table[k] = nil
@@ -93,7 +111,9 @@ M.remove_all = function(table, target)
 end
 
 M.raw_remove_one = function(table, target)
-	table = table or {}
+	if not table then 
+		return false 
+	end
 	for k,v in pairs(table) do
 		if raw_compare(v, val) then
 			table[k] = nil
@@ -105,8 +125,10 @@ M.raw_remove_one = function(table, target)
 end
 
 M.raw_remove_all = function(table, target)
+	if not table then 
+		return false 
+	end
 	local found = false
-	table = table or {}
 	for k,v in pairs(table) do
 		if raw_compare(v, target) then
 			table[k] = nil
@@ -118,7 +140,9 @@ M.raw_remove_all = function(table, target)
 end
 
 M.each = function(table, iter, ...)
-	table = table or {}
+	if not table then 
+		return false 
+	end
 	for k,v in pairs(table) do 
 		iter(v, k, ...)
 	end
@@ -140,7 +164,9 @@ M.reduce = function (table, iter, memo)
 end
 
 M.find = function (table, iter)
-	table = table or {}
+	if not table then
+		return nil
+	end
 	for k,v in pairs(table) do 
 		if iter(v, k) then
 			return v
@@ -171,7 +197,9 @@ M.every = function (table, iter)
 end
 
 M.any = function (table, iter)
-	table = table or {}
+	if not table then
+		return false
+	end
 	for k, v in pairs(table) do
 		if iter(v, k) then
 			return true
@@ -181,7 +209,9 @@ M.any = function (table, iter)
 end
 
 M.contains = function (table, target)
-	table = table or {}
+	if not table then
+		return false
+	end
 	for k,v in pairs(table) do
 		if v == target then
 			return true
@@ -191,7 +221,9 @@ M.contains = function (table, target)
 end
 
 M.raw_contains = function (table, target)
-	table = table or {}
+	if not table then
+		return false
+	end
 	for k,v in pairs(table) do
 		if rawcompare(v, target) then
 			return true
@@ -201,9 +233,11 @@ M.raw_contains = function (table, target)
 end
 
 M.max = function (table, iter)
+	if not table then
+		return nil
+	end
 	local val = nil
 	iter = iter or math.max
-	table = table or {}
 	for k, v in pairs(table) do
 		if val then
 			val = iter(val, v)
@@ -215,9 +249,11 @@ M.max = function (table, iter)
 end
 
 M.min = function (table, iter)
+	if not table then
+		return nil
+	end
 	local val = nil
 	iter = iter or math.min
-	table = table or {}
 	for k, v in pairs(table) do
 		if val then
 			val = iter(val, v)
@@ -229,8 +265,10 @@ M.min = function (table, iter)
 end
 
 M.group_by = function (table, iter)
+	if not table then
+		return nil
+	end
 	local results = {}
-	table = table or {}
 	for k, v in pairs(table) do
 		results[iter(v, k)] = v
 	end

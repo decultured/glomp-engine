@@ -15,7 +15,7 @@
 glomp = glomp or {}
 glomp.description = glomp.description or {}
 
-local event_pump = event_pump
+local event_pump = glomp.event_pump
 local data_store = glomp.data_store
 local table_util = glomp.table_utils
 
@@ -28,18 +28,21 @@ function description_proto:has(attr)
 end
 
 function description_proto:set_defaults(defaults)
-    defaults = defaults or {}
+    if not defaults then
+        return false
+    end
+
     for k, v in pairs (defaults) do
-        if not self.attributes[tostring(k)] then
-            self.attributes[tostring(k)] = v
+        if not self.attributes[k] then
+            self.attributes[k] = v
         end
     end
 end
 
 function description_proto:set_many(table, options)
     for k, v in pairs (table) do
-        self:set(tostring(k), v, {silent = true})
-        self.events:trigger(tostring(k), v, self)
+        self:set(k, v, {silent = true})
+        self.events:trigger(k, v, self)
     end
     self.events:trigger("changed", self)
 end
@@ -66,6 +69,10 @@ function description_proto:set(attr, val, options)
     self.events:trigger("changed", self)
 end
 
+function description_proto:get(attr, default)
+    return self.attributes[attr] or default
+end
+
 function description_proto:apply_to(attr, funct, options)
     self:set(attr, funct(self.attributes[attr]), options)
 end
@@ -90,10 +97,6 @@ function description_proto:concat(attr, val, options)
     if self.attributes[attr] then
         self:set(attr, self.attributes[attr] .. val, options)
     end
-end
-
-function description_proto:get(attr, default)
-    return self.attributes[attr] or default
 end
 
 function description_proto:all()
@@ -130,21 +133,21 @@ end
 
 description_proto.__index = description_proto
 
-function M.fetch_or_create(id, defaults)
-    local result = self:fetch(id, defaults)
+function M.fetch_or_create(name, defaults)
+    local result = M.fetch(name, defaults)
     if not result then
-        result = self:create(id, defaults)
+        result = M.create(name, defaults)
     end
     return result
 end
 
-function M.fetch(id, defaults)
-    if not id then
-        error ("Description id must not be nil")
+function M.fetch(name, defaults)
+    if not name then
+        error ("Description name must not be nil")
         return false
     end
 
-    local found_desc = data_store:get(id)
+    local found_desc = data_store:fetch("description", name)
 
     if found_desc then
         self:set_defaults(defaults)
@@ -154,31 +157,31 @@ function M.fetch(id, defaults)
     return false
 end
 
-function M.create(id, defaults)
-    if not id then
-        id = UUID()
-    elseif type(id) == "table" then
-        defaults = id
-        id = UUID()
+function M.create(name, defaults)
+    if not name then
+        name = UUID()
+    elseif type(name) == "table" then
+        defaults = name
+        name = UUID()
     end
 
-    if data_store:has(id) then
-        error ("Existing Item Found in data_store: ", id)
+    if data_store:has("description", name) then
+        error ("Existing Item Found in data_store: ", name)
         return false
     end
 
     local new_description = {
-                                id = id,
+                                name = name,
                                 previous = {},
                                 attributes = {},
-                                changed = {}
+                                changed = {},
+                                events = event_pump.create()            
                             }
-    new_description.events = event_pump.create()
 
     setmetatable(new_description, description_proto)
     new_description:set_defaults(defaults)
 
-    data_store:set(id, new_description)
+    data_store:create("description", name, new_description)
 
     return new_description
 end
