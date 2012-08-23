@@ -1,14 +1,13 @@
 local graphics = graphics
-local glomp = glomp or {}
-glomp.description = glomp.description or {}
 
-local timer = glomp.description.fetch_or_create("glomp_time", {
+
+local timer = description.workon("glomp_time", {
 								frame_time = 0,
 								update_count = 0,
 								total_time = 0,
 							})
 
-local window = glomp.description.fetch_or_create("glomp_window", {
+local window = description.workon("glomp_window", {
 								w = 0,
 								h = 0,
 								entered = 1,

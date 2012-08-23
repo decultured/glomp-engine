@@ -1,10 +1,9 @@
-glomp = glomp or {}
-glomp.event_pump = glomp.event_pump or {}
+event_pump = event_pump or {}
 
-local data_store = glomp.data_store
-local table_utils = glomp.table_utils
+local data_store = data_store
+local table_utils = table_utils
 
-local M = glomp.event_pump
+local M = event_pump
 
 local event_pump_proto = {}
 
@@ -111,7 +110,7 @@ end
 
 event_pump_proto.__index  = event_pump_proto
 
-function M.fetch_or_create(name)
+function M.workon(name)
 	local event_pump = M.fetch(name);
 	if not event_pump then
 		return M.create(name)

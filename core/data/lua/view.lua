@@ -139,7 +139,7 @@ glomp.view.visible = true
 glomp.view.parent = nil
 glomp.view.event_pump = glomp.event_pump.load(name)
 
-function glomp.view:fetch_or_create(name, attributes)
+function glomp.view.workon(name, attributes)
 	local result = self:fetch(name, attributes)
 	if not result then
 		result = self:create(name, attributes)
@@ -172,7 +172,7 @@ function glomp.view:create(name, attributes)
 	end
 
 	if _g_views[name] then
-		error ("Existing view found (Perhaps you want 'fetch_or_create'?): " .. name)
+		error ("Existing view found (Perhaps you want 'use'?): " .. name)
 		return false
 	end
 

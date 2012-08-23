@@ -1,6 +1,5 @@
 function glomp_printobj(obj, indent)
 	indent = indent or ""
-	print (indent .. "Object:")
 	indent = indent .. "\t"
 	for key, val in pairs(obj) do
 		if type(val) == "table" then

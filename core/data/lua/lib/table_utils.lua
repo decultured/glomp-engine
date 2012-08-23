@@ -1,6 +1,5 @@
-glomp = glomp or {}
-glomp.table_utils = glomp.table_utils or {}
-local M = glomp.table_utils
+table_utils = table_utils or {}
+local M = table_utils
 
 M.deep_copy = function(table)
     if not table then

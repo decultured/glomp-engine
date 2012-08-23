@@ -2,11 +2,10 @@
 -- Descriptions in a Collection are like rows in a table
 -- Only store references
 
-glomp = glomp or {}
-glomp.collection = glomp.collection or {}
+collection = collection or {}
 
-local event_pump = glomp.event_pump
-local M = glomp.collection
+local event_pump = event_pump
+local M = collection
 local collection_proto = {}
 
 function collection_proto:has(target)
@@ -31,7 +30,7 @@ local function base_collection()
             }
 end
 
-function M.fetch_or_create(name)
+function M.workon(name)
 
 end
 

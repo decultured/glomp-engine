@@ -1,12 +1,11 @@
-glomp = glomp or {}
-glomp.data_store = glomp.data_store or {}
+data_store = data_store or {}
 
-local M = glomp.data_store
+local M = data_store
 
 M.store = {}
 M.builders = {}
 
-function M:fetch_or_create(base, name)
+function M.workon(base, name)
     local base_store = self.store[base] or {} 
     local record = base_store[name]
 
