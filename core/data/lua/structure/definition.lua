@@ -5,9 +5,9 @@ local M = definition or {}
 local definition_proto = {}
 
 local need = {
-    field:
-    default:
-    type:
+    field = "this",
+    default = "should be",
+    kind = "a string"
 }
 
 definition_proto.__index = definition_proto

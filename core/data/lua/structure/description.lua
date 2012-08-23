@@ -145,7 +145,8 @@ end
 function description_proto:add_definitions(definitions)
     local def_type = type(definitions)
     if def_type == "string" then
-        
+
+    end
 
     return self
 end
