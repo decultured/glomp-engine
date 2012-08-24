@@ -2,13 +2,22 @@ local fnt = glomp.font.load("assets/fonts/Cousine-Regular.ttf", 12, true, false,
 local keyboard = description.workon("glomp_keyboard")
 local time = description.workon("glomp_time")
 local window = description.workon("glomp_window")
--- local root = glomp.view.workon("root")
+local images = collection.workon("image_list")
 
 local new_img = glomp.image.load("assets/images/openFrameworks.png")
 
-images = collection.workon("image_list")
+local sprite = definition.workon("sprite")
 
-images.events:on("add", function (data, caller) print("added:", data.name, "to collection.") end)
+sprite.defaults.x = 0
+sprite.defaults.y = 0
+sprite.defaults.image = nil
+sprite.default_events:on("draw", function (data, caller, called)
+				props = called:all()
+				if props.image then
+					props.image:draw(props.x, props.y)
+				end
+			end)
+
 
 for counter = 1,300 do
 	local props = 	{
@@ -17,21 +26,13 @@ for counter = 1,300 do
 						image = new_img
 					}
 
-	local new_image = description.workon("image_test_" .. tostring(counter)) -- :set(props)
-
-	new_image:set(props)
-
-	-- print (new_image)
+	local new_image = description.workon("image_test_" .. counter, props, sprite)
 	images:add(new_image)
 end
 
 window.events:on("draw", function (data, caller) 
 		local props
-		images:each(function (val)
-				props = val:all()
-				props.image:draw(props.x, props.y)
-				print ("Drawing:", val.name, "at:", props.x, props.y)
-			end)
+		images:trigger_all("draw")
 	end)
 
 -- local performance = description.workon("debug_performance_display")

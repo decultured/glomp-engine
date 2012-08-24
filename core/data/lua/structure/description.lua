@@ -50,11 +50,11 @@ end
 function description_proto:set(attr, val, options)
     if val == nil then
         self:set_many(attr)
-        return
+        return self
     end
 
     if self.fields[attr] == val or not attr then
-        return
+        return self
     end
 
     self.previous[attr] = self.fields[attr]
@@ -64,7 +64,7 @@ function description_proto:set(attr, val, options)
     self.changed[attr] = true
 
     if options and options.silent then
-        return
+        return self
     end
 
     self:commit()
@@ -182,7 +182,7 @@ function description_proto:add_definitions(definitions)
     if def_type == "string" then
         local definition = data_store.fetch("definition", definitions)
     elseif def_type == "table" then
-        if definitions.create then
+        if definitions.data_type and definitions.data_type == "definition" then
             definition = definitions
         else
             for k, v in pairs(definitions) do
@@ -191,7 +191,7 @@ function description_proto:add_definitions(definitions)
         end
     end
 
-    if not definition then
+    if not definition or self:has_definition(definition) then
         return self
     end
 
@@ -199,11 +199,11 @@ function description_proto:add_definitions(definitions)
 
     self:set_defaults(definition.defaults)
 
-    for k, v in definition.validators do
+    for k, v in pairs(definition.validators) do
         self:add_validator(k, v)
     end
 
-    self.events.merge_from(definition.default_events)
+    self.events:merge_from(definition.default_events)
 
     return self
 end
@@ -213,11 +213,11 @@ function description_proto:remove_definitions(definitions)
     return self
 end
 
-function get_definitions()
+function description_proto:get_definitions()
     return self.definitions
 end
 
-function has_definition(definition)
+function description_proto:has_definition(definition)
     local name = definition
 
     if type(definition) == "table" and definition.name then
@@ -255,6 +255,7 @@ function M.fetch(name, defaults, definitions)
 
     if found_desc then
         found_desc:set_defaults(defaults)
+        found_desc:add_definitions(definitions)
         return found_desc
     end
 
@@ -268,8 +269,6 @@ function M.create(name, defaults, definitions)
         defaults = name
         name = UUID()
     end
-
-    print ("New Description: ", name)
 
     if data_store:has("description", name) then
         error ("Existing Item Found in data_store: ", name)
@@ -288,6 +287,7 @@ function M.create(name, defaults, definitions)
 
     setmetatable(new_description, description_proto)
     new_description:set_defaults(defaults)
+    new_description:add_definitions(definitions)
 
     data_store:create("description", name, new_description)
 

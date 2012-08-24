@@ -83,12 +83,12 @@ function event_pump_proto:off(event, callback)
 	end
 end
 
-function event_pump_proto:trigger(event, data, caller)
+function event_pump_proto:trigger(event, data, caller, context)
 	local list = self.callbacks[event] or {}
 	for k, v in pairs(list) do
 		if v.callback and type(v.callback) == "function" then
 			if not v.truth_check or v.truth_check(data, v.params) then
-				v.callback(data, caller)
+				v.callback(data, caller, context, v.params)
 			end
 		end
 	end
@@ -110,14 +110,17 @@ function event_pump_proto:clone(name)
 end
 
 function event_pump_proto:merge_from(source)
-	if type(source) ~= "table" or not source.trigger then
-		error("source must be another event_pump")
-		return false
+	if type(source) ~= "table" or 
+		not source.data_type or 
+		not source.data_type == "event_pump" then
+			error("source must be another event_pump")
+			return false
 	end
 
 	for k, v in pairs(source.callbacks) do
+		self.callbacks[k] = self.callbacks[k] or {}
 		for in_k, in_v in pairs(v) do
-			self.insert(self.callbacks[k], in_v)
+			table.insert(self.callbacks[k], in_v)
 		end
 	end
 
@@ -149,6 +152,7 @@ local function build_event(name)
 	end
 
 	local new_event_pump =  { 
+								data_type = "event_pump",
 								name = name,
 								callbacks = {} 
 							}

@@ -63,6 +63,12 @@ function collection_proto:clear()
     self.events:trigger("reset", self)
 end
 
+function collection_proto:trigger_all(event, data, caller)
+    self:each(function (item) 
+        item.events:trigger(event, data, caller, item)
+    end)
+end
+
 collection_proto.__index = collection_proto
 
 local function base_collection()

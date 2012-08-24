@@ -1,6 +1,7 @@
 event_pump = event_pump or {}
 
-local M = definition or {}
+definition = definition or {}
+local M = definition
 
 local definition_proto = {}
 
@@ -49,14 +50,14 @@ function M.create(name)
     end
 
     if data_store:has("definition", name) then
-        error ("Existing Definition Found in data_store: ", name)
+        error ("Existing definition found in data_store: ", name)
         return false
     end
 
     local new_definition = base_definition()
     new_definition.name = name
 
-    set_metatable(new_definition, definition_proto)
+    setmetatable(new_definition, definition_proto)
     
     data_store:create("definition", name, new_definition)
 
