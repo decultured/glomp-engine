@@ -23,7 +23,7 @@ local M = description
 local description_proto = {}
 
 function description_proto:has(attr)
-    return self.attributes[attr] ~= nil
+    return self.fields[attr] ~= nil
 end
 
 function description_proto:set_defaults(defaults)
@@ -32,8 +32,8 @@ function description_proto:set_defaults(defaults)
     end
 
     for k, v in pairs (defaults) do
-        if not self.attributes[k] then
-            self.attributes[k] = v
+        if not self.fields[k] then
+            self.fields[k] = v
         end
     end
     return self
@@ -42,9 +42,8 @@ end
 function description_proto:set_many(table, options)
     for k, v in pairs (table) do
         self:set(k, v, {silent = true})
-        self.events:trigger(k, v, self)
     end
-    self.events:trigger("changed", self)
+    self:commit()
     return self
 end
 
@@ -54,59 +53,82 @@ function description_proto:set(attr, val, options)
         return
     end
 
-    if self.attributes[attr] == val or not attr then
+    if self.fields[attr] == val or not attr then
         return
     end
 
-    self.previous[attr] = self.attributes[attr]
-    self.attributes[attr] = val
-    self.changed[attr] = 1
+    self.previous[attr] = self.fields[attr]
+    self.fields[attr] = val
+    
+    self.changed = self.changed or {}
+    self.changed[attr] = true
 
     if options and options.silent then
         return
     end
 
-    self.events:trigger(attr, val, self)
+    self:commit()
+
+    return self
+end
+
+function description_proto:commit(skip_validation)
+    if not self.changed then
+        return self
+    end
+
+    if not skip_validation then
+        self:validate()
+    end
+
+    for k, v in pairs(self.changed) do
+        self.events:trigger(k, self.fields[k], self)
+    end
     self.events:trigger("changed", self)
 
     return self
 end
 
+function description_proto:validate()
+
+    return self
+end
+
 function description_proto:get(attr, default)
-    return self.attributes[attr] or default
+    return self.fields[attr] or default
 end
 
 function description_proto:all()
-    return self.attributes
+    return self.fields
 end
 
 function description_proto:apply_to(attr, funct, options)
-    self:set(attr, funct(self.attributes[attr]), options)
+    self:set(attr, funct(self.fields[attr]), options)
     return self
 end
 
 function description_proto:add_to(attr, val, options)
-    if self.attributes[attr] then
-        self:set(attr, self.attributes[attr] + val, options)
+    if self.fields[attr] then
+        self:set(attr, self.fields[attr] + val, options)
     end
     return self
 end
 
 function description_proto:multiply(attr, val, options)
-    if self.attributes[attr] then
-        self:set(attr, self.attributes[attr] * val, options)
+    if self.fields[attr] then
+        self:set(attr, self.fields[attr] * val, options)
     end
     return self
 end
 
 function description_proto:toggle(attr, options)
-    self:set(attr, not self.attributes[attr], options)
+    self:set(attr, not self.fields[attr], options)
     return self
 end
 
 function description_proto:concat(attr, val, options)
-    if self.attributes[attr] then
-        self:set(attr, self.attributes[attr] .. val, options)
+    if self.fields[attr] then
+        self:set(attr, self.fields[attr] .. val, options)
     end
     return self
 end
@@ -117,7 +139,7 @@ function description_proto:unset(attr)
 end
     
 function description_proto:clear(self)
-    self.attributes = {}
+    self.fields = {}
     return self
 end
 
@@ -126,7 +148,7 @@ function description_proto:__tostring()
 end
 
 function description_proto:toJSON()
-    return json.encode(self.attributes)
+    return json.encode(self.fields)
 end
 
 function description_proto:fromJSON(JSON_data)
@@ -135,18 +157,53 @@ function description_proto:fromJSON(JSON_data)
 end
 
 function description_proto:marshal()
-    return marshal.encode(self.attributes)
+    return marshal.encode(self.fields)
 end
     
 function description_proto:unmarshal(marshalled_data)
     self:set(marshal.decode(marshalled_data))
 end
 
+function description_proto:add_validator(value, validation_function)
+    if type(validation_function) ~= "function" then
+        return self
+    end
+
+    self.validators[value] = self.validators[value] or {}
+
+    table.insert(self.validators[value], validation_function)
+
+    return self
+end
+
 function description_proto:add_definitions(definitions)
+    local definition
     local def_type = type(definitions)
     if def_type == "string" then
-
+        local definition = data_store.fetch("definition", definitions)
+    elseif def_type == "table" then
+        if definitions.create then
+            definition = definitions
+        else
+            for k, v in pairs(definitions) do
+                self:add_definitions(v)
+            end
+        end
     end
+
+    if not definition then
+        return self
+    end
+
+    table.insert(self.definitions, definition)
+
+    self:set_defaults(definition.defaults)
+
+    for k, v in definition.validators do
+        self:add_validator(k, v)
+    end
+
+    self.events.merge_from(definition.default_events)
 
     return self
 end
@@ -161,7 +218,21 @@ function get_definitions()
 end
 
 function has_definition(definition)
-    
+    local name = definition
+
+    if type(definition) == "table" and definition.name then
+        name = definition.name
+    else
+        error("Could not determine definition name", 2)
+    end
+
+    for k, v in pairs(self.definitions) do
+        if v.name == name then
+            return true
+        end
+    end
+
+    return false
 end
 
 description_proto.__index = description_proto
@@ -206,10 +277,11 @@ function M.create(name, defaults, definitions)
     end
 
     local new_description = {
+                                data_type = "description",
                                 name = name,
                                 previous = {},
-                                attributes = {},
-                                changed = {},
+                                fields = {},
+                                changed = nil,
                                 definitions = {},
                                 events = event_pump.create(name)            
                             }

@@ -31,10 +31,11 @@ local function _not_between(data, min, max)
 	return not (min < param < max)
 end
 
-function event_pump_proto:on(event, callback)
+function event_pump_proto:on(event, callback, ...)
 	local list = self.callbacks[event] or {}
 	table.insert(list, { 
-			callback = callback
+			callback = callback,
+			params = ...
 		})
 	self.callbacks[event] = list
 end
@@ -106,6 +107,21 @@ function event_pump_proto:clone(name)
 
 	setmetatable(new_event_pump, event_pump_proto)
 	return new_event_pump
+end
+
+function event_pump_proto:merge_from(source)
+	if type(source) ~= "table" or not source.trigger then
+		error("source must be another event_pump")
+		return false
+	end
+
+	for k, v in pairs(source.callbacks) do
+		for in_k, in_v in pairs(v) do
+			self.insert(self.callbacks[k], in_v)
+		end
+	end
+
+	return self
 end
 
 event_pump_proto.__index  = event_pump_proto

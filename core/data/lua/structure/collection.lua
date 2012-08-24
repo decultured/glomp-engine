@@ -5,27 +5,43 @@
 collection = collection or {}
 
 local event_pump = event_pump
+local table_utils = table_utils
 local M = collection
 local collection_proto = {}
 
-function collection_proto:has(target)
 
-end
 
 function collection_proto:add(target)
-    
+    if not target or
+        not type(target) == "table" or
+        not target.data_type == "description" then
+            error("Collections store only definitions")
+            return false
+    end    
+
+    for k, v in pairs(self.definitions) do
+        if not target.has_definition(v.name) then
+            error ("target does not have the required definition")
+            return false
+        end
+    end
+
+    table.insert(self.descriptions, target)
 end
 
-function collection_proto:remove(target)
-    
+function collection_proto:add_many(targets)
+    for k, v in targets do
+        self:add(v)
+    end
 end
 
 collection_proto.__index = collection_proto
 
 local function base_collection()
     return  {
+                data_type = "collection",
                 definitions = {},
-                contents = {},
+                descriptions = {},
                 events = event_pump.create()
             }
 end
