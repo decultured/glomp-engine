@@ -9,15 +9,23 @@ local table_utils = table_utils
 local M = collection
 local collection_proto = {}
 
+local imports = {"each", "map", "reduce", "find", "filter", "select", "every", "any", "contains", "raw_contains", "max", "min", "group_by"}
 
+for k, v in pairs(imports) do
+    collection_proto[v] = function (self, ...)
+        self.descriptions = table_utils[v](self.descriptions, ...)
+        return self
+    end
+end
 
 function collection_proto:add(target)
     if not target or
         not type(target) == "table" or
         not target.data_type == "description" then
-            error("Collections store only definitions")
+            print (target)
+            error("Collections store only descriptions")
             return false
-    end    
+    end
 
     for k, v in pairs(self.definitions) do
         if not target.has_definition(v.name) then
@@ -27,12 +35,32 @@ function collection_proto:add(target)
     end
 
     table.insert(self.descriptions, target)
+
+    self.events:trigger("add", target, self)
 end
 
 function collection_proto:add_many(targets)
     for k, v in targets do
         self:add(v)
     end
+end
+
+function collection_proto:remove(target)
+    for k, v in ipairs(self.descriptions) do
+        if v == target then
+            table.remove(self.descriptions, k)
+            self.events:trigger("remove", target, self)
+        end
+    end
+end
+
+function collection_proto:clear()
+    for k, v in ipairs(self.descriptions) do
+        self.events:trigger("remove", v, self)
+        self.descriptions[k] = nil
+    end
+    self.descriptions = {}
+    self.events:trigger("reset", self)
 end
 
 collection_proto.__index = collection_proto
@@ -47,14 +75,20 @@ local function base_collection()
 end
 
 function M.workon(name)
-
+    local coll = M.fetch(name)
+    if not coll then
+        return M.create(name)
+    end
+    return coll
 end
 
 function M.fetch(name)
-    local coll = data_store:get("collection", name)
+    if not name then
+        error("Must supply a name for 'fetch'")
+        return nil
+    end
 
-
-
+    return data_store:fetch("collection", name)
 end
 
 function M.create(name)
@@ -69,7 +103,7 @@ function M.create(name)
 
     local new_collection = base_collection()
 
-    set_metatable(new_collection, collection_proto)
+    setmetatable(new_collection, collection_proto)
 
     return new_collection
 end

@@ -52,28 +52,33 @@ glomp_print_queue = glomp_print_queue or {}
 
 local old_print = print
 function print(...)
-	local out = "\n"
+	local out = {}
 	local args = {}
 	local arg
+    local arg_type
 
-	for i = 1, select("#",...) do
+	for i = 1, select("#", ...) do
 		arg = select(i, ...)
+        arg_type = type(arg)
 		if not arg then 
 			arg = "nil"
-		elseif type (arg) == "table" then
-			glomp_printobj(arg)
+        elseif type(arg) == "table" then
+		-- elseif type (arg) == "table" then
+			-- glomp_printobj(arg)
 			-- if arg.tostring then
 			-- 	arg = arg.tostring()
 			-- else
-				-- arg = json.encode(arg)
+				arg = "Object:\n\t" .. json.encode(arg) .. "\n"
 			-- end
 		end
-		out = string.format("%s %s", out, tostring(arg))
+
+        out[#out + 1] = tostring(arg)
 	end
 
-	glomp_print_queue[#glomp_print_queue + 1] = out
+    local out_string = table.concat(out, " ")
+    glomp_print_queue[#glomp_print_queue + 1] = out_string
 	
-	old_print(...)
+	old_print(out_string)
 end
 
 local old_error = error

@@ -240,7 +240,7 @@ description_proto.__index = description_proto
 function M.workon(name, defaults, definitions)
     local result = M.fetch(name, defaults, definitions)
     if not result then
-        result = M.create(name, defaults, definitions)
+        return M.create(name, defaults, definitions)
     end
     return result
 end

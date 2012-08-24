@@ -1,33 +1,33 @@
 table_utils = table_utils or {}
 local M = table_utils
 
-M.deep_copy = function(table)
-    if not table then
+M.deep_copy = function(obj)
+    if not obj then
     	return {}
     end
-    local lookup_table = {}
-    local function _copy(table)
-        if type(table) ~= "table" then
-            return table
-        elseif lookup_table[table] then
-            return lookup_table[table]
+    local lookup_obj = {}
+    local function _copy(obj)
+        if type(obj) ~= "obj" then
+            return obj
+        elseif lookup_table[obj] then
+            return lookup_table[obj]
         end
         local new_table = {}
-        lookup_table[table] = new_table
-        for index, value in pairs(table) do
+        lookup_table[obj] = new_table
+        for index, value in pairs(obj) do
             new_table[_copy(index)] = _copy(value)
         end
-        return setmetatable(new_table, getmetatable(table))
+        return setmetatable(new_table, getmetatable(obj))
     end
-    return _copy(table)
+    return _copy(obj)
 end
 
-M.shallow_copy = function(table)
-	if not table then
+M.shallow_copy = function(obj)
+	if not obj then
 		return {}
 	end
 	local new_table = {}
-	for k,v in pairs(table) do
+	for k,v in pairs(obj) do
 		new_table[k] = v
 	end
 	return new_table
@@ -47,126 +47,121 @@ M.extend = function(first, second)
 	return new_table
 end
 
-M.set_defaults = function (table, defaults)
-	table = table or {}
-	if not defaults then 
-		return table
-	end
-	for k, v in pairs (defaults) do
-		if not table[k] then
-			table[k] = v
-		end
-	end
-	return table
-end
-
-M.extend_original = function (table, second)
-	table = table or {}
+M.extend_original = function (obj, second)
+	obj = obj or {}
 	if not second then
-		return table
+		return obj
 	end
 	for k, v in pairs (second) do
-		table[k] = v
+		obj[k] = v
 	end
-	return table
+	return obj
 end
 
 M.merge = M.extend
 
-M.add = function(table, val)
-	table.insert(val)
+M.set_defaults = function (obj, defaults)
+	obj = obj or {}
+	if not defaults then 
+		return obj
+	end
+	for k, v in pairs (defaults) do
+		if not obj[k] then
+			obj[k] = v
+		end
+	end
+	return obj
 end
 
-M.remove_one = function(table, target)
-	if not table then
-		return false
+M.add = function(obj, val)
+	table.insert(obj, val)
+	return obj
+end
+
+M.remove_one = function(obj, target)
+	if not obj or not target then
+		return obj
 	end
-	if not target then
-		return false
-	end
-	for k,v in pairs(table) do
+	for k,v in pairs(obj) do
 		if v == target then
-			table[k] = nil
-			table.remove(table, k)
-			return true
+			obj[k] = nil
+			table.remove(obj, k)
+			return obj
 		end
 	end
-	return false
+	return obj
 end
 
-M.remove_all = function(table, target)
-	if not table then
-		return false 
+M.remove_all = function(obj, target)
+	if not obj or not target then
+		return obj 
 	end
-	local found = false
-	for k,v in pairs(table) do
+	for k,v in pairs(obj) do
 		if v == target and type(k) == number then
-			table[k] = nil
-			table.remove(table, k)
-			found = true
+			obj[k] = nil
+			table.remove(obj, k)
 		end
 	end
-	return found
+	return obj
 end
 
-M.raw_remove_one = function(table, target)
-	if not table then 
-		return false 
+M.raw_remove_one = function(obj, target)
+	if not obj or not target then 
+		return obj 
 	end
-	for k,v in pairs(table) do
+	for k,v in pairs(obj) do
 		if raw_compare(v, val) then
-			table[k] = nil
-			table.remove(table, k)
-			return true
+			obj[k] = nil
+			table.remove(obj, k)
+			return obj
 		end
 	end
-	return false
+	return obj
 end
 
-M.raw_remove_all = function(table, target)
-	if not table then 
-		return false 
+M.raw_remove_all = function(obj, target)
+	if not obj or not target then 
+		return obj
 	end
-	local found = false
-	for k,v in pairs(table) do
+	for k,v in pairs(obj) do
 		if raw_compare(v, target) then
-			table[k] = nil
-			table.remove(table, k)
-			found = true
+			obj[k] = nil
+			table.remove(obj, k)
 		end
 	end
-	return found
+	return obj
 end
 
-M.each = function(table, iter, ...)
-	if not table then 
+M.each = function(obj, iter, ...)
+	if not obj then 
 		return false 
 	end
-	for k,v in pairs(table) do 
+	for k,v in pairs(obj) do 
 		iter(v, k, ...)
 	end
+	return obj
 end
 
-M.map = function(table, iter)
+M.map = function(obj, iter)
 	local results = {}
-	M.each(table, function(val, key)
+	M.each(obj, function(val, key)
 			results[#results + 1] = iter(val, key)
 		end)
 	return results
 end
 
-M.reduce = function (table, iter, memo)
-	M.each(table, function (val, key)
-		memo = iter(val, key, memo)
+M.reduce = function (obj, iter, memo)
+	M.each(obj, function (val, key)
+		memo = iter(memo, val, key)
 	end)
 	return memo
 end
 
-M.find = function (table, iter)
-	if not table then
+M.find = function (obj, iter)
+	if not obj or not iter then
 		return nil
 	end
-	for k,v in pairs(table) do 
+	for k,v in pairs(obj) do 
 		if iter(v, k) then
 			return v
 		end
@@ -174,9 +169,9 @@ M.find = function (table, iter)
 	return nil
 end
 
-M.filter = function (table, iter)
+M.filter = function (obj, iter)
 	local results = {}
-	M.each(table, function(val, key)
+	M.each(obj, function(val, key)
 		if iter(val, key) then 
 			results[#results + 1] = val
 		end
@@ -186,8 +181,8 @@ end
 
 M.select = M.filter
 
-M.every = function (table, iter)
-	M.each(table, function(val, key)
+M.every = function (obj, iter)
+	M.each(obj, function(val, key)
 		if not iter(val, key) then 
 			return false
 		end
@@ -195,11 +190,11 @@ M.every = function (table, iter)
 	return true
 end
 
-M.any = function (table, iter)
-	if not table then
+M.any = function (obj, iter)
+	if not obj then
 		return false
 	end
-	for k, v in pairs(table) do
+	for k, v in pairs(obj) do
 		if iter(v, k) then
 			return true
 		end
@@ -207,11 +202,11 @@ M.any = function (table, iter)
 	return false
 end
 
-M.contains = function (table, target)
-	if not table then
+M.contains = function (obj, target)
+	if not obj then
 		return false
 	end
-	for k,v in pairs(table) do
+	for k,v in pairs(obj) do
 		if v == target then
 			return true
 		end
@@ -219,11 +214,11 @@ M.contains = function (table, target)
 	return false
 end
 
-M.raw_contains = function (table, target)
-	if not table then
+M.raw_contains = function (obj, target)
+	if not obj then
 		return false
 	end
-	for k,v in pairs(table) do
+	for k,v in pairs(obj) do
 		if rawcompare(v, target) then
 			return true
 		end
@@ -231,13 +226,13 @@ M.raw_contains = function (table, target)
 	return false
 end
 
-M.max = function (table, iter)
-	if not table then
+M.max = function (obj, iter)
+	if not obj then
 		return nil
 	end
 	local val = nil
 	iter = iter or math.max
-	for k, v in pairs(table) do
+	for k, v in pairs(obj) do
 		if val then
 			val = iter(val, v)
 		else
@@ -247,13 +242,13 @@ M.max = function (table, iter)
 	return val
 end
 
-M.min = function (table, iter)
-	if not table then
+M.min = function (obj, iter)
+	if not obj then
 		return nil
 	end
 	local val = nil
 	iter = iter or math.min
-	for k, v in pairs(table) do
+	for k, v in pairs(obj) do
 		if val then
 			val = iter(val, v)
 		else
@@ -263,14 +258,37 @@ M.min = function (table, iter)
 	return val
 end
 
-M.group_by = function (table, iter)
-	if not table then
+M.group_by = function (obj, iter)
+	if not obj then
 		return nil
 	end
 	local results = {}
-	for k, v in pairs(table) do
+	for k, v in pairs(obj) do
 		results[iter(v, k)] = v
 	end
 	return results
 end
 
+local table_utils_meta = {obj = {}}
+
+for k, v in pairs(M) do
+	table_utils_meta[k] = function (self, ...)
+		self.obj = v(self.obj, ...)
+		return self
+	end
+end
+
+function table_utils_meta:values()
+	return self.obj
+end
+
+table_utils_meta.__index = table_utils_meta
+
+M.chain = function (obj)
+	local new_chain = {obj = obj}
+	setmetatable(new_chain, table_utils_meta)
+
+	return new_chain
+end
+
+return M

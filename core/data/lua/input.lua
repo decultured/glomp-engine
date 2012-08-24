@@ -15,11 +15,13 @@ end
 function _glomp_key_pressed(key)
     key = inv_glomp_keys[key] or key
     keyboard:set(key, keyboard:get(key, 0) + 1)
+    keyboard.events:trigger("key_pressed", key, keyboard)
 end
 
 function _glomp_key_released(key)
     key = inv_glomp_keys[key]
     keyboard:set(key, 0)
+    keyboard.events:trigger("key_released", key, keyboard)
 end
 
 function _glomp_mouse_moved(x, y)
@@ -27,6 +29,7 @@ function _glomp_mouse_moved(x, y)
             x = x,
             y = y
         })
+    mouse.events:trigger("moved", mouse.all(), mouse)
 end
 
 function _glomp_mouse_dragged(x, y, button)
@@ -37,6 +40,8 @@ function _glomp_mouse_dragged(x, y, button)
             y = y,
             [button] = mouse:get(button, 0) + 1
         })
+    mouse.events:trigger("dragged", mouse.all(), mouse)
+    mouse.events:trigger("moved", mouse.all(), mouse)
 end
 
 function _glomp_mouse_pressed(x, y, button)
@@ -47,6 +52,7 @@ function _glomp_mouse_pressed(x, y, button)
             y = y,
             [button] = mouse:get(button, 0) + 1
         })
+    mouse.events:trigger("pressed", button, mouse)
 end
 
 function _glomp_mouse_released(x, y, button)
@@ -57,5 +63,6 @@ function _glomp_mouse_released(x, y, button)
             y = y,
             [button] = 0
         })
+    mouse.events:trigger("released", button, mouse)
 end
 

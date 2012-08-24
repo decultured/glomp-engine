@@ -29,7 +29,7 @@ end
 function M.workon(name)
     local result = M.fetch(name)
     if not result then
-        M.create(name)
+        return M.create(name)
     end
     return result
 end
@@ -55,7 +55,7 @@ function M.create(name)
 
     local new_definition = base_definition()
     new_definition.name = name
-    
+
     set_metatable(new_definition, definition_proto)
     
     data_store:create("definition", name, new_definition)

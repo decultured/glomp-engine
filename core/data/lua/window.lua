@@ -16,10 +16,11 @@ local window = description.workon("glomp_window", {
 
 function _glomp_window_resized(w, h)
     window:set({w = w, h = h})
+	window.events:trigger("resized")
 end
 
 function _glomp_window_entry(state)
-   window:set({entered = state})
+	window:set({entered = state})
 end
 
 function _glomp_update(frame_time)
@@ -28,8 +29,10 @@ function _glomp_update(frame_time)
 			total_time = timer:get("total_time") + frame_time,
 			update_count = timer:get("update_count") + 1
 		})
+	window.events:trigger("update")
 end
 
 function _glomp_draw()
 	glomp.graphics.clear(hex_to_rgb(window:get("clear_color")))
+	window.events:trigger("draw")
 end
