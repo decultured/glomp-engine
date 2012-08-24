@@ -23,6 +23,7 @@ function glomp_app()
 end
 
 function glomp_run_tests()
+	load_module("simple_gui/load_all")
 	load_module("basic_input")
 	load_module("model_tests")
 	load_module("playground")

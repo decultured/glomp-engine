@@ -6,19 +6,6 @@ local images = collection.workon("image_list")
 
 local new_img = glomp.image.load("assets/images/openFrameworks.png")
 
-local sprite = definition.workon("sprite")
-
-sprite.defaults.x = 0
-sprite.defaults.y = 0
-sprite.defaults.image = nil
-sprite.default_events:on("draw", function (data, caller, called)
-				props = called:all()
-				if props.image then
-					props.image:draw(props.x, props.y)
-				end
-			end)
-
-
 for counter = 1,300 do
 	local props = 	{
 						x = math.random(100, 800),
@@ -26,7 +13,7 @@ for counter = 1,300 do
 						image = new_img
 					}
 
-	local new_image = description.workon("image_test_" .. counter, props, sprite)
+	local new_image = description.workon("image_test_" .. counter, "simple_gui_rectangle"):set(props)
 	images:add(new_image)
 end
 

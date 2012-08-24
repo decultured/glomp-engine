@@ -15,8 +15,10 @@
 namespace glomp {
     
     static int lua_graphics_clear(lua_State *L);
+    static int lua_graphics_clear_hex(lua_State *L);
 
     static int lua_graphics_set_color(lua_State *L);
+    static int lua_graphics_set_color_hex(lua_State *L);
 
     static int lua_graphics_push_matrix(lua_State *L);
     static int lua_graphics_pop_matrix(lua_State *L);

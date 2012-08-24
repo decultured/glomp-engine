@@ -1,0 +1,5 @@
+load_module("simple_gui/theme_def")
+load_module("simple_gui/default_theme")
+load_module("simple_gui/image")
+load_module("simple_gui/rectangle")
+load_module("simple_gui/button")

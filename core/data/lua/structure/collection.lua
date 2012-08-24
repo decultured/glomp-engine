@@ -60,12 +60,12 @@ function collection_proto:clear()
         self.descriptions[k] = nil
     end
     self.descriptions = {}
-    self.events:trigger("reset", self)
+    self.events:trigger("reset", self, self)
 end
 
-function collection_proto:trigger_all(event, data, caller)
+function collection_proto:trigger_all(event, data)
     self:each(function (item) 
-        item.events:trigger(event, data, caller, item)
+        item.events:trigger(event, data, item)
     end)
 end
 

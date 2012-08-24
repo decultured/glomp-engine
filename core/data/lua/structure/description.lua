@@ -27,10 +27,7 @@ function description_proto:has(attr)
 end
 
 function description_proto:set_defaults(defaults)
-    if not defaults then
-        return false
-    end
-
+    defaults = defaults or {}
     for k, v in pairs (defaults) do
         if not self.fields[k] then
             self.fields[k] = v
@@ -177,33 +174,40 @@ function description_proto:add_validator(value, validation_function)
 end
 
 function description_proto:add_definitions(definitions)
-    local definition
+    local def
     local def_type = type(definitions)
     if def_type == "string" then
-        local definition = data_store.fetch("definition", definitions)
+        def = data_store:fetch("definition", definitions)
+        if not def then
+            warning("Definition " .. definitions .. " does not exist.  Creating empty placeholder")
+            def = definition.workon(definitions)
+        end
     elseif def_type == "table" then
         if definitions.data_type and definitions.data_type == "definition" then
-            definition = definitions
+            def = definitions
         else
             for k, v in pairs(definitions) do
-                self:add_definitions(v)
+                self:add_definitions(v, false)
+                return self
             end
         end
     end
 
-    if not definition or self:has_definition(definition) then
+    if not def or self:has_definition(def) then
         return self
     end
 
-    table.insert(self.definitions, definition)
+    table.insert(self.definitions, def)
 
-    self:set_defaults(definition.defaults)
+    self:set_defaults(def.defaults)
 
-    for k, v in pairs(definition.validators) do
+    for k, v in pairs(def.validators) do
         self:add_validator(k, v)
     end
 
-    self.events:merge_from(definition.default_events)
+    self.events:merge_from(def.default_events)
+
+    def.events:trigger("apply", self, self, def)
 
     return self
 end
@@ -237,15 +241,15 @@ end
 
 description_proto.__index = description_proto
 
-function M.workon(name, defaults, definitions)
-    local result = M.fetch(name, defaults, definitions)
+function M.workon(name, definitions)
+    local result = M.fetch(name, definitions)
     if not result then
-        return M.create(name, defaults, definitions)
+        return M.create(name, definitions)
     end
     return result
 end
 
-function M.fetch(name, defaults, definitions)
+function M.fetch(name, definitions)
     if not name then
         error ("Description name must not be nil")
         return false
@@ -262,7 +266,7 @@ function M.fetch(name, defaults, definitions)
     return false
 end
 
-function M.create(name, defaults, definitions)
+function M.create(name, definitions)
     if not name then
         name = UUID()
     elseif type(name) == "table" then
@@ -288,6 +292,7 @@ function M.create(name, defaults, definitions)
     setmetatable(new_description, description_proto)
     new_description:set_defaults(defaults)
     new_description:add_definitions(definitions)
+    new_description.events:trigger("initialize", new_description, new_description)
 
     data_store:create("description", name, new_description)
 

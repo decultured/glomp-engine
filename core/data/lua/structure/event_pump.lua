@@ -83,12 +83,12 @@ function event_pump_proto:off(event, callback)
 	end
 end
 
-function event_pump_proto:trigger(event, data, caller, context)
+function event_pump_proto:trigger(event, data, context, ...)
 	local list = self.callbacks[event] or {}
 	for k, v in pairs(list) do
 		if v.callback and type(v.callback) == "function" then
 			if not v.truth_check or v.truth_check(data, v.params) then
-				v.callback(data, caller, context, v.params)
+				v.callback(data, caller, context, v.params, ...)
 			end
 		end
 	end

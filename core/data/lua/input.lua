@@ -1,5 +1,5 @@
-local keyboard = description.workon("glomp_keyboard", {})
-local mouse = description.workon("glomp_mouse", {
+local keyboard = description.workon("glomp_keyboard")
+local mouse = description.workon("glomp_mouse"):set({
                     x = 0,
                     y = 0,
                 })

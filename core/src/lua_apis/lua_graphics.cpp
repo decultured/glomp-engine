@@ -20,6 +20,15 @@ namespace glomp {
         return 0;
     }
     
+    static int lua_graphics_clear_hex(lua_State *L) {
+        int color = luaL_checkinteger(L, 1);
+        
+        ofColor c = ofColor::fromHex(color);
+        ofClear(c.r, c.g, c.b);
+        
+        return 0;
+    }
+    
     static int lua_graphics_set_color(lua_State *L) {
         float r = luaL_checknumber(L, 1);
         float g = luaL_checknumber(L, 2);
@@ -27,10 +36,19 @@ namespace glomp {
         float a = lua_isnumber(L, 4) ? lua_tonumber(L, 4) : 255;
         
         ofSetColor(r, g, b, a);
+            
+        return 0;
+    }
+
+
+    static int lua_graphics_set_color_hex(lua_State *L) {
+        int color = luaL_checkinteger(L, 1);
+        
+        ofSetHexColor(color);
         
         return 0;
     }
-    
+
     static int lua_graphics_push_matrix(lua_State *L) {
         ofPushMatrix();
         return 0;
@@ -262,7 +280,9 @@ namespace glomp {
     
     static const struct luaL_Reg lua_graphics_methods[] = {
         {"clear", lua_graphics_clear},
+        {"clear_hex", lua_graphics_clear_hex},
         {"set_color", lua_graphics_set_color},
+        {"set_color_hex", lua_graphics_set_color_hex},
         {"push_matrix", lua_graphics_push_matrix},
         {"pop_matrix", lua_graphics_pop_matrix},
         {"push_2d_transform", lua_graphics_push_2d_transform},
