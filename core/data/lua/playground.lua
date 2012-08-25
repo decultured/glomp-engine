@@ -10,10 +10,11 @@ for counter = 1,300 do
 	local props = 	{
 						x = math.random(100, 800),
 						y = math.random(100, 600),
-						image = new_img
+						image = new_img,
+						text = "this is text!"
 					}
 
-	local new_image = description.workon("image_test_" .. counter, "simple_gui_rectangle"):set(props)
+	local new_image = description.workon("image_test_" .. counter, "simple_gui_label"):set(props)
 	images:add(new_image)
 end
 

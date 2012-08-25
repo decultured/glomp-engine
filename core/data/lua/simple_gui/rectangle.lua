@@ -16,8 +16,8 @@ rectangle.defaults.border_width = theme_vals.line_width
 rectangle.defaults.border_color = theme_vals.main_color
 rectangle.defaults.background_color = theme_vals.component_bg
 
-rectangle.default_events:on("draw", function (data, caller, called)
-                props = called:all()
+rectangle.default_events:on("draw", function (data, context)
+                props = context:all()
                 draw_fills(true)
                 set_color_hex(props.background_color)
                 draw_rectangle(props.x, props.y, props.width, props.height)

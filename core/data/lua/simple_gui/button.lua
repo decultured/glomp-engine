@@ -14,8 +14,8 @@ button.defaults.current_color       = button.defaults.normal_color
 
 
 
-button.default_events:on("draw", function (data, caller, context)
-                props = called:all()
+button.default_events:on("draw", function (data, context)
+                props = context:all()
                 if props.current_color then
                     glomp.graphics.push_matrix()
                     glomp.graphics.translate(props.x, props.y)

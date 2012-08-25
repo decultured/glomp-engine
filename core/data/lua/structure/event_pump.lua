@@ -83,15 +83,17 @@ function event_pump_proto:off(event, callback)
 	end
 end
 
+-- returns: 2 vals: handled, stop_propagation
 function event_pump_proto:trigger(event, data, context, ...)
 	local list = self.callbacks[event] or {}
 	for k, v in pairs(list) do
 		if v.callback and type(v.callback) == "function" then
 			if not v.truth_check or v.truth_check(data, v.params) then
-				v.callback(data, caller, context, v.params, ...)
+				return v.callback(data, context, v.params, ...)
 			end
 		end
 	end
+	return false
 end
 
 function event_pump_proto:clone(name)
