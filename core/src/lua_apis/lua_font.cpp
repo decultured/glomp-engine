@@ -96,7 +96,7 @@ namespace glomp {
         
         const char * out = luaL_checkstring(L, 2);
         
-        float width = font->stringHeight(out);
+        float width = font->stringWidth(out);
         lua_pushnumber(L, width);
         
         return 1;

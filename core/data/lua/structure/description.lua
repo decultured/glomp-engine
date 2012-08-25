@@ -36,17 +36,21 @@ function description_proto:set_defaults(defaults)
     return self
 end
 
-function description_proto:set_many(table, options)
-    for k, v in pairs (table) do
-        self:set(k, v, {silent = true})
+function description_proto:set_many(list, options)
+    if type(list) ~= "table" then
+        error(self, list, options)
+        return
+    end
+    for k, v in pairs (list) do
+        self:set(k, v, options)
     end
     self:commit()
     return self
 end
 
 function description_proto:set(attr, val, options)
-    if val == nil then
-        self:set_many(attr)
+    if val == nil and type(attr) == "table" then
+        self:set_many(attr, {silent=true})
         return self
     end
 
@@ -69,6 +73,44 @@ function description_proto:set(attr, val, options)
     return self
 end
 
+function description_proto:has_changed(field)
+    if not self.changed then
+        return false
+    end
+    return self.changed[field]
+end
+
+function description_proto:any_have_changed(...)
+    local arg
+    for i = 1, select("#", ...) do
+        arg = select(i, ...)
+        if self:has_changed(arg) then
+            return true
+        end
+    end
+    return false
+end
+
+function description_proto:all_have_changed(...)
+    local arg
+    for i = 1, select("#", ...) do
+        arg = select(i, ...)
+        if not self:has_changed(arg) then
+            return false
+        end
+    end
+    return true
+end
+
+function description_proto:check_for_new_changes(was_changed, all_changed)
+    for k, v in pairs(self.changed) do
+        if not was_changed[k] then
+            table.insert(all_changed, k)
+            was_changed[k] = 1
+        end
+    end
+end
+
 function description_proto:commit(skip_validation)
     if not self.changed or self.committing then
         return self
@@ -80,8 +122,13 @@ function description_proto:commit(skip_validation)
 
     self.committing = true
 
-    for k, v in pairs(self.changed) do
-        self.events:trigger(k, self.fields[k], self)
+    local was_changed = {}
+    local all_changed = {}
+    self:check_for_new_changes(was_changed, all_changed)
+    
+    for k, v in ipairs(all_changed) do
+        self.events:trigger(v, self.fields[v], self)
+        self:check_for_new_changes(was_changed, all_changed)
     end
     self.events:trigger("changed", self, self)
 

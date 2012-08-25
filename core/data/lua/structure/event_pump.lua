@@ -32,6 +32,16 @@ local function _not_between(data, min, max)
 end
 
 function event_pump_proto:on(event, callback, ...)
+	local event_type = type(event)
+	if event_type == "table" then
+		for i = 1,#event do
+			self:on(event[i], callback, ...)
+		end
+	elseif event_type ~= "string" then
+		warning("event_pump:on requires either a string event name or a list of names")
+		return false
+	end
+
 	local list = self.callbacks[event] or {}
 	table.insert(list, { 
 			callback = callback,

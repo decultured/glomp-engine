@@ -5,8 +5,6 @@ local M = data_store
 M.store = {}
 M.builders = {}
 
-
-
 function M:workon(base, name)
     local base_store = self.store[base] or {} 
     local record = base_store[name]

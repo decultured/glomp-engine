@@ -64,7 +64,7 @@ function print(...)
 			arg = "nil"
         elseif type(arg) == "table" then
 			-- glomp_printobj(arg)
-    		arg = "Object:\n\t" .. json.encode(arg) .. "\n"
+    		arg = "Object: " .. json.encode(arg)
 		end
 
         out[#out + 1] = tostring(arg)
@@ -78,6 +78,9 @@ end
 
 local old_error = error
 function error(text, level)
+    if level and type(level) ~= number then
+        return
+    end
 	print(text)
     print(debug.traceback())
     level = level or 1
@@ -117,3 +120,24 @@ function rgb_to_hex ( nR, nG, nB )
     sColor = sColor .. ( ( string.len ( nB ) == 1 ) and ( "0" .. nB ) or nB )
     return sColor
 end
+
+function point_in_rect(x, y, rx, ry, rw, rh)
+    if x < rx + rw and x > rx and
+        y < ry + rh and y > ry then
+        return true
+    end
+    return false
+end
+
+function percent_string_to_num(str, percent_of)
+    if not str or type(str) ~= "string" then
+        return false
+    end
+    local result = string.match(str, "(%d+%.?%d*)%%")
+    if not tonumber(result) then
+        print (str, result)
+        return false
+    end
+    return result * 0.01 * percent_of
+end
+

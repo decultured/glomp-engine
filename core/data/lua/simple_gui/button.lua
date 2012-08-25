@@ -2,25 +2,29 @@ local theme_vals = description.workon("simple_gui_active_theme", "simple_gui_the
 
 local normal_init       = definition.workon("simple_gui_button_normal_init", "simple_gui_rectangle")
 normal_init.defaults.color = theme_vals.highlight_color
+normal_init.defaults.pct_width = 100
+normal_init.defaults.pct_height = 100
 normal_init.defaults.border_color = theme_vals.white
 
 local pressed_init      = definition.workon("simple_gui_button_pressed_init", "simple_gui_rectangle")
 pressed_init.defaults.color = theme_vals.active_color
+pressed_init.defaults.pct_width = 100
+pressed_init.defaults.pct_height = 100
 pressed_init.defaults.border_color = theme_vals.white
 
 local hover_init        = definition.workon("simple_gui_button_hover_init", "simple_gui_rectangle")
 hover_init.defaults.color = theme_vals.cyan
+hover_init.defaults.pct_width = 100
+hover_init.defaults.pct_height = 100
 hover_init.defaults.border_color = theme_vals.white
 
 local disabled_init     = definition.workon("simple_gui_button_disabled_init", "simple_gui_rectangle")
 disabled_init.defaults.color = theme_vals.disabled_color
+disabled_init.defaults.pct_width = 100
+disabled_init.defaults.pct_height = 100
 disabled_init.defaults.border_color = theme_vals.white
 
 local button = definition.workon("simple_gui_button", "simple_gui_element")
-
-local push_matrix       = glomp.graphics.push_matrix
-local pop_matrix        = glomp.graphics.pop_matrix
-local translate         = glomp.graphics.translate
 
 button.defaults.x       = 0
 button.defaults.y       = 0
@@ -44,22 +48,20 @@ button.defaults.rectangle   = nil
 button.defaults.disabled    = false
 
 button.events:on("apply", function (def, context)
+    local props = context:all()
+
     local normal_rect   = description.workon(context.name.."_normal_rect",      "simple_gui_button_normal_init")
     local hover_rect    = description.workon(context.name.."_hover_rect",       "simple_gui_button_hover_init")
     local pressed_rect  = description.workon(context.name.."_pressed_rect",     "simple_gui_button_pressed_init")
     local disabled_rect = description.workon(context.name.."_disabled_rect",    "simple_gui_button_disabled_init")
     local label         = description.workon(context.name.."_label",            "simple_gui_label")
 
-    label.events:on("changed", function (width, label_context)
-        if not context:get("fit_text") then
-            return
-        end
-
-        local label_props = label_context:all()
-        local props = context:all()
-        context:set("width", label_props.width + props.padding_left + props.padding_right)
-        context:set("height", label_props.height + props.padding_top + props.padding_bottom)
-    end)
+    label:set({
+        font = theme_vals.font,
+        text = props.text,
+        x = props.padding_left,
+        y = props.padding_top,
+    })
 
     context:set({
         normal_rect     = normal_rect,
@@ -67,30 +69,61 @@ button.events:on("apply", function (def, context)
         pressed_rect    = pressed_rect,
         disabled_rect   = disabled_rect,
 
+        label     = label,
         rectangle = normal_rect,
-        label     = label
     })
 
 end)
 
-button.default_events:on("changed", function (data, context)
+button.default_events:on({"padding_left","padding_top"}, function (data, context)
     local props = context:all()
     if props.label then
         props.label:set({
                 x = props.padding_left,
-                y = props.padding_top + props.label:get("height"),
-                text = props.text,
-                color = (props.rectangle and props.rectangle:get("border_color")) or props.color
+                y = props.padding_top,
             })
     end
+end)
 
-    if props.rectangle then 
-        props.rectangle:set({
-                x       = 0,
-                y       = 0,
-                width   = props.width,
-                height  = props.height
+button.default_events:on("text", function (data, context)
+    local props = context:all()
+    if props.label then
+        props.label:set("text", props.text)
+        context:set({
+                width = props.label:get("width") + props.padding_left + props.padding_right,
+                height = props.label:get("height") + props.padding_bottom + props.padding_top
             })
+    end
+end)
+
+button.default_events:on({"label", "rectangle"}, function (data, context)
+    local props = context:all()
+    local childs = context:get("children")
+
+    if not props.label or not props.rectangle then
+        return
+    end
+
+    if not childs:contains(props.label) or not childs:contains(props.rectangle) then
+        childs:clear()
+
+        if props.rectangle then
+            childs:add(props.rectangle)
+        end
+        
+        if props.label then
+            childs:add(props.label)
+        end
+    end
+
+    context.events:trigger("text", props.label:get("text"), context)
+    props.rectangle.events:trigger("calc_size", data, context)
+end)
+
+button.default_events:on("rectangle", function (data, context)
+    local props = context:all()
+    if props.label then
+        props.label:set("color", (props.rectangle and props.rectangle:get("border_color")) or props.color)
     end
 end)
 
@@ -132,15 +165,3 @@ button.default_events:on("disabled", function (data, context)
         context:set("rectangle", "normal_rect")
     end
 end)
-
-button.default_events:on("draw", function (data, context)
-        local props = context:all()
-
-        push_matrix()
-        translate(props.x, props.y)
-        
-        props.rectangle.events:trigger("draw", context, props.rectangle)
-        props.label.events:trigger("draw", context, props.label)
-
-        pop_matrix()
-    end)

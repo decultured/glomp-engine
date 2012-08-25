@@ -19,14 +19,13 @@ rectangle.defaults.color = theme_vals.component_bg
 rectangle.default_events:on("draw", function (data, context)
                 props = context:all()
                 draw_fills(true)
-                set_color_hex(props.color)
-                draw_rectangle(props.x, props.y, props.width, props.height)
+                draw_rectangle(0, 0, props.width, props.height)
 
                 if props.border_width > 0 then
                     draw_fills(false)
                     set_line_width(props.border_width)
                     set_color_hex(props.border_color)
-                    draw_rectangle(props.x, props.y, props.width, props.height)
+                    draw_rectangle(0, 0, props.width, props.height)
                 end
             end)
 
