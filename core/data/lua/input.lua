@@ -29,7 +29,7 @@ function _glomp_mouse_moved(x, y)
             x = x,
             y = y
         })
-    mouse.events:trigger("moved", mouse.all(), mouse)
+    mouse.events:trigger("moved", mouse:all(), mouse)
 end
 
 function _glomp_mouse_dragged(x, y, button)
@@ -40,8 +40,8 @@ function _glomp_mouse_dragged(x, y, button)
             y = y,
             [button] = mouse:get(button, 0) + 1
         })
-    mouse.events:trigger("dragged", mouse.all(), mouse)
-    mouse.events:trigger("moved", mouse.all(), mouse)
+    mouse.events:trigger("dragged", mouse:all(), mouse)
+    mouse.events:trigger("moved", mouse:all(), mouse)
 end
 
 function _glomp_mouse_pressed(x, y, button)

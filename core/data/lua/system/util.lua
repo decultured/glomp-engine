@@ -63,13 +63,8 @@ function print(...)
 		if not arg then 
 			arg = "nil"
         elseif type(arg) == "table" then
-		-- elseif type (arg) == "table" then
-			-- glomp_printobj(arg)
-			-- if arg.tostring then
-			-- 	arg = arg.tostring()
-			-- else
-				arg = "Object:\n\t" .. json.encode(arg) .. "\n"
-			-- end
+			glomp_printobj(arg)
+    		-- arg = "Object:\n\t" .. json.encode(arg) .. "\n"
 		end
 
         out[#out + 1] = tostring(arg)
@@ -85,6 +80,7 @@ local old_error = error
 function error(text, level)
 	print(text)
     print(debug.traceback())
+    level = level or 1
 	old_error(text, level + 1)
 end
 

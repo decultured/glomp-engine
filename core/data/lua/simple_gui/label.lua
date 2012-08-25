@@ -31,6 +31,10 @@ label.default_events:on("font", function (data, context)
 label.default_events:on("draw", function (data, context)
         props = context:all()
 
+        if not props.visible then
+            return
+        end
+
         if not props.display_text and props.text then
             context.events:trigger("text", props.text, context)
         end
@@ -44,6 +48,8 @@ label.default_events:on("draw", function (data, context)
         else
             print_string(props.display_text)
         end
+
+        props.children:trigger_all("draw", context)
 
         pop_matrix()
     end)

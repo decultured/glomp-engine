@@ -1,6 +1,7 @@
 load_module("simple_gui/theme_def")
 load_module("simple_gui/default_theme")
-load_module("simple_gui/gui_element")
+load_module("simple_gui/element")
+load_module("simple_gui/root")
 load_module("simple_gui/image")
 load_module("simple_gui/rectangle")
 load_module("simple_gui/label")

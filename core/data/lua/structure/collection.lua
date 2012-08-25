@@ -28,8 +28,8 @@ function collection_proto:add(target)
     end
 
     for k, v in pairs(self.definitions) do
-        if not target.has_definition(v.name) then
-            error ("target does not have the required definition")
+        if not target:has_definition(v) then
+            error ("Target " .. target.name .. " does not have the required definition: " .. v)
             return false
         end
     end
@@ -69,6 +69,26 @@ function collection_proto:trigger_all(event, data)
     end)
 end
 
+function collection_proto:add_definitions(definitions)
+    local def
+    local def_type = type(definitions)
+    if def_type == "string" then
+        if not table_utils.contains(self.definitions, definitions) then
+            table.insert(self.definitions, definitions)
+        end
+        return self
+    elseif def_type == "table" then
+        if definitions.data_type and definitions.data_type == "definition" then
+            self:add_definitions(definitions.name)
+        else
+            for k, v in pairs(definitions) do
+                self:add_definitions(v)
+            end
+        end
+    end
+    return self
+end
+
 collection_proto.__index = collection_proto
 
 local function base_collection()
@@ -80,24 +100,29 @@ local function base_collection()
             }
 end
 
-function M.workon(name)
-    local coll = M.fetch(name)
+function M.workon(name, definitions)
+    local coll = M.fetch(name, definitions)
     if not coll then
-        return M.create(name)
+        return M.create(name, definitions)
     end
     return coll
 end
 
-function M.fetch(name)
+function M.fetch(name, definitions)
     if not name then
         error("Must supply a name for 'fetch'")
         return nil
     end
 
-    return data_store:fetch("collection", name)
+    local coll = data_store:fetch("collection", name)
+    if coll then
+        coll:add_definitions(definitions)
+    end
+
+    return coll
 end
 
-function M.create(name)
+function M.create(name, definitions)
     if not name then
         name = UUID()
     end
@@ -110,6 +135,9 @@ function M.create(name)
     local new_collection = base_collection()
 
     setmetatable(new_collection, collection_proto)
+    new_collection.name = name
+
+    new_collection:add_definitions(definitions)
 
     return new_collection
 end

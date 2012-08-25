@@ -22,10 +22,9 @@ function glomp_app()
 	load_module("window")
 end
 
-function glomp_run_tests()
+function glomp_run_app()
 	load_module("simple_gui/load_all")
 	load_module("basic_input")
-	load_module("model_tests")
 	load_module("playground")
 end
 
@@ -33,4 +32,4 @@ glomp_libs()
 glomp_structure()
 glomp_app()
 
-glomp_run_tests()
+glomp_run_app()

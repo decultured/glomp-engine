@@ -85,33 +85,23 @@ end
 
 -- returns: 2 vals: handled, stop_propagation
 function event_pump_proto:trigger(event, data, context, ...)
+	local results = false
 	local list = self.callbacks[event] or {}
 	for k, v in pairs(list) do
 		if v.callback and type(v.callback) == "function" then
 			if not v.truth_check or v.truth_check(data, v.params) then
-				return v.callback(data, context, v.params, ...)
+				results = v.callback(data, context, v.params, ...)
+				if results then
+					return results
+				end
 			end
 		end
 	end
 	return false
 end
 
-function event_pump_proto:clone(name)
-	local new_event_pump = { callbacks = {} }
-
-	for k, v in pairs(self.callbacks) do
-		new_event_pump.callbacks[k] = {}
-		local insnamee = new_event_pump.callbacks[k]
-		for k, v in pairs(v) do
-			table.insert(insnamee, v)
-		end
-	end
-
-	setmetatable(new_event_pump, event_pump_proto)
-	return new_event_pump
-end
-
 function event_pump_proto:merge_from(source)
+	-- print ("Merging ", source.name, "into: ", self.name)
 	if type(source) ~= "table" or 
 		not source.data_type or 
 		not source.data_type == "event_pump" then
@@ -120,9 +110,14 @@ function event_pump_proto:merge_from(source)
 	end
 
 	for k, v in pairs(source.callbacks) do
+		-- print (self.name, k)
 		self.callbacks[k] = self.callbacks[k] or {}
 		for in_k, in_v in pairs(v) do
-			table.insert(self.callbacks[k], in_v)
+			local new_ev = {}
+			for ev_k, ev_v in pairs(in_v) do
+				new_ev[ev_k] = ev_v
+			end
+			table.insert(self.callbacks[k], new_ev)
 		end
 	end
 
@@ -168,6 +163,6 @@ function M.create(name)
 	return data_store:create("event", name, new_event_pump)
 end
 
-data_store:add_builder("event", build_event)
+-- data_store:add_builder("event", build_event)
 
 return M

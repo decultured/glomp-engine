@@ -1,7 +1,7 @@
 local theme_desc = description.workon("simple_gui_active_theme", "simple_gui_theme")
 local theme_vals = theme_desc:all()
 
-local rectangle = definition.workon("simple_gui_rectangle")
+local rectangle = definition.workon("simple_gui_rectangle", "simple_gui_element")
 
 local draw_fills        = glomp.graphics.draw_fills
 local draw_rectangle    = glomp.graphics.rectangle

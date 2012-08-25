@@ -42,12 +42,6 @@ function definition_proto:extends(definitions)
 
     table.insert(self.extended_from, def.name)
 
-    table_utils.set_defaults(self.defaults, def.defaults)
-    table_utils.set_defaults(self.validators, def.validators)
-
-    self.events:merge_from(def.events)
-    self.default_events:merge_from(def.default_events)
-
     return self
 end
 
@@ -58,10 +52,8 @@ local function base_definition()
                 name = "__undefined__",
                 data_type = "definition",
                 extended_from = {},
-                events = event_pump.create(),
                 defaults = {},
                 validators = {},
-                default_events = event_pump.create(),
             }
 end
 
@@ -99,6 +91,8 @@ function M.create(name, extends)
 
     local new_definition = base_definition()
     new_definition.name = name
+    new_definition.events = event_pump.create(name .. "_def_e")
+    new_definition.default_events = event_pump.create(name .. "_def_de")
 
     setmetatable(new_definition, definition_proto)
     

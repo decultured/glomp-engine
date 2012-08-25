@@ -82,6 +82,7 @@ function description_proto:commit(skip_validation)
         self.events:trigger(k, self.fields[k], self)
     end
     self.events:trigger("changed", self)
+    self.changed = nil
 
     return self
 end
@@ -197,7 +198,7 @@ function description_proto:add_definitions(definitions)
         return self
     end
 
-    table.insert(self.definitions, def)
+    table.insert(self.definitions, def.name)
 
     self:set_defaults(def.defaults)
 
@@ -207,7 +208,11 @@ function description_proto:add_definitions(definitions)
 
     self.events:merge_from(def.default_events)
 
-    def.events:trigger("apply", self, def)
+    for k, v in pairs(def.extended_from) do
+        self:add_definitions(v)
+    end
+
+    def.events:trigger("apply", def, self)
 
     return self
 end
@@ -226,12 +231,14 @@ function description_proto:has_definition(definition)
 
     if type(definition) == "table" and definition.name then
         name = definition.name
+    elseif type(definition) == "string" then
+        name = definition
     else
         error("Could not determine definition name", 2)
     end
 
     for k, v in pairs(self.definitions) do
-        if v.name == name then
+        if v == name then
             return true
         end
     end
