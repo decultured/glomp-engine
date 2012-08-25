@@ -45,7 +45,8 @@ function definition_proto:extends(definitions)
     table_utils.set_defaults(self.defaults, def.defaults)
     table_utils.set_defaults(self.validators, def.validators)
 
-    self.events:merge_from(def.default_events)
+    self.events:merge_from(def.events)
+    self.default_events:merge_from(def.default_events)
 
     return self
 end

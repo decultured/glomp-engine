@@ -207,7 +207,7 @@ function description_proto:add_definitions(definitions)
 
     self.events:merge_from(def.default_events)
 
-    def.events:trigger("apply", self, self, def)
+    def.events:trigger("apply", self, def)
 
     return self
 end
