@@ -7,16 +7,21 @@ local time 		= description.workon("glomp_time")
 local window 	= description.workon("glomp_window")
 
 local gui_root 	= description.workon("gui_root", "simple_gui_root")
+local performance = description.workon("debug_performance_display", "simple_gui_label")
 
-for counter = 1,3000 do
+for counter = 1,3 do
 	local props = 	{
 						x = math.random(100, 800),
 						y = math.random(100, 600),
 						image = new_img,
-						text = "this is text!"
+						text = "Press me."
 					}
 
-	local new_image = description.workon("image_test_" .. counter, "simple_gui_image"):set(props)
+	local new_image = description.workon("image_test_" .. counter, "simple_gui_button"):set(props)
+
+	new_image.events:on("click", function (data, context)
+		performance:toggle("visible")
+	end)
 	gui_root:get("children"):add(new_image)
 end
 
@@ -34,15 +39,24 @@ mouse.events:on("dragged", function (data, caller)
 end)
 
 mouse.events:on("pressed", function (data, caller)
-	print (data)
+    data_store:each("definition_index:".."simple_gui_element", function (item, index)
+            if item.fields.mouse_down then
+                item:set("mouse_down", false)
+            end
+        end)
+
 	gui_root.events:trigger("test_mouse_down", caller, gui_root)
 end)
 
 mouse.events:on("released", function (data, caller)
+    data_store:each("definition_index:".."simple_gui_element", function (item, index)
+            if item.fields.mouse_down then
+                item:set("mouse_down", false)
+            end
+        end)
+
 	gui_root.events:trigger("test_mouse_released", caller, gui_root)
 end)
-
-local performance = description.workon("debug_performance_display", "simple_gui_label")
 
 performance:set({
 		x = 700,
@@ -58,6 +72,10 @@ keyboard.events:when_equals("T", function()
 	end, 0)
 
 time.events:on("update_count", function()
+		if not performance:get("visible") then
+			return
+		end
+
 		local time_data = time:all()
 
 		local text = string.format("Updates: %d\nElapsed: %f\nAverage: %f\nRunning: %f\nFPS: %d",

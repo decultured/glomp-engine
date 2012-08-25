@@ -20,8 +20,20 @@ label.defaults.is_monospaced = true
 label.default_events:on("text", function (data, context)
         local props = context:all()
 
-        -- calculate width, height
-        props.display_text = props.text
+        -- GLUT_BITMAP_8_BY_13
+        if not font then
+            context:set({
+                    height = 8,
+                    width = string.len(data) * 8,
+                    display_text = data
+                })
+        else
+            context:set({
+                    height = font.get_string_height(props.text),
+                    width = font.get_string_width(props.text),
+                    display_text = props.text
+                })
+        end
     end)
 
 label.default_events:on("font", function (data, context)

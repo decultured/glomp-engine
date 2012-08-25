@@ -83,7 +83,7 @@ function description_proto:commit(skip_validation)
     for k, v in pairs(self.changed) do
         self.events:trigger(k, self.fields[k], self)
     end
-    self.events:trigger("changed", self)
+    self.events:trigger("changed", self, self)
 
     self.changed = nil
     self.committing = false

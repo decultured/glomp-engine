@@ -42,20 +42,19 @@ gui_element.default_events:on("test_mouse_down", function (data, context)
         local mouse_props = data:all()
         local props = context:all()
         
-        if mouse_props.x < props.x + props.width and mouse_props.x > props.x and
-            mouse_props.y < props.y + props.height and mouse_props.y > props.y then
-            context.events:trigger("mouse_down", data, context)
+        if props.children:reverse_trigger_all_until("test_mouse_down", data) then
             return true
         end
-    end)
 
-gui_element.default_events:on("test_mouse_up", function (data, context)
-        local mouse_props = data:all()
-        local props = context:all()
+        if not props.hover then
+            return
+        end
 
         if mouse_props.x < props.x + props.width and mouse_props.x > props.x and
             mouse_props.y < props.y + props.height and mouse_props.y > props.y then
-            context.events:trigger("mouse_up", data, context)
+
+            context:set("mouse_down", true)
+            return true
         end
     end)
 
@@ -75,7 +74,10 @@ gui_element.default_events:on("test_mouse_over", function (data, context)
             mouse_props.y < props.y + props.height and mouse_props.y > props.y then
 
             data_store:each("definition_index:".."simple_gui_element", function (item, index)
-                    item:set("hover", false)
+                    if item.fields.hover then
+                        item:set("hover", false)
+                        item.events:trigger(mouse_out, data, context)
+                    end
                 end)
             context:set("hover", true)
             context.events:trigger("mouse_over", data, context)
