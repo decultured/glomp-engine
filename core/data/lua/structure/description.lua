@@ -70,7 +70,7 @@ function description_proto:set(attr, val, options)
 end
 
 function description_proto:commit(skip_validation)
-    if not self.changed then
+    if not self.changed or self.committing then
         return self
     end
 
@@ -78,11 +78,15 @@ function description_proto:commit(skip_validation)
         self:validate()
     end
 
+    self.committing = true
+
     for k, v in pairs(self.changed) do
         self.events:trigger(k, self.fields[k], self)
     end
     self.events:trigger("changed", self)
+
     self.changed = nil
+    self.committing = false
 
     return self
 end

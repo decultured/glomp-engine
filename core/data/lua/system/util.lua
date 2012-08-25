@@ -63,8 +63,8 @@ function print(...)
 		if not arg then 
 			arg = "nil"
         elseif type(arg) == "table" then
-			glomp_printobj(arg)
-    		-- arg = "Object:\n\t" .. json.encode(arg) .. "\n"
+			-- glomp_printobj(arg)
+    		arg = "Object:\n\t" .. json.encode(arg) .. "\n"
 		end
 
         out[#out + 1] = tostring(arg)

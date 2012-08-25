@@ -1,11 +1,12 @@
 local fnt = glomp.font.load("assets/fonts/Cousine-Regular.ttf", 12, true, false, true, 0.9, 100)
-local keyboard = description.workon("glomp_keyboard")
-local time = description.workon("glomp_time")
-local window = description.workon("glomp_window")
-
 local new_img = glomp.image.load("assets/images/openFrameworks.png")
 
-local gui_root = description.workon("gui_root", "simple_gui_root")
+local keyboard 	= description.workon("glomp_keyboard")
+local mouse 	= description.workon("glomp_mouse")
+local time 		= description.workon("glomp_time")
+local window 	= description.workon("glomp_window")
+
+local gui_root 	= description.workon("gui_root", "simple_gui_root")
 
 for counter = 1,3000 do
 	local props = 	{
@@ -22,6 +23,23 @@ end
 window.events:on("draw", function (data, caller) 
 		gui_root.events:trigger("draw", gui_root, gui_root)
 	end)
+
+mouse.events:on("moved", function (data, caller)
+	gui_root.events:trigger("test_mouse_moved", caller, gui_root)
+end)
+
+mouse.events:on("dragged", function (data, caller)
+	gui_root.events:trigger("test_mouse_dragged", caller, gui_root)
+end)
+
+mouse.events:on("pressed", function (data, caller)
+	print (data)
+	gui_root.events:trigger("test_mouse_down", caller, gui_root)
+end)
+
+mouse.events:on("released", function (data, caller)
+	gui_root.events:trigger("test_mouse_released", caller, gui_root)
+end)
 
 local performance = description.workon("debug_performance_display", "simple_gui_label")
 
