@@ -25,7 +25,8 @@ window.events:on("draw", function (data, caller)
 	end)
 
 mouse.events:on("moved", function (data, caller)
-	gui_root.events:trigger("test_mouse_moved", caller, gui_root)
+	gui_root.events:trigger("test_mouse_out", caller, gui_root)
+	gui_root.events:trigger("test_mouse_over", caller, gui_root)
 end)
 
 mouse.events:on("dragged", function (data, caller)

@@ -202,6 +202,8 @@ function description_proto:add_definitions(definitions)
         return self
     end
 
+    data_store:create("definition_index:"..def.name, self.name, self)
+
     table.insert(self.definitions, def.name)
 
     self:set_defaults(def.defaults)

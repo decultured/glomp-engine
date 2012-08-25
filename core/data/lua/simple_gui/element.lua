@@ -59,23 +59,46 @@ gui_element.default_events:on("test_mouse_up", function (data, context)
         end
     end)
 
-gui_element.default_events:on("test_mouse_moved", function (data, context)
+gui_element.default_events:on("test_mouse_over", function (data, context)
         local mouse_props = data:all()
         local props = context:all()
+
+        if props.children:reverse_trigger_all_until("test_mouse_over", data) then
+            return true
+        end
+
+        if props.hover then
+            return true
+        end
 
         if mouse_props.x < props.x + props.width and mouse_props.x > props.x and
             mouse_props.y < props.y + props.height and mouse_props.y > props.y then
 
-            if not props.hover then
-                context:set("hover", true)
-                context.events:trigger("mouse_over", data, context)
-            end
-        elseif props.hover then
+            data_store:each("definition_index:".."simple_gui_element", function (item, index)
+                    item:set("hover", false)
+                end)
+            context:set("hover", true)
+            context.events:trigger("mouse_over", data, context)
+            return true
+        end
+    end)
+
+gui_element.default_events:on("test_mouse_out", function (data, context)
+        local mouse_props = data:all()
+        local props = context:all()
+
+        props.children:reverse_trigger_all("test_mouse_out", data)
+
+        if not props.hover then
+            return
+        end
+
+        if mouse_props.x > props.x + props.width or mouse_props.x < props.x or
+            mouse_props.y > props.y + props.height or mouse_props.y < props.y then
+
             context:set("hover", false)
             context.events:trigger("mouse_out", data, context)
         end
-
-        props.children:trigger_all("test_mouse_moved", data)
     end)
 
 gui_element.default_events:on("test_mouse_dragged", function (data, context)

@@ -13,8 +13,7 @@ local imports = {"each", "map", "reduce", "find", "filter", "select", "every", "
 
 for k, v in pairs(imports) do
     collection_proto[v] = function (self, ...)
-        self.descriptions = table_utils[v](self.descriptions, ...)
-        return self
+        return table_utils[v](self.descriptions, ...)
     end
 end
 
@@ -64,9 +63,47 @@ function collection_proto:clear()
 end
 
 function collection_proto:trigger_all(event, data)
-    self:each(function (item) 
+    local desc = self.descriptions
+    local item 
+
+    for i = 1,#desc do
+        item = desc[i]
         item.events:trigger(event, data, item)
-    end)
+    end
+end
+
+function collection_proto:trigger_all_until(event, data)
+    local desc = self.descriptions
+    local item 
+
+    for i = 1,#desc do
+        item = desc[i]
+        if item.events:trigger(event, data, item) then
+            return true
+        end
+    end
+end
+
+function collection_proto:reverse_trigger_all(event, data)
+    local desc = self.descriptions
+    local item 
+
+    for i = #desc,1,-1 do
+        item = desc[i]
+        item.events:trigger(event, data, item)
+    end
+end
+
+function collection_proto:reverse_trigger_all_until(event, data)
+    local desc = self.descriptions
+    local item 
+
+    for i = #desc,1,-1 do
+        item = desc[i]
+        if item.events:trigger(event, data, item) then
+            return true
+        end
+    end
 end
 
 function collection_proto:add_definitions(definitions)

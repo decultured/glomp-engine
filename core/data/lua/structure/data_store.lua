@@ -5,7 +5,9 @@ local M = data_store
 M.store = {}
 M.builders = {}
 
-function M.workon(base, name)
+
+
+function M:workon(base, name)
     local base_store = self.store[base] or {} 
     local record = base_store[name]
 
@@ -70,5 +72,15 @@ function M:build(base)
         return false
     end
 end
+
+local imports = {"each", "map", "reduce", "find", "filter", "select", "every", "any", "contains", "raw_contains", "max", "min", "group_by"}
+
+for k, v in pairs(imports) do
+    M[v] = function (self, base, ...)
+        local base_store = self.store[base] or {}
+        return table_utils[v](base_store, ...)
+    end
+end
+
 
 return M
