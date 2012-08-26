@@ -21,6 +21,7 @@ title:set({
     })
 
 local go_bttn = description.workon("start_button", "simple_gui_button")
+go_bttn:get("label"):set("font", theme_vals.title_font)
 go_bttn:set({
         text = "Get Moving!",
         color = theme_vals.color,
@@ -39,7 +40,7 @@ go_bttn.events:on("click", function ()
     game_state:set("scene", game_state:get("game_scene"))
 end)
 
-go_bttn:get("label"):set("font", theme_vals.title_font)
+
 
 startup:get("children"):add_many(title, go_bttn)
 
@@ -48,8 +49,4 @@ window:set("clear_color", theme_vals.main_bg_color)
 window.events:on("update", function (data, context)
     -- startup:set("x", startup:get("x") + timer:get("frame_time") * 100)
     -- print(startup:get("x"))
-end)
-
-startup.events:on("parent", function (data, context)
-        
 end)

@@ -24,7 +24,7 @@ local released = false
 window.events:on("update", function (data, window)
         root_window:calc_transforms()
         root_window:test_mouse(mouse, pressed, released)
-
+        root_window.events:trigger("update", time, root_window)
         pressed, released = false, false
     end)
 

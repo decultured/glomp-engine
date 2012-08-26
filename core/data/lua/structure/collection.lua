@@ -13,8 +13,16 @@ local imports = {"each", "map", "reduce", "find", "filter", "select", "every", "
 
 for k, v in pairs(imports) do
     collection_proto[v] = function (self, ...)
-        return table_utils[v](self.descriptions, ...)
+        return table_utils[v](self.list, ...)
     end
+end
+
+function collection_proto:len()
+    return #self.list
+end
+
+function collection_proto:get(index)
+    return self.list[index]
 end
 
 function collection_proto:add(target)
@@ -33,7 +41,7 @@ function collection_proto:add(target)
         end
     end
 
-    table.insert(self.descriptions, target)
+    table.insert(self.list, target)
 
     self.events:trigger("add", target, self)
 end
@@ -46,25 +54,25 @@ function collection_proto:add_many(...)
 end
 
 function collection_proto:remove(target)
-    for k, v in ipairs(self.descriptions) do
+    for k, v in ipairs(self.list) do
         if v == target then
-            table.remove(self.descriptions, k)
+            table.remove(self.list, k)
             self.events:trigger("remove", target, self)
         end
     end
 end
 
 function collection_proto:clear()
-    for k, v in ipairs(self.descriptions) do
+    for k, v in ipairs(self.list) do
         self.events:trigger("remove", v, self)
-        self.descriptions[k] = nil
+        self.list[k] = nil
     end
-    self.descriptions = {}
+    self.list = {}
     self.events:trigger("reset", self, self)
 end
 
 function collection_proto:trigger_all(event, data)
-    local desc = self.descriptions
+    local desc = self.list
     local item 
 
     for i = 1,#desc do
@@ -74,7 +82,7 @@ function collection_proto:trigger_all(event, data)
 end
 
 function collection_proto:trigger_all_until(event, data)
-    local desc = self.descriptions
+    local desc = self.list
     local item 
 
     for i = 1,#desc do
@@ -86,7 +94,7 @@ function collection_proto:trigger_all_until(event, data)
 end
 
 function collection_proto:reverse_trigger_all(event, data)
-    local desc = self.descriptions
+    local desc = self.list
     local item 
 
     for i = #desc,1,-1 do
@@ -96,7 +104,7 @@ function collection_proto:reverse_trigger_all(event, data)
 end
 
 function collection_proto:reverse_trigger_all_until(event, data)
-    local desc = self.descriptions
+    local desc = self.list
     local item 
 
     for i = #desc,1,-1 do
@@ -133,7 +141,7 @@ local function base_collection()
     return  {
                 data_type = "collection",
                 definitions = {},
-                descriptions = {},
+                list = {},
                 events = event_pump.create()
             }
 end

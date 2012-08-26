@@ -35,6 +35,10 @@ gui_element.defaults.color      = theme_vals.main_color
 gui_element.defaults.visible    = true
 gui_element.defaults.hover      = false
 
+gui_element.events:on("update", function (data, context)
+    props.children:trigger_all("update", data)
+end)
+
 gui_element.events:on("apply", function(data, context)
     local children = collection.workon(context.name .. "_children", "simple_gui_element")
     context:set("children", children)

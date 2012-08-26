@@ -21,6 +21,7 @@ title:set({
     })
 
 local go_bttn = description.workon("quit_button", "simple_gui_button")
+go_bttn:get("label"):set("font", theme_vals.title_font)
 go_bttn:set({
         text = "I quit",
         color = theme_vals.color,
@@ -35,10 +36,26 @@ go_bttn.events:on("click", function ()
     game_state:set("scene", game_state:get("startup_scene"))
 end)
 
-go_bttn:get("label"):set("font", theme_vals.title_font)
+local sprite_image = glomp.image.load("assets/images/spritesheet.png")
+local sprite_test = description.workon("spritetest", "simple_gui_sprite_sheet")
 
-game_scene:get("children"):add_many(title, go_bttn)
+sprite_test:set({
+        image = sprite_image,
+        frames_wide = 5,
+        frames_high = 6,
+        x = 200,
+        y = 300
+    })
 
-game_scene.events:on("visible", function (data, context)
-    print("gogogogogog", data)
-end)
+function cycle_frames()
+    local frame = sprite_test:get("current_frame") + 1
+    if frame > sprite_test:get("frames_wide") * sprite_test:get("frames_high") then
+        frame = 1
+    end
+    sprite_test:set("current_frame", frame)
+    print("Drawing",frame)
+end
+
+tick(cycle_frames, 0.1)
+
+game_scene:get("children"):add_many(title, go_bttn, sprite_test)
