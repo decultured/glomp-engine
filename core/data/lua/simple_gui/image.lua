@@ -25,11 +25,3 @@ image.default_events:on("draw", function (data, context)
                     props.image:draw()
                 end
             end)
-
-image.default_events:on("hover", function (data, context)
-    if data then
-        context:set("color", 0xff0000)
-    else
-        context:set("color", 0xffffff)
-    end
-end)

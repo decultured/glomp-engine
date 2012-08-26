@@ -31,6 +31,10 @@ go_bttn:set({
         offset_x = 250
     })
 
+tick(function ()
+    print("lol")
+end, 2)
+
 go_bttn.events:on("click", function ()
     game_state:set("scene", game_state:get("game_scene"))
 end)

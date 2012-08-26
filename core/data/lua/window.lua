@@ -20,14 +20,34 @@ function delay(callback, seconds)
 	end
 
 	closure = function ()
-		print(timer:get("total_time"), start_time, seconds, closure)
 		if timer:get("total_time") - start_time > seconds then
 			callback()
 			done()
 		end
 	end
 
-	print(timer:get("total_time"), start_time, seconds, closure)
+	timer.events:on("total_time", closure)
+end
+
+function tick(callback, seconds)
+	
+	local start_time = timer:get("total_time")
+	local closure
+
+	local done = function ()
+		timer.events:off("total_time", closure)
+	end
+
+	closure = function ()
+		if timer:get("total_time") - start_time > seconds then
+			if callback() then
+				done()
+			else
+				start_time = start_time + seconds
+			end
+		end
+	end
+
 	timer.events:on("total_time", closure)
 end
 

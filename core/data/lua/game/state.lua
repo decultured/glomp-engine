@@ -13,7 +13,7 @@ game_state.events:on("scene", function (data, context)
 
     print(props.scene.name)
     
-    delay(show_scene, 5.5)
+    show_scene()
 end)
 
 function show_scene()
