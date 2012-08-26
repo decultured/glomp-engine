@@ -1,10 +1,10 @@
 local theme_vals = description.workon("simple_gui_active_theme", "simple_gui_theme"):all()
 
 local normal_init       = definition.workon("simple_gui_button_normal_init", "simple_gui_rectangle")
-normal_init.defaults.color = theme_vals.highlight_color
+normal_init.defaults.color = theme_vals.orange
 normal_init.defaults.pct_width = 100
 normal_init.defaults.pct_height = 100
-normal_init.defaults.border_color = theme_vals.white
+normal_init.defaults.border_color = theme_vals.black
 
 local pressed_init      = definition.workon("simple_gui_button_pressed_init", "simple_gui_rectangle")
 pressed_init.defaults.color = theme_vals.active_color
@@ -31,11 +31,6 @@ button.defaults.y       = 0
 button.defaults.width   = 100
 button.defaults.height  = 100
 button.defaults.text    = "Button"
-button.defaults.fit_text    = true
-button.defaults.padding_top     = 5
-button.defaults.padding_bottom  = 5
-button.defaults.padding_left    = 5
-button.defaults.padding_right   = 5
 
 button.defaults.normal_rect     = nil
 button.defaults.hover_rect      = nil
@@ -63,7 +58,9 @@ button.events:on("apply", function (def, context)
         font = theme_vals.font,
         text = props.text,
         pct_width = 100,
-        pct_height = 100
+        pct_height = 100,
+        v_align = "middle",
+        align = "center"
     })
 
     context:set({
@@ -76,16 +73,6 @@ button.events:on("apply", function (def, context)
         rectangle = normal_rect,
     })
 
-end)
-
-button.default_events:on({"padding_left","padding_top"}, function (data, context)
-    local props = context:all()
-    if props.label then
-        props.label:set({
-                x = props.padding_left,
-                y = props.padding_top,
-            })
-    end
 end)
 
 button.default_events:on("text", function (data, context)

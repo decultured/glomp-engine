@@ -8,10 +8,13 @@ local root_window   = description.workon("root_window", "simple_gui_root")
 local performance   = description.workon("debug_performance_display", "simple_gui_label")
 
 performance:set({
-        x = 20,
-        y = 20,
+        top = 20,
+        left = 20,
         visible = false,
-        font = theme_vals.font
+        font = theme_vals.tiny_font,
+        color = theme_vals.orange,
+        align = "left",
+        v_align = "top"
     })
 
 root_window:get("children"):add(performance)

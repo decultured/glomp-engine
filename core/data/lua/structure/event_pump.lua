@@ -86,6 +86,12 @@ end
 
 function event_pump_proto:off(event, callback)
 	local list = self.callbacks[event] or {}
+
+	if not callback and list then
+		self.callbacks[event] = {}
+		return
+	end
+
 	for k, v in pairs(list) do
 		if v.callback == callback then
 			table.remove(list,k)

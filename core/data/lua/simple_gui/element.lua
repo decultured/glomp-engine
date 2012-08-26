@@ -121,49 +121,54 @@ gui_element.methods.world_point_inside = function (self, x, y)
 end
 
 gui_element.methods.calc_transforms = function (self)
-        local props = self:all()
-        local new_vals = {}
+    local props = self:all()
+    local new_vals = {}
 
-        new_vals.width = tonumber(props.width) or 0
-        new_vals.height = tonumber(props.height) or 0
-        new_vals.x = tonumber(props.x) or 0
-        new_vals.y = tonumber(props.y) or 0
+    new_vals.x = pct_num(props.left, props.parent_width) or tonumber(props.left) or tonumber(props.x) or 0
+    new_vals.y = pct_num(props.top, props.parent_height) or tonumber(props.top) or tonumber(props.y) or 0
 
-        new_vals.x = pct_num(props.left, props.parent_width) or tonumber(props.left) or props.x or 0
-        new_vals.y = pct_num(props.top, props.parent_height) or tonumber(props.top) or props.y or 0
-        
-        if tonumber(props.pct_width) and props.parent_width then
-            new_vals.width = pct_num(props.pct_width, props.parent_width) or props.pct_width * props.parent_width
-        elseif props.right and props.parent_width then
-            new_vals.width = pct_num(props.right, props.parent_width) or props.parent_width - props.right - new_vals.x
-        end
-
-        new_vals.width = new_vals.width or props.width or 100 
-        new_vals.width = math.max(new_vals.width, 0)
-        new_vals.width = math.min(new_vals.width, props.parent_width or math.huge)
-
-        if tonumber(props.pct_height) and props.parent_height then
-            new_vals.height = pct_num(props.pct_height, props.parent_height) or props.pct_height * props.parent_height
-        elseif props.bottom and props.parent_height then
-            new_vals.height = pct_num(props.bottom, props.parent_height) or props.parent_height - props.bottom - new_vals.y
-        end
-
-        new_vals.height = new_vals.height or props.height or 0
-        new_vals.height = math.max(new_vals.height, 0)
-        new_vals.height = math.min(new_vals.height, props.parent_height or math.huge)
-
-        self:set(new_vals)
-
-        props.children:each(function (child)
-            child:set({
-                    parent_width = props.width,
-                    parent_height = props.height,
-                    world_x = props.world_x + props.x,
-                    world_y = props.world_y + props.y,
-                })
-            child:calc_transforms()
-        end)
+    if tonumber(props.pct_width) and props.parent_width then
+        new_vals.width = pct_num(props.pct_width, props.parent_width) or props.pct_width * props.parent_width
+    elseif props.right and props.parent_width and props.left then
+        new_vals.width = pct_num(props.right, props.parent_width) or props.parent_width - props.right - new_vals.x
     end
+
+    new_vals.width = new_vals.width or tonumber(props.width) or 100 
+    new_vals.width = math.max(new_vals.width, 0)
+    new_vals.width = math.min(new_vals.width, props.parent_width or math.huge)
+
+    if props.right and not props.left and tonumber(props.parent_width) then
+        new_vals.x = pct_num(props.right, props.parent_width) or tonumber(props.right)
+        new_vals.x = props.parent_width - new_vals.x - new_vals.width
+    end
+
+    if tonumber(props.pct_height) and props.parent_height then
+        new_vals.height = pct_num(props.pct_height, props.parent_height) or props.pct_height * props.parent_height
+    elseif props.bottom and props.parent_height and props.top then
+        new_vals.height = pct_num(props.bottom, props.parent_height) or props.parent_height - props.bottom - new_vals.y
+    end
+
+    new_vals.height = new_vals.height or tonumber(props.height) or 100
+    new_vals.height = math.max(new_vals.height, 0)
+    new_vals.height = math.min(new_vals.height, props.parent_height or math.huge)
+
+    if props.bottom and not props.top and tonumber(props.parent_height) then
+        new_vals.y = pct_num(props.bottom, props.parent_height) or tonumber(props.bottom)
+        new_vals.y = props.parent_height - new_vals.y - new_vals.height
+    end
+
+    self:set(new_vals)
+
+    props.children:each(function (child)
+        child:set({
+                parent_width = props.width,
+                parent_height = props.height,
+                world_x = props.world_x + props.x,
+                world_y = props.world_y + props.y,
+            })
+        child:calc_transforms()
+    end)
+end
 
 
 gui_element.methods.test_mouse = function (self, mouse_props, pressed, released)

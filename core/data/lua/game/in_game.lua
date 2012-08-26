@@ -14,22 +14,22 @@ title:set({
         font = theme_vals.title_font,
         text = "WHAT NOW??!?!?!",
         color = theme_vals.color,
-        bottom = 20,
-        left = 0,
+        top = 0,
+        bottom = 0,
         right = 0,
-        align = "center"
+        align = "right",
+        v_align = "middle"
     })
 
 local go_bttn = description.workon("quit_button", "simple_gui_button")
-go_bttn:get("label"):set("font", theme_vals.title_font)
+go_bttn:get("label"):set("font", theme_vals.gui_font)
 go_bttn:set({
         text = "I quit",
         color = theme_vals.color,
-        top = "50%",
-        left = "50%",
-        width = 500,
-        height = 50,
-        offset_x = 250
+        bottom = 10,
+        right = 10,
+        width = 110,
+        height = 40
     })
 
 go_bttn.events:on("click", function ()
@@ -47,13 +47,14 @@ sprite_test:set({
         y = 300
     })
 
+local map_test = glomp.image
+
 function cycle_frames()
     local frame = sprite_test:get("current_frame") + 1
     if frame > sprite_test:get("frames_wide") * sprite_test:get("frames_high") then
         frame = 1
     end
     sprite_test:set("current_frame", frame)
-    print("Drawing",frame)
 end
 
 tick(cycle_frames, 0.1)

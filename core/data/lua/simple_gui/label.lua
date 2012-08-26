@@ -44,15 +44,13 @@ label.default_events:on("text", function (data, context)
         context:set({
                 text_height = text_height,
                 text_width = text_width,
-                height = text_height,
-                width = text_width,
                 display_text = data
             })
 
         context.events:trigger("align", props.align, context)
     end)
 
-label.default_events:on({"parent_width", "width", "align"}, function (data, context)
+label.default_events:on({"parent_width", "width", "align", "text_width"}, function (data, context)
     local props = context:all()
 
     if not props.align then
@@ -65,6 +63,22 @@ label.default_events:on({"parent_width", "width", "align"}, function (data, cont
         context:set("text_offset_x", (props.width - props.text_width) * 0.5)
     else
         context:set("text_offset_x", 0)
+    end
+end)
+
+label.default_events:on({"parent_height", "height", "v_align", "text_height"}, function (data, context)
+    local props = context:all()
+
+    if not props.v_align then
+        return
+    end
+
+    if props.v_align == "bottom" then
+        context:set("text_offset_y", props.height - props.text_height)
+    elseif props.v_align == "middle" then
+        context:set("text_offset_y", (props.height - props.text_height) * 0.5)
+    else
+        context:set("text_offset_y", 0)
     end
 end)
 

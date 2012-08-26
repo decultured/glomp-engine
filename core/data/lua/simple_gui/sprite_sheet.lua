@@ -18,12 +18,18 @@ sprite_sheet.defaults.image_width   = 100
 sprite_sheet.defaults.image_height  = 100
 
 sprite_sheet.defaults.current_frame = 1
+
+sprite_sheet.defaults.self_build    = true
 sprite_sheet.defaults.frames_wide   = 1
 sprite_sheet.defaults.frames_high   = 1
+
+sprite_sheet.defaults.total_frames  = 1
 sprite_sheet.defaults.frames        = nil
 
 sprite_sheet.default_events:on({"image_width", "image_height", "frames_wide", "frames_high"}, function (data, context)
-    context:build_frames()
+    if context:get("self_build") then
+        context:build_frames()
+    end
 end)
 
 sprite_sheet.default_events:on("current_frame", function (data, context)
@@ -31,8 +37,10 @@ sprite_sheet.default_events:on("current_frame", function (data, context)
         local frames = props.frames
         local new_props = {}
 
-        if frames:len() ~= props.frames_wide * props.frames_high then
-            context:build_frames()
+        if frames:len() ~= props.total_frames then
+            if props.self_build then
+                context:build_frames()
+            end
         end
 
         if not frames:len() or props.current_frame > frames:len() or props.current_frame < 1 then
@@ -52,6 +60,9 @@ sprite_sheet.default_events:on("current_frame", function (data, context)
     end)
 
 sprite_sheet.events:on("apply", function (data, context)
+        if context:get("frames") then
+            return
+        end
         local frames = collection.workon(context.name.."_frames", "simple_gui_sprite_sheet_frame")
         context:set("frames", frames)
     end)
@@ -84,9 +95,9 @@ sprite_sheet.methods.build_frames = function (self)
 
     self:set({
             image_width = props.image:get_width(),
-            image_height = props.image:get_height()
+            image_height = props.image:get_height(),
+            total_frames = props.frames_wide * props.frames_high
         })
-
 
     local source_width = props.image_width / props.frames_wide
     local source_height = props.image_height / props.frames_high
