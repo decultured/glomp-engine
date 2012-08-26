@@ -17,8 +17,6 @@ performance:set({
         v_align = "top"
     })
 
-root_window:get("children"):add(performance)
-
 keyboard.events:when_equals("T", function()
         performance:toggle("visible")
     end, 0)
@@ -30,12 +28,12 @@ time.events:on("update_count", function()
 
         local time_data = time:all()
 
-        local text = string.format("Updates: %d\nElapsed: %f\nAverage: %f\nRunning: %f\nFPS: %d",
+        local text = string.format("Updates: %d\nElapsed: %f\nAverage: %f\nRunning: %f\nFPS: %6d",
                     time_data["update_count"],
                     time_data["frame_time"],
                     time_data["total_time"] / time_data["update_count"],
                     time_data["total_time"],
-                    time_data["update_count"] / time_data["total_time"])
+                    1.0 / (time_data["average_frame_time"] or 1000000))
 
         performance:set("text", text)
     end, 0)

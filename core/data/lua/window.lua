@@ -8,6 +8,7 @@ local timer = description.workon("glomp_time"):set({
 								frame_time = 0,
 								update_count = 0,
 								total_time = 0,
+								average_frame_time = 0
 							})
 
 function delay(callback, seconds)
@@ -70,12 +71,34 @@ function _glomp_window_entry(state)
 	window:set({entered = state})
 end
 
+local frames = {}
+local frame_samples = 100
+for i = 1, frame_samples do
+	frames[i] = 100
+end
+local frame = 1
+local average_frame_time = 0
+
 function _glomp_update(frame_time)
 	frame_time = frame_time or 0
+	
+	frames[frame] = frame_time
+	frame = frame + 1
+	if frame > frame_samples then
+		frame = 1
+	end
+
+	average_frame_time = 0
+	for i = 1, frame_samples do
+		average_frame_time = average_frame_time + frames[i]
+	end
+	average_frame_time = average_frame_time / frame_samples
+
 	timer:set({
 			frame_time = frame_time,
 			total_time = timer:get("total_time") + frame_time,
-			update_count = timer:get("update_count") + 1
+			update_count = timer:get("update_count") + 1,
+			average_frame_time = average_frame_time
 		})
 	window.events:trigger("update", window.fields, window)
 end

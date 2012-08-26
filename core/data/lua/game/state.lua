@@ -4,6 +4,7 @@ local startup_scene  = description.workon("startup_scene", "simple_gui_root")
 local game_scene = description.workon("game_scene", "simple_gui_root")
 
 local game_state = description.workon("game_state")
+local performance = description.workon("debug_performance_display", "simple_gui_label")
 
 game_state.events:on("scene", function (data, context)
     local props = context:all()
@@ -27,4 +28,4 @@ game_state:set({
         scene = startup_scene
     })
 
-root_window:get("children"):add_many(startup_scene, game_scene)
+root_window:get("children"):add_many(startup_scene, game_scene, performance)

@@ -57,6 +57,12 @@ quit_bttn:set({
 
 go_bttn.events:on("click", function ()
     game_state:set("scene", game_state:get("game_scene"))
+    theme_vals.phazer_sound:play()
+end)
+
+quit_bttn.events:on("click", function ()
+    theme_vals.quit_sound:play()
+    delay(glomp.system.exit, 1.8)
 end)
 
 startup:get("children"):add_many(title, go_bttn, sub_title, quit_bttn)

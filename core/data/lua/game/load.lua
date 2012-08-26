@@ -8,3 +8,6 @@ load_module("game/performance_indicator")
 load_module("game/state")
 load_module("game/startup")
 load_module("game/in_game")
+
+glomp.graphics.enable_alpha_blending()
+glomp.graphics.enable_smoothing()
