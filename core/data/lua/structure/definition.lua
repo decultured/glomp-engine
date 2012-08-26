@@ -7,16 +7,6 @@ local M = definition
 
 local definition_proto = {}
 
-
--- field definitions are:
--- {
---      field = "fieldname",
---      default = "default value goes here",
---      type = "typename (bool, number, string, description, collection, resource_type, etc)",
---      definitions = [] (list of definition names allowed, used if type is either "description" or "collection")
---      throws_error = true | false
--- }
-
 function definition_proto:extends(definitions)
     local def
     local def_type = type(definitions)
@@ -54,6 +44,7 @@ local function base_definition()
                 extended_from = {},
                 defaults = {},
                 validators = {},
+                methods = {}
             }
 end
 
@@ -76,7 +67,7 @@ function M.fetch(name, extends)
         def:extends(extends)
     end
 
-    return 
+    return def
 end
 
 function M.create(name, extends)

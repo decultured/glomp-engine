@@ -130,7 +130,7 @@ function point_in_rect(x, y, rx, ry, rw, rh)
 end
 
 function percent_string_to_num(str, percent_of)
-    if not str or type(str) ~= "string" then
+    if not str or type(str) ~= "string" or not percent_of then
         return false
     end
     local result = string.match(str, "(%d+%.?%d*)%%")

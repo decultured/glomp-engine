@@ -1,3 +1,5 @@
+local mouse = description.workon("glomp_mouse")
+
 local clear_hex = glomp.graphics.clear_hex
 local screen_size = glomp.window.get_screen_size
 local window_size = glomp.window.get_size
@@ -7,6 +9,27 @@ local timer = description.workon("glomp_time"):set({
 								update_count = 0,
 								total_time = 0,
 							})
+
+function delay(callback, seconds)
+	
+	local start_time = timer:get("total_time")
+	local closure
+
+	local done = function ()
+		timer.events:off("total_time", closure)
+	end
+
+	closure = function ()
+		print(timer:get("total_time"), start_time, seconds, closure)
+		if timer:get("total_time") - start_time > seconds then
+			callback()
+			done()
+		end
+	end
+
+	print(timer:get("total_time"), start_time, seconds, closure)
+	timer.events:on("total_time", closure)
+end
 
 local window = description.workon("glomp_window"):set({
 								width = 0,
@@ -38,6 +61,10 @@ function _glomp_update(frame_time)
 end
 
 function _glomp_draw()
-	clear_hex(window:get("clear_color"))
+	if window:get("clear_color") then
+		clear_hex(window:get("clear_color"))
+	else
+		clear_hex(0x000000)
+	end
 	window.events:trigger("draw", window.fields, window)
 end

@@ -214,6 +214,18 @@ M.contains = function (obj, target)
 	return false
 end
 
+M.contains_key = function (obj, target_key)
+	if not obj then
+		return false
+	end
+	for k,v in pairs(obj) do
+		if k == target_key then
+			return true
+		end
+	end
+	return false
+end
+
 M.raw_contains = function (obj, target)
 	if not obj then
 		return false

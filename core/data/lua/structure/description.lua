@@ -102,10 +102,11 @@ function description_proto:all_have_changed(...)
     return true
 end
 
-function description_proto:check_for_new_changes(was_changed, all_changed)
+function description_proto:check_for_new_changes(was_changed, all_changed, new_changes)
     for k, v in pairs(self.changed) do
         if not was_changed[k] then
             table.insert(all_changed, k)
+            new_changes[k] = 1
             was_changed[k] = 1
         end
     end
@@ -124,15 +125,17 @@ function description_proto:commit(skip_validation)
 
     local was_changed = {}
     local all_changed = {}
-    self:check_for_new_changes(was_changed, all_changed)
+    local new_changes = {}
+    self:check_for_new_changes(was_changed, all_changed, new_changes)
     
     for k, v in ipairs(all_changed) do
         self.events:trigger(v, self.fields[v], self)
-        self:check_for_new_changes(was_changed, all_changed)
+        new_changes[v] = nil
+        self:check_for_new_changes(was_changed, all_changed, new_changes)
     end
     self.events:trigger("changed", self, self)
 
-    self.changed = nil
+    self.changed = new_changes
     self.committing = false
 
     return self
@@ -263,6 +266,17 @@ function description_proto:add_definitions(definitions)
 
     for k, v in pairs(def.extended_from) do
         self:add_definitions(v)
+    end
+
+    for k, v in pairs(def.methods) do
+        if type(v) ~= "function" or type(k) ~= "string" then
+            warning("invalid method in definition table")
+            return false
+        elseif table_utils.contains_key(self, k) then
+            warning("Description method shares a used key in description, aborting assignment.")
+        else
+            self[k] = v
+        end
     end
 
     def.events:trigger("apply", def, self)

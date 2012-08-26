@@ -56,11 +56,14 @@ button.events:on("apply", function (def, context)
     local disabled_rect = description.workon(context.name.."_disabled_rect",    "simple_gui_button_disabled_init")
     local label         = description.workon(context.name.."_label",            "simple_gui_label")
 
+    local width = 0
+    local height = 0
+
     label:set({
         font = theme_vals.font,
         text = props.text,
-        x = props.padding_left,
-        y = props.padding_top,
+        pct_width = 100,
+        pct_height = 100
     })
 
     context:set({
@@ -89,10 +92,6 @@ button.default_events:on("text", function (data, context)
     local props = context:all()
     if props.label then
         props.label:set("text", props.text)
-        context:set({
-                width = props.label:get("width") + props.padding_left + props.padding_right,
-                height = props.label:get("height") + props.padding_bottom + props.padding_top
-            })
     end
 end)
 
@@ -131,25 +130,35 @@ button.default_events:on("mouse_over", function (data, context)
     if context:get("disabled") then
         return
     end
-    context:set("rectangle", context:get("hover_rect"))
+    if not context:get("mouse_down") then
+        context:set("rectangle", context:get("hover_rect"))
+    end
+    return true
 end)
 
 button.default_events:on("mouse_out", function (data, context)
     if context:get("disabled") then
         return
     end
-    context:set("rectangle", context:get("normal_rect"))
+    if not context:get("mouse_down") then
+        context:set("rectangle", context:get("normal_rect"))
+    end
 end)
 
 button.default_events:on("mouse_down", function (data, context)
-    if context:get("disabled") then
+    local  props = context:all()
+
+    if props.disabled then
         return
     end
 
     if data then
-        context:set("rectangle", context:get("pressed_rect"))
+        context:set("rectangle", props.pressed_rect)
+    elseif props.hover then
+        context:set("rectangle", props.hover_rect)
+        context.events:trigger("click", data, context)
     else
-        context:set("rectangle", context:get("normal_rect"))
+        context:set("rectangle", props.normal_rect)
         context.events:trigger("click", data, context)
     end
 end)

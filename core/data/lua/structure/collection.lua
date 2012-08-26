@@ -38,9 +38,10 @@ function collection_proto:add(target)
     self.events:trigger("add", target, self)
 end
 
-function collection_proto:add_many(targets)
-    for k, v in targets do
-        self:add(v)
+function collection_proto:add_many(...)
+    for i = 1, select("#", ...) do
+        arg = select(i, ...)
+        self:add(arg)
     end
 end
 

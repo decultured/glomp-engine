@@ -7,3 +7,4 @@ keyboard.events:when_equals("F", function()
 end, 0)
 
 keyboard.events:when_greater_than("Q", glomp.system.exit, 0)
+print("Dont't forget to change the exit button!")

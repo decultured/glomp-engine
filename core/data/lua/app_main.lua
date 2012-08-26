@@ -22,14 +22,12 @@ function glomp_app()
 	load_module("window")
 end
 
-function glomp_run_app()
-	load_module("simple_gui/load_all")
-	load_module("basic_input")
-	load_module("playground")
+function glomp_run_game()
+	load_module("game/load")
 end
 
 glomp_libs()
 glomp_structure()
 glomp_app()
 
-glomp_run_app()
+glomp_run_game()

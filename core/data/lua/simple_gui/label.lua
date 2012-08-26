@@ -8,36 +8,65 @@ local translate         = glomp.graphics.translate
 local set_color_hex     = glomp.graphics.set_color_hex
 local print_string      = glomp.graphics.print
 
-label.defaults.color         = theme_vals.main_color
-label.defaults.text          = "nothing."
-label.defaults.display_text  = "nothing."
-label.defaults.multi_line    = false
-label.defaults.num_lines     = 1
-label.defaults.wrap          = false
-label.defaults.max_width     = nil
-label.defaults.font          = nil
-label.defaults.is_monospaced = true
-label.defaults.font_height   = 8
+label.defaults.color            = theme_vals.main_color
+label.defaults.text             = "nothing."
+label.defaults.display_text     = "nothing."
+label.defaults.multi_line       = false
+label.defaults.num_lines        = 1
+label.defaults.wrap             = false
+label.defaults.max_width        = nil
+label.defaults.font             = nil
+label.defaults.is_monospaced    = true
+label.defaults.font_height      = 8
+label.defaults.align            = "center"
+label.defaults.v_align          = "middle"
+label.defaults.text_height      = 0
+label.defaults.text_width       = 0
+label.defaults.text_offset_x    = 0
+label.defaults.text_offset_y    = 0
 
 label.default_events:on("text", function (data, context)
         local props = context:all()
         local font = props.font
 
+        local text_height = 0
+        local text_width = 0
+
         -- GLUT_BITMAP_8_BY_13
         if not font then
-            context:set({
-                    height = 8,
-                    width = string.len(data) * 8,
-                    display_text = data
-                })
+            text_height = 8
+            text_width  = string.len(data) * 8
         else
-            context:set({
-                    height = font:get_string_height(data),
-                    width = font:get_string_width(data),
-                    display_text = data
-                })
+            text_height = font:get_string_height(data)
+            text_width  = font:get_string_width(data)
         end
+
+        context:set({
+                text_height = text_height,
+                text_width = text_width,
+                height = text_height,
+                width = text_width,
+                display_text = data
+            })
+
+        context.events:trigger("align", props.align, context)
     end)
+
+label.default_events:on({"parent_width", "width", "align"}, function (data, context)
+    local props = context:all()
+
+    if not props.align then
+        return
+    end
+
+    if props.align == "right" then
+        context:set("text_offset_x", props.width - props.text_width)
+    elseif props.align == "center" then
+        context:set("text_offset_x", (props.width - props.text_width) * 0.5)
+    else
+        context:set("text_offset_x", 0)
+    end
+end)
 
 label.default_events:on("font", function (data, context)
         context.events:trigger("text", context:get("text"), context)
@@ -50,12 +79,12 @@ label.default_events:on("font", function (data, context)
 label.default_events:on("draw", function (data, context)
         props = context:all()
 
-        if not props.display_text and props.text then
+        -- if not props.display_text and props.text then
             context.events:trigger("text", props.text, context)
-        end
+        -- end
 
         push_matrix()
-        translate(0, props.font_height)
+        translate(props.text_offset_x, props.font_height + props.text_offset_y)
         if props.font then
             props.font:draw_string(props.display_text)
         else

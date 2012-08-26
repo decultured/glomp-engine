@@ -337,6 +337,9 @@ end
 -- @param s The string to return as a JSON encoded (i.e. backquoted string)
 -- @return The string appropriately escaped.
 function encodeString(s)
+  if base.type(s) ~= "string" then
+      return ""
+  end
   s = string.gsub(s,'\\','\\\\')
   s = string.gsub(s,'"','\\"')
   s = string.gsub(s,"'","\\'")

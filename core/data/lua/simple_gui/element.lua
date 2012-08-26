@@ -2,6 +2,8 @@ local theme_vals = description.workon("simple_gui_active_theme", "simple_gui_the
 
 local gui_element = definition.workon("simple_gui_element")
 
+local pct_num           = percent_string_to_num
+
 local push_matrix       = glomp.graphics.push_matrix
 local pop_matrix        = glomp.graphics.pop_matrix
 local translate         = glomp.graphics.translate
@@ -15,6 +17,12 @@ gui_element.parent_height       = 100
 
 gui_element.defaults.x          = 0
 gui_element.defaults.y          = 0
+gui_element.defaults.world_x    = 0
+gui_element.defaults.world_y    = 0
+gui_element.defaults.calc_x     = 0
+gui_element.defaults.calc_y     = 0
+gui_element.defaults.offset_x   = 0
+gui_element.defaults.offset_y   = 0
 gui_element.defaults.width      = 100
 gui_element.defaults.height     = 100
 gui_element.defaults.pct_width  = nil
@@ -66,7 +74,9 @@ gui_element.default_events:on("render", function (data, context)
 
     context.events:trigger("transform", data, context)
 
-    set_color_hex(props.color)
+    if props.color then
+        set_color_hex(props.color)
+    end
 
     context.events:trigger("draw", data, context)
     props.children:trigger_all("render", context)
@@ -78,7 +88,8 @@ gui_element.default_events:on("transform", function (data, context)
         local props = context:all()
 
         push_matrix()
-        translate(props.x, props.y)
+        context:calc_transforms()
+        translate(props.x - props.offset_x, props.y - props.offset_y)
         if (props.scale_x and props.scale_x ~= 1) or
             (props.scale_y and props.scale_y ~= 1) then
             scale(props.scale_x, props.scale_y)
@@ -89,115 +100,107 @@ gui_element.default_events:on("un_transform", function (data, context)
         pop_matrix()
 end)
 
-local pct_num = percent_string_to_num
+gui_element.methods.local_point_inside = function (self, x, y)
+    local props = self.fields
+    local true_x = props.x - props.offset_x
+    local true_y = props.y - props.offset_y
 
-gui_element.default_events:on("changed", function (data, context)
-        local props = context:all()
+    return point_in_rect(x, y, true_x, true_y, props.width, props.height)
+end
+
+gui_element.methods.world_point_inside = function (self, x, y)
+    local props = self.fields
+    local true_x = props.world_x + props.x - props.offset_x
+    local true_y = props.world_y + props.y - props.offset_y
+
+    return point_in_rect(x, y, true_x, true_y, props.width, props.height)
+end
+
+gui_element.methods.calc_transforms = function (self)
+        local props = self:all()
         local new_vals = {}
 
-        new_vals.x = pct_num(props.left, props.parent_width) or props.left or props.x or 0
-        new_vals.y = pct_num(props.top, props.parent_height) or props.top or props.y or 0
+        new_vals.width = tonumber(props.width) or 0
+        new_vals.height = tonumber(props.height) or 0
+        new_vals.x = tonumber(props.x) or 0
+        new_vals.y = tonumber(props.y) or 0
+
+        new_vals.x = pct_num(props.left, props.parent_width) or tonumber(props.left) or props.x or 0
+        new_vals.y = pct_num(props.top, props.parent_height) or tonumber(props.top) or props.y or 0
         
-        -- print (context.name, new_vals, props.parent_width, props.parent_height, props.parent)
-
-        if not props.parent_width or not props.parent_height then
-            props.children:trigger_all("parent_transform", new_vals, context)
-            context:set(new_vals)
-            return
-        end
-
-        if props.pct_width then
-            new_vals.width = pct_num(props.pct_width, props.parent_width) or (tonumber(props.pct_width) and tonumber(props.pct_width) * props.parent_width)
-        elseif props.right then
-            new_vals.width = pct_num(props.right, props.parent_width) or props.parent_width - props.right - props.x
+        if tonumber(props.pct_width) and props.parent_width then
+            new_vals.width = pct_num(props.pct_width, props.parent_width) or props.pct_width * props.parent_width
+        elseif props.right and props.parent_width then
+            new_vals.width = pct_num(props.right, props.parent_width) or props.parent_width - props.right - new_vals.x
         end
 
         new_vals.width = new_vals.width or props.width or 100 
         new_vals.width = math.max(new_vals.width, 0)
-        new_vals.width = math.min(new_vals.width, props.parent_width)
+        new_vals.width = math.min(new_vals.width, props.parent_width or math.huge)
 
-        if props.pct_height then
+        if tonumber(props.pct_height) and props.parent_height then
             new_vals.height = pct_num(props.pct_height, props.parent_height) or props.pct_height * props.parent_height
-        elseif props.bottom then
-            new_vals.height = pct_num(props.bottom, props.parent_height) or props.parent_height - props.bottom - props.y
+        elseif props.bottom and props.parent_height then
+            new_vals.height = pct_num(props.bottom, props.parent_height) or props.parent_height - props.bottom - new_vals.y
         end
 
         new_vals.height = new_vals.height or props.height or 0
         new_vals.height = math.max(new_vals.height, 0)
-        new_vals.height = math.min(new_vals.height, props.parent_height)
+        new_vals.height = math.min(new_vals.height, props.parent_height or math.huge)
 
-        props.children:trigger_all("parent_transform", new_vals, context)
+        self:set(new_vals)
 
-        context:set(new_vals)
-end)
+        props.children:each(function (child)
+            child:set({
+                    parent_width = props.width,
+                    parent_height = props.height,
+                    world_x = props.world_x + props.x,
+                    world_y = props.world_y + props.y,
+                })
+            child:calc_transforms()
+        end)
+    end
 
-gui_element.default_events:on("parent_transform", function(data, context)
-        if data.width then
-            context:set("parent_width", data.width)
+
+gui_element.methods.test_mouse = function (self, mouse_props, pressed, released)
+        local props = self:all()
+        local found = false
+
+        if not props.visible then
+            return
         end
 
-        if data.height then
-            context:set("parent_height", data.height)
-        end
-    end)
+        props.children:each(function (child)
+            found = child:test_mouse(mouse_props, pressed, released)
+        end)
 
-gui_element.default_events:on("test_mouse_down", function (data, context)
-        local mouse_props = data:all()
-        local props = context:all()
-        
-        if props.children:reverse_trigger_all_until("test_mouse_down", data) then
-            return true
-        end
+        local is_inside = self:world_point_inside(mouse_props:get("x"), mouse_props:get("y"))
 
-        if props.hover and point_in_rect(mouse_props.x, mouse_props.y, props.x, props.y, props.width, props.height) then
-            context:set("mouse_down", true)
-            return true
-        end
-    end)
-
-gui_element.default_events:on("test_mouse_over", function (data, context)
-        local mouse_props = data:all()
-        local props = context:all()
-
-        if props.children:reverse_trigger_all_until("test_mouse_over", data) then
-            return true
+        if props.mouse_down and released then
+            self:set("mouse_down", false)
+        elseif props.mouse_down then
+            self.events:trigger("mouse_dragged", mouse_props, self)
         end
 
-        if props.hover then
-            return true
+        if props.hover and (not is_inside or found) then
+            self:set("hover", false)
+            self.events:trigger("mouse_out", mouse_props, self)
         end
 
-        if point_in_rect(mouse_props.x, mouse_props.y, props.x, props.y, props.width, props.height) then
-            data_store:each("definition_index:".."simple_gui_element", function (item, index)
-                    if item.fields.hover then
-                        item:set("hover", false)
-                        item.events:trigger("mouse_out", data, context)
-                    end
-                end)
-            context:set("hover", true)
-            context.events:trigger("mouse_over", data, context)
-            return true
+        if not found and is_inside then
+            if not props.hover then
+                self:set("hover", true)
+                found = self.events:trigger("mouse_over", mouse_props, self)
+            end
+
+            if pressed then
+                self:set("mouse_down", true)
+            end
+
+            if released then
+                self.events:trigger("mouse_up", true, self)
+            end
         end
-    end)
 
-gui_element.default_events:on("test_mouse_out", function (data, context)
-        local mouse_props = data:all()
-        local props = context:all()
-
-        props.children:reverse_trigger_all("test_mouse_out", data)
-
-        if props.hover and point_in_rect(mouse_props.x, mouse_props.y, props.x, props.y, props.width, props.height) then
-            context:set("hover", false)
-            context.events:trigger("mouse_out", data, context)
-        end
-    end)
-
-gui_element.default_events:on("test_mouse_dragged", function (data, context)
-        local mouse_props = data:all()
-        local props = context:all()
-
-        if props.mouse_down then
-            context.events:trigger("mouse_dragged", data, context)
-            print ("Dragging:", mouse_props.x, mouse_props.y)
-        end
-    end)
+        return found
+    end
