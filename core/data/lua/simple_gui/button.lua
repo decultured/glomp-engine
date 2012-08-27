@@ -84,23 +84,17 @@ end)
 
 button.default_events:on({"label", "rectangle"}, function (data, context)
     local props = context:all()
-    local childs = context:get("children")
 
     if not props.label or not props.rectangle then
         return
     end
 
-    if not childs:contains(props.label) or not childs:contains(props.rectangle) then
-        childs:clear()
-
-        if props.rectangle then
-            childs:add(props.rectangle)
-        end
-        
-        if props.label then
-            childs:add(props.label)
-        end
+    if context:has_child(props.label) and context:has_child(props.rectangle) then
+        return
     end
+
+    context:clear_children()
+    context:add_children(props.rectangle, props.label)
 
     context.events:trigger("text", props.label:get("text"), context)
     props.rectangle.events:trigger("calc_size", data, context)

@@ -316,16 +316,18 @@ end
 description_proto.__index = description_proto
 
 function M.workon(name, definitions)
-    local result = M.fetch(name, definitions)
+    local result = M.fetch(name, definitions, suppress)
     if not result then
         return M.create(name, definitions)
     end
     return result
 end
 
-function M.fetch(name, definitions)
+function M.fetch(name, definitions, suppress)
     if not name then
-        error ("Description name must not be nil")
+        if not suppress then
+            error ("Description name must not be nil")
+        end
         return false
     end
 
@@ -360,7 +362,7 @@ function M.create(name, definitions)
                                 fields = {},
                                 changed = nil,
                                 definitions = {},
-                                events = event_pump.create(name)            
+                                events = event_pump.workon(name .. "_events")
                             }
 
     setmetatable(new_description, description_proto)

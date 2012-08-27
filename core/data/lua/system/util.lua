@@ -1,3 +1,5 @@
+math.randomseed(os.time())
+
 -- break os.exit
 os.exit = function (...)
 	-- error("Exit not allowed, params: (".. ... .. ")")
@@ -105,12 +107,12 @@ function split(inputstr, sep)
 end
 
 -- TODO : this is likely slow, copypasta
-function hex_to_rgb(hex)
+function hex_string_to_rgb(hex)
 	hex = hex:gsub("#","")
 	return tonumber("0x"..hex:sub(1,2)), tonumber("0x"..hex:sub(3,4)), tonumber("0x"..hex:sub(5,6))
 end
 
-function rgb_to_hex ( nR, nG, nB )
+function rgb_to_hex_string ( nR, nG, nB )
     local sColor = "#"
     nR = string.format ( "%X", nR )
     sColor = sColor .. ( ( string.len ( nR ) == 1 ) and ( "0" .. nR ) or nR )
@@ -119,6 +121,21 @@ function rgb_to_hex ( nR, nG, nB )
     nB = string.format ( "%X", nB )
     sColor = sColor .. ( ( string.len ( nB ) == 1 ) and ( "0" .. nB ) or nB )
     return sColor
+end
+
+function rgb_to_int ( red, green, blue )
+    return 65536 * red + 256 * green + blue
+end
+
+function random_color ()
+    return rgb_to_int(math.random(0, 255), math.random(0, 255), math.random(0, 255))
+end
+
+function random_color_from_base(base_r, base_g, base_b, v_r, v_g, v_b)
+    local r = math.random(0, v_r) + base_r
+    local g = math.random(0, v_g) + base_g
+    local b = math.random(0, v_b) + base_b
+    return rgb_to_int(r, g, b)
 end
 
 function point_in_rect(x, y, rx, ry, rw, rh)
@@ -141,3 +158,6 @@ function percent_string_to_num(str, percent_of)
     return result * 0.01 * percent_of
 end
 
+function distance_squared(x1, y1, x2, y2)
+    return (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2)
+end

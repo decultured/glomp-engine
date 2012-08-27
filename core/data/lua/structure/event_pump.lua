@@ -156,7 +156,7 @@ function M.fetch(name)
 		return false
 	end
 
-	return data_store:get("event", name)
+	return data_store:fetch("event", name)
 end
 
 local function build_event(name)

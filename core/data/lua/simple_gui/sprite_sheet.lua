@@ -107,14 +107,27 @@ sprite_sheet.methods.build_frames = function (self)
     for y = 1, props.frames_high do
         for x = 1, props.frames_wide do
             frame = props.frames:get(frame_num)
-            frame_num = frame_num + 1
+            if frame then
+                frame_num = frame_num + 1
 
-            frame:set({
-                    source_x = (x - 1) * source_width,
-                    source_y = (y - 1) * source_height,
-                    source_width = source_width,
-                    source_height = source_height,
-                })
+                frame:set({
+                        source_x = (x - 1) * source_width,
+                        source_y = (y - 1) * source_height,
+                        source_width = source_width,
+                        source_height = source_height,
+                    })
+            else
+                print (frame_num, props.frames_high, props.frames_wide, props.frames:len())
+            end
         end
     end
+end
+
+-- TODO : setup tick thing here
+local function cycler()
+    local frame = sprite_test:get("current_frame") + 1
+    if frame > sprite_test:get("frames_wide") * sprite_test:get("frames_high") then
+        frame = 1
+    end
+    sprite_test:set("current_frame", frame)
 end

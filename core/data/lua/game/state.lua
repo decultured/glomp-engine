@@ -28,4 +28,4 @@ game_state:set({
         scene = startup_scene
     })
 
-root_window:get("children"):add_many(startup_scene, game_scene, performance)
+root_window:add_children(startup_scene, game_scene, performance)

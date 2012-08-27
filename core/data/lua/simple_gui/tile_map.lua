@@ -26,8 +26,13 @@ function draw_tiles(data, context)
 
     local frame
     for i = 1, #(props.tiles) do
+
+        if not props.tiles[i] then
+            return
+        end
+        
         frame = frames[props.tiles[i]].fields
-        -- print(i, props.tiles[i], x, y, source_width, source_height, frame.source_x, frame.source_y, source_width, source_height)
+        
         draw(image, x, y, tile_width, tile_height, 
             frame.source_x, frame.source_y, source_width, source_height)
         x = x + tile_width
@@ -76,7 +81,6 @@ tile_map.methods.make_random = function (self)
     local frames = #(props.frames.list)
 
     for i = 1, #(props.tiles) do
-        props.tiles[i] = math.random(16)
-        print("qahts", i, props.tiles[i], props.frames.list)
+        props.tiles[i] = 1
     end
 end

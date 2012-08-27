@@ -82,8 +82,8 @@ function M.create(name, extends)
 
     local new_definition = base_definition()
     new_definition.name = name
-    new_definition.events = event_pump.create(name .. "_def_e")
-    new_definition.default_events = event_pump.create(name .. "_def_de")
+    new_definition.events = event_pump.workon(name .. "_def_e")
+    new_definition.default_events = event_pump.workon(name .. "_def_de")
 
     setmetatable(new_definition, definition_proto)
     

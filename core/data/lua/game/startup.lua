@@ -65,7 +65,7 @@ quit_bttn.events:on("click", function ()
     delay(glomp.system.exit, 1.8)
 end)
 
-startup:get("children"):add_many(title, go_bttn, sub_title, quit_bttn)
+startup:add_children(title, go_bttn, sub_title, quit_bttn)
 
 window:set("clear_color", theme_vals.main_bg_color)
 

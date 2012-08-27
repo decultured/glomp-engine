@@ -27,23 +27,26 @@ end
 
 function collection_proto:add(target)
     if not target or
-        not type(target) == "table" or
-        not target.data_type == "description" then
-            print (target)
-            error("Collections store only descriptions")
+        type(target) ~= "table" or
+        target.data_type ~= "description" then
+            error("Collections store only descriptions, provided:" .. tostring(target))
             return false
     end
 
     for k, v in pairs(self.definitions) do
-        if not target:has_definition(v) then
-            error ("Target " .. target.name .. " does not have the required definition: " .. v)
+        if not target.has_definition or not target:has_definition(v) then
+            error ("Target " .. target.name .. " does not have the required definition: " .. v .. tostring(target))
             return false
         end
     end
 
     table.insert(self.list, target)
 
+    if not self.events then
+        print("XXXXXX", self.name)
+    else
     self.events:trigger("add", target, self)
+end
 end
 
 function collection_proto:add_many(...)
@@ -137,12 +140,13 @@ end
 
 collection_proto.__index = collection_proto
 
-local function base_collection()
+local function base_collection(name)
     return  {
+                name = name,
                 data_type = "collection",
                 definitions = {},
                 list = {},
-                events = event_pump.create()
+                events = event_pump.workon(name .. "_events")
             }
 end
 
@@ -178,10 +182,9 @@ function M.create(name, definitions)
         return false
     end
 
-    local new_collection = base_collection()
+    local new_collection = base_collection(name)
 
     setmetatable(new_collection, collection_proto)
-    new_collection.name = name
 
     new_collection:add_definitions(definitions)
 
